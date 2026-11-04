@@ -4,9 +4,10 @@ A plan with dates belongs in the GIMC content calendar, not only in a document. 
 card per month or week at `/marketing/kalender` and as a layer in the user's agenda (`/agenda`). The full steps are in
 the `content-planning` skill; this is the short version.
 
-**Posting does not happen yet.** GIMC has no connection to Instagram, LinkedIn, Facebook, TikTok, X or YouTube yet.
-Scheduling puts the post in the calendar; nothing is sent. Every answer carries `publish_note`
-("Posten volgt zodra Instagram gekoppeld is."). Say that once to the user; never promise that a post will go out.
+**Posting goes through the connected accounts.** With an account for every chosen platform (Socials → Accounts) the
+post is scheduled at the platform (`at_platform: true`, empty `publish_note`) and goes out at the chosen time.
+Otherwise it stays in the calendar and `publish_note` says why. Say that once; promise a post goes out only when
+`at_platform` is true.
 
 ## Tools
 

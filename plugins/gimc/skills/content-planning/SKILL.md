@@ -16,9 +16,10 @@ You put dated posts into the GIMC content calendar. The user sees them at `/mark
 platform, drag to move) and as a layer in their agenda. Follow `gimc-canvas` for everything on the board itself; the
 short rules for the calendar are in its reference `references/scheduling.md`.
 
-**Be honest about posting.** GIMC is not connected to the social platforms yet. Scheduling puts a post in the
-calendar; nothing is published or sent. Every answer has `publish_note` ("Posten volgt zodra Instagram gekoppeld
-is."). Tell the user once, in one sentence. Never say a post "will go live" or "is published".
+**Be honest about posting.** A post goes live only when the company connected an account for every chosen platform
+(Socials → Accounts): then the answer has `at_platform: true` and an empty `publish_note`, and the platform posts it at
+the chosen time. Otherwise it stays in the calendar only and `publish_note` says why. Tell the user once, in one
+sentence. Say a post "will go live" only when `at_platform` is true; never say "is published" before it is.
 
 ## 1. Find the cards
 
