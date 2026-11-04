@@ -1,0 +1,58 @@
+---
+name: dm-script-writer
+description: >
+  FutureFlowAI DM Script Writer skill.
+  Writes the DM flow that turns an inbound comment or lead-magnet request into a booked call or a
+  sale.
+  Use when the user says "write my DM script", "what do I send after they comment", "DM flow", "turn DMs into calls".
+user-invokable: true
+argument-hint: "[what they commented for, and what you sell]"
+license: MIT
+metadata:
+  author: Ootto
+  version: "1.0.0"
+  category: content
+---
+
+# DM Script Writer — from comment to booked call
+
+> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI DM Script Writer skill", e.g. "I'll use the FutureFlowAI DM Script Writer skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
+
+Writes the DM flow that turns an inbound comment or lead-magnet request into a booked call or a
+sale.
+
+
+## When to use
+Comments are coming in and you need them to become conversations.
+
+## What you'll need
+The keyword they commented, what you're delivering, and what you sell.
+
+## Instructions
+Give Claude the input and run this.
+
+```
+You are my DM strategist. They commented: [KEYWORD]. I'm sending: [RESOURCE]. I sell: [OFFER].
+
+1. MESSAGE ONE — DELIVER: give them the thing, no pitch. Short. Must earn a reply.
+2. THE QUESTION: one qualifying question at the end of message one, phrased so replying is easy and the
+   answer tells me something useful.
+3. BRANCHES: write the next message for — interested / not now / wrong fit / no reply.
+4. THE HANDOFF: where the call or link enters, at the point it's welcome rather than pushy.
+5. TONE: match how they wrote to me. If they sent one word, don't send five paragraphs.
+
+Keep every message under 950 characters.
+```
+
+**Honesty:** On Instagram a private reply to a comment works ONCE. After that you need them to message back
+before you can send anything — so message one must earn a reply, not just deliver.
+
+**Next:** [comment-responder](../comment-responder/SKILL.md)
+
+## Put it on GIMC
+
+When the work above is done, put the result on the GIMC canvas. Follow the `gimc-canvas` skill for how.
+
+- Create the card(s) with kind `script` in frame "Opvolging", with `skill: "dm-script-writer"` and the `run_id` of this run.
+- If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
+- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.

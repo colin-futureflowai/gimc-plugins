@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "gimc": {
+      "type": "http",
+      "url": "https://gimc-app.vercel.app/api/mcp"
+    }
+  }
+}

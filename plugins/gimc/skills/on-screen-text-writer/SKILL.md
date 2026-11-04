@@ -1,0 +1,54 @@
+---
+name: on-screen-text-writer
+description: >
+  FutureFlowAI On-Screen Text Writer skill.
+  Writes the tight caption-style overlays that keep silent viewers watching to the end.
+  Use when the user says "write the on-screen text", "captions for this reel", "text overlays", "what should appear on screen".
+user-invokable: true
+argument-hint: "[your script]"
+license: MIT
+metadata:
+  author: Ootto
+  version: "1.0.0"
+  category: content
+---
+
+# On-Screen Text Writer — for the 80% watching on mute
+
+> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI On-Screen Text Writer skill", e.g. "I'll use the FutureFlowAI On-Screen Text Writer skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
+
+Writes the tight caption-style overlays that keep silent viewers watching to the end.
+
+
+## When to use
+Most people watch on mute. The text has to carry the reel alone.
+
+## What you'll need
+Your script, with the beats marked if you have them.
+
+## Instructions
+Give Claude the input and run this.
+
+```
+You are my on-screen text writer. Script: [paste].
+
+1. ONE LINE PER BEAT: the headline of that beat, not a transcript. Short enough to read before the cut.
+2. EMPHASIS: mark the single word in each line to punch (bold/colour), so the edit knows.
+3. TIMING: tie each line to the spoken word it should appear on.
+4. MUTE PASS: list the lines in order on their own. Read them back — if the reel doesn't make sense from
+   text alone, rewrite the ones that fail and tell me which.
+5. LENGTH CHECK: flag any line over ~7 words.
+```
+
+**Honesty:** This is not your script written out. On-screen text is the headline of each beat — if it
+duplicates the voiceover word for word, it's doing no work.
+
+**Next:** [reel-builder](../reel-builder/SKILL.md)
+
+## Put it on GIMC
+
+When the work above is done, put the result on the GIMC canvas. Follow the `gimc-canvas` skill for how.
+
+- Create the card(s) with kind `note` in frame "Tekst in beeld", with `skill: "on-screen-text-writer"` and the `run_id` of this run.
+- If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
+- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.

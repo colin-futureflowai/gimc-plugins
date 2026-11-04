@@ -1,0 +1,56 @@
+---
+name: cta-writer
+description: >
+  FutureFlowAI CTA Writer skill.
+  Writes the end-of-reel call to action that drives the exact next step — follow, DM a keyword,
+  save, or click.
+  Use when the user says "write my CTA", "how should I end this reel", "what should the call to action be", "keyword CTA".
+user-invokable: true
+argument-hint: "[the reel, and what you want them to do]"
+license: MIT
+metadata:
+  author: Ootto
+  version: "1.0.0"
+  category: content
+---
+
+# CTA Writer — one ask, matched to the reel
+
+> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI CTA Writer skill", e.g. "I'll use the FutureFlowAI CTA Writer skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
+
+Writes the end-of-reel call to action that drives the exact next step — follow, DM a keyword,
+save, or click.
+
+
+## When to use
+The reel works but the ending fizzles.
+
+## What you'll need
+The reel or script, and the one next step you want.
+
+## Instructions
+Give Claude the input and run this.
+
+```
+You are my CTA writer. Reel: [paste]. I want: [follow / DM keyword / save / click].
+
+1. ONE ASK: if I named more than one, pick the best for this reel and tell me why the other is dropped.
+2. THE REASON LINE: the sentence before the ask — why they should. This does more work than the ask.
+3. THE ASK: the exact words, spoken and on-screen.
+4. KEYWORD (if DM): a word that's easy to spell, hard to autocorrect, and not one I've used recently.
+5. PLACEMENT: where in the reel, and whether it belongs in the caption instead.
+6. DELIVERY CHECK: state exactly what I must have ready to send. If I can't deliver it, say don't run this CTA.
+```
+
+**Honesty:** Only promise what actually exists and actually sends. An unwired keyword burns the trust of
+everyone who comments.
+
+**Next:** [dm-script-writer](../dm-script-writer/SKILL.md) → [comment-responder](../comment-responder/SKILL.md)
+
+## Put it on GIMC
+
+When the work above is done, put the result on the GIMC canvas. Follow the `gimc-canvas` skill for how.
+
+- Create the card(s) with kind `note` in frame "CTA", with `skill: "cta-writer"` and the `run_id` of this run.
+- If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
+- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.

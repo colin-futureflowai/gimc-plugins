@@ -1,0 +1,117 @@
+{
+  "name": "TEST-Studio Noord",
+  "tokens": {
+    "colors": {
+      "light": {
+        "bg": "#f6f4ef",
+        "surface": "#ffffff",
+        "text": "#1c1b19",
+        "muted": "#6b675f",
+        "accent": "#0f766e",
+        "accent_text": "#ffffff",
+        "border": "#e3dfd6",
+        "success": "#2f7d4f",
+        "warning": "#a15c07",
+        "danger": "#b42318"
+      },
+      "dark": {
+        "bg": "#141412",
+        "surface": "#1e1d1b",
+        "text": "#f2efe8",
+        "muted": "#a39e94",
+        "accent": "#5ec4b6",
+        "accent_text": "#0b1f1d",
+        "border": "#33312d"
+      },
+      "extra": [
+        { "name": "noord", "hex": "#1f3a5f", "role": "Steunkleur: koppen op foto's, donkere vlakken" },
+        { "name": "klei", "hex": "#c4663a", "role": "Signaalkleur: alleen grote tekst en kleine accenten" }
+      ]
+    },
+    "type": {
+      "families": [
+        { "role": "display", "family": "Fraunces", "source": "google", "weights": [400, 500, 600], "fallback": "Georgia, serif" },
+        { "role": "body", "family": "Inter", "source": "google", "weights": [400, 500, 600], "fallback": "system-ui, sans-serif" },
+        { "role": "mono", "family": "JetBrains Mono", "source": "google", "weights": [400, 500], "fallback": "ui-monospace, monospace" }
+      ],
+      "scale": [
+        { "role": "display", "size_px": 72, "line_height": 1.02, "weight": 400, "tracking_em": -0.02 },
+        { "role": "h1", "size_px": 48, "line_height": 1.08, "weight": 400, "tracking_em": -0.015 },
+        { "role": "h2", "size_px": 32, "line_height": 1.15, "weight": 500, "tracking_em": -0.01 },
+        { "role": "h3", "size_px": 22, "line_height": 1.3, "weight": 600 },
+        { "role": "body", "size_px": 17, "line_height": 1.6, "weight": 400 },
+        { "role": "small", "size_px": 14, "line_height": 1.5, "weight": 400 },
+        { "role": "label", "size_px": 11, "line_height": 1.4, "weight": 500, "tracking_em": 0.08 },
+        { "role": "mono", "size_px": 13, "line_height": 1.5, "weight": 400 }
+      ]
+    },
+    "space": [4, 8, 12, 16, 24, 32, 48, 64, 96, 128],
+    "radius": { "sm": 4, "md": 8, "lg": 14, "pill": 999 },
+    "shadow": {
+      "sm": "0 1px 2px rgba(28, 27, 25, 0.06)",
+      "md": "0 8px 24px rgba(28, 27, 25, 0.08)"
+    },
+    "motion": {
+      "duration_ms": { "fast": 120, "base": 200, "slow": 360 },
+      "easing": { "standard": "cubic-bezier(0.2, 0, 0, 1)", "out": "ease-out" }
+    }
+  },
+  "assets": {
+    "logos": [
+      { "variant": "primary", "url": "https://www.test-studio-noord.example/assets/logo.svg" },
+      { "variant": "light", "url": "https://www.test-studio-noord.example/assets/logo-wit.svg" },
+      { "variant": "mark", "url": "https://www.test-studio-noord.example/favicon.svg" }
+    ],
+    "photos": [
+      { "url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600&q=80&auto=format&fit=crop", "alt": "Handen schetsen een plattegrond op calqueerpapier", "credit": "Unsplash" },
+      { "url": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1600&q=80&auto=format&fit=crop", "alt": "Kleurstalen en papiermonsters op een bureau", "credit": "Unsplash" },
+      { "url": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=1600&q=80&auto=format&fit=crop", "alt": "Een wireframe wordt op een tablet geschetst", "credit": "Unsplash" },
+      { "url": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&q=80&auto=format&fit=crop", "alt": "Licht interieur met lamp, stoelen en houten kasten", "credit": "Unsplash" },
+      { "url": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1600&q=80&auto=format&fit=crop", "alt": "Wit gebouw met schuine vlakken tegen een lichte lucht", "credit": "Unsplash" },
+      { "url": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1600&q=80&auto=format&fit=crop", "alt": "Gele fauteuil in een rustige witte kamer", "credit": "Unsplash" }
+    ],
+    "icon_style": "Lijniconen van 1,5 px, hoeken afgerond, geen vulling"
+  },
+  "voice": {
+    "mission": "Bedrijven in het noorden helpen om er net zo goed uit te zien als ze werken.",
+    "positioning": "Voor ondernemers in Groningen en Drenthe die een merk willen dat klopt, is TEST-Studio Noord de ontwerpstudio die strategie en vormgeving in één team houdt, anders dan bureaus die het ontwerp uitbesteden.",
+    "audience": "Eigenaren van mkb-bedrijven (10–80 mensen) in Noord-Nederland die groeien en merken dat hun uitstraling achterblijft.",
+    "tone": ["Nuchter, maar niet kaal", "Precies, maar niet stijf", "Warm, maar niet amicaal"],
+    "do": [
+      "Zeg wat je doet in één zin: “We maken je merk af, van strategie tot website.”",
+      "Noem een concreet resultaat: “Na zes weken stond de nieuwe site live.”",
+      "Spreek de lezer aan met je."
+    ],
+    "dont": [
+      "Geen jargon: “holistische merkbeleving”, “synergie”.",
+      "Geen overdrijving: “de allerbeste studio van het noorden”.",
+      "Geen uitroeptekens in koppen."
+    ],
+    "examples": [
+      "Goed ontwerp valt pas op als het ontbreekt.",
+      "We beginnen bij wat je al hebt.",
+      "Een merk is een belofte die je elke dag nakomt."
+    ]
+  },
+  "provenance": {
+    "name": "fixed",
+    "tokens.colors.light": "fixed",
+    "tokens.colors.dark": "proposed",
+    "tokens.colors.extra": "fixed",
+    "tokens.type.families": "fixed",
+    "tokens.type.scale": "proposed",
+    "tokens.space": "proposed",
+    "tokens.radius": "proposed",
+    "tokens.shadow": "proposed",
+    "tokens.motion": "proposed",
+    "assets.logos": "fixed",
+    "assets.photos": "proposed",
+    "voice.mission": "fixed",
+    "voice.positioning": "proposed",
+    "voice.audience": "fixed",
+    "voice.tone": "proposed",
+    "voice.do": "proposed",
+    "voice.dont": "proposed",
+    "voice.examples": "proposed"
+  }
+}

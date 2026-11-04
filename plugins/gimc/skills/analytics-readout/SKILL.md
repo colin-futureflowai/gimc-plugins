@@ -1,0 +1,58 @@
+---
+name: analytics-readout
+description: >
+  FutureFlowAI Analytics Readout skill.
+  Reads your reel insights and explains in plain English what to make more of and what to stop —
+  no jargon.
+  Use when the user says "explain my analytics", "what do my numbers mean", "read my insights", "how did this reel do".
+user-invokable: true
+argument-hint: "[paste your insights, or connect the MCP]"
+license: MIT
+metadata:
+  author: Ootto
+  version: "1.0.0"
+  category: content
+---
+
+# Analytics Readout — your numbers, in plain English
+
+> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Analytics Readout skill", e.g. "I'll use the FutureFlowAI Analytics Readout skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
+
+Reads your reel insights and explains in plain English what to make more of and what to stop — no
+jargon.
+
+
+## When to use
+You're looking at insights and can't tell what to do differently.
+
+## What you'll need
+Your reel or account insights. An Instagram connector (e.g. Composio) can pull them directly.
+
+## Instructions
+Give Claude the input and run this.
+
+```
+You are my analyst. Here are my insights: [paste]. My goal right now is: [reach/saves/leads/follows].
+
+1. THE METRIC THAT MATTERS for that goal — and tell me which numbers to stop staring at.
+2. VS MY MEDIAN: every figure judged against my own baseline, not anyone else's screenshot.
+3. WHERE IT BROKE: if retention data exists — a drop at ~3s is a hook problem, at ~12s a middle problem,
+   at the end a CTA problem. Name which.
+4. TWO ACTIONS. Not twelve. The two that would move the metric in point 1.
+5. WHAT I CAN'T TELL from this data, stated plainly.
+
+Every number must come from what I pasted. If something isn't there, say so — do not estimate.
+```
+
+**Honesty:** No invented figures, no industry benchmarks presented as my data. 'Not enough signal' is a valid
+answer.
+
+**Next:** [content-audit](../content-audit/SKILL.md)
+
+## Put it on GIMC
+
+When the work above is done, put the result on the GIMC canvas. Follow the `gimc-canvas` skill for how.
+
+- Create the card(s) with kind `analysis` in frame "Analyse", with `skill: "analytics-readout"` and the `run_id` of this run.
+- If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
+- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.
