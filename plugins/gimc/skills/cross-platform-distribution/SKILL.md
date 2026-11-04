@@ -52,4 +52,5 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
 
 - Create the card(s) with kind `doc` in frame "Publicatie", with `skill: "cross-platform-distribution"` and the `run_id` of this run.
 - If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
+- Also put every dated post in the GIMC content calendar with `canvas_schedule_posts` (Amsterdam time, one call for the whole plan), following the `content-planning` skill; the document alone is not enough. Posting itself does not happen yet: say so once, using `publish_note`.
 - If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.

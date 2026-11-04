@@ -5,7 +5,7 @@ description: How to put work on the GIMC content canvas neatly — boards, frame
 
 # GIMC canvas
 
-This is plugin version 0.6.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.7.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas is the user's content board at `/marketing/canvas`. People watch it while you work: every finished step appears as cards in a frame, linked with arrows. Make the board read like a clear story of the run, and never let the canvas stop the actual work.
 
@@ -17,12 +17,13 @@ Hard rules — they apply to every section below:
 4. **Every card you make carries `skill` and `run_id`** (one id per run, see "Lay it out"). `skill` is the exact name of the skill or tool that produced the card; for your own glue cards (a brief, a choice note, a frame not tied to one skill) use `gimc-canvas`.
 5. **Read errors.** GIMC errors are short Dutch sentences that name the cause (an unknown field, a full frame, a card that changed, multiple workspaces). Fix what they name; don't guess around them.
 
-Details live in four references; open the one you need:
+Details live in five references; open the one you need:
 
 - [references/layout.md](references/layout.md) — grid sizes, frame placement, arrows, the full reel run, reusing frames, full frames.
 - [references/media.md](references/media.md) — upload flow, poster, landscape video, audio, carousels, Cowork network and Remotion workarounds.
 - [references/folders.md](references/folders.md) — choosing and matching folders, creating one, how to write the folder note.
 - [references/notes-and-tasks.md](references/notes-and-tasks.md) — `canvas_inbox`, notes, tasks, replies, changing a person's card.
+- [references/scheduling.md](references/scheduling.md) — scheduling posts in the GIMC content calendar.
 
 ## 1. Check the connection
 
