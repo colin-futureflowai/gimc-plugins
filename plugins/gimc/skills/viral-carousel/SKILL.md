@@ -83,6 +83,5 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
 
 - Create the card(s) with kind `carousel` in frame "Carrousel", with `skill: "viral-carousel"` and the `run_id` of this run.
 - If this work came from a card on the board, draw a line with relation `structure_clone` from that source card to the new card(s).
-- The result has media (image): upload it as described in `gimc-canvas` (media) and attach it to the card.
-- A carousel card takes slide 1 as its poster (role poster) and the other slides as separate image cards linked to it; never upload an image as the carousel card's media.
+- Build the slides yourself with one `canvas_create_build` call (type `carousel`, 4:5 by default) as described in the `canvas-builds` skill: GIMC renders each slide as a PNG in the folder's brand and makes the carousel card. Only when the user brings finished slide images: slide 1 as the carousel card's poster (role poster), the other slides as separate image cards linked to it.
 - If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.

@@ -5,7 +5,7 @@ description: How to put work on the GIMC content canvas neatly — boards, frame
 
 # GIMC canvas
 
-This is plugin version 0.5.2. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.6.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas is the user's content board at `/marketing/canvas`. People watch it while you work: every finished step appears as cards in a frame, linked with arrows. Make the board read like a clear story of the run, and never let the canvas stop the actual work.
 
@@ -61,7 +61,7 @@ The context answer has the folder, its boards and subfolders; `canvas_list_folde
 | Ideeën, Planning, Strategie, Notities | Ideeën |
 | Onderzoek | Onderzoek & concurrentie |
 | Analyse | Analyses |
-| Hooks, Script, Tekst in beeld, Shotlist, Cover, Eindvideo, Clips, Carrousel, Stories, Publicatie, CTA, Profiel, Outreach, Opvolging, Reacties, Briefing | In productie |
+| Hooks, Script, Tekst in beeld, Shotlist, Cover, Eindvideo, Clips, Carrousel, Stories, Publicatie, CTA, Profiel, Outreach, Opvolging, Reacties, Briefing, Bouwwerken | In productie |
 | Brandbook | Brandbook |
 
 The table only picks the board for the first card of a new run; later steps stay on that board. Tracking a published post with numbers (`canvas_record_stats`) is its own run, on "Mijn content".
@@ -102,19 +102,19 @@ The board should read left to right like the run itself: one frame per step, the
 
 **Cards.** Create them with `frame_id` and no x/y: GIMC finds a free spot in the frame and nothing overlaps. Only give your own x/y when you need a precise order, and then keep to the grid in layout.md.
 
-- Kind, frame and relation come from the skill's "Put it on GIMC" section. Kinds are exactly: `video`, `image`, `carousel`, `note`, `hook`, `script`, `analysis`, `idea`, `link`, `doc`, `frame`, `html` (a self-contained page, made only with `canvas_create_html_card` or a plan step; the board shows it without scripts, so scripts only enrich).
+- Kind, frame and relation come from the skill's "Put it on GIMC" section. Kinds are exactly: `video`, `image`, `carousel`, `note`, `hook`, `script`, `analysis`, `idea`, `link`, `doc`, `frame`, `html` (a self-contained page, made only with `canvas_create_html_card` or a plan step; the board shows it without scripts, so scripts only enrich). **Building** an email template, carousel, post or story yourself: one `canvas_create_build` call, see the `canvas-builds` skill.
 - **Title**: short and specific, the thing itself ("Hook A: Niemand vertelt je dit over ochtendroutines"), max ~80 characters — the board shows titles first.
 - **Body**: the full result in Markdown, in the user's language. Not a summary of it: someone should be able to use the card without the chat.
 - Several alternatives (hooks, variants, clips) → one card each, not one card with a list. A choice the user makes → a small `note` "Keuze: Hook B" in the same frame.
 
-**One call per step.** Use `canvas_create_items` to create a step's frame, cards and links in one call (refs for new items, ids for existing ones; frames first in `items`). Use `canvas_create_item` only for a single card. Never fire several create calls in parallel: they can land on the same free spot.
+**One call per step.** Use `canvas_create_items` to create a step's frame, cards and links in one call (refs for new items, ids for existing ones; frames first in `items`). Use `canvas_create_item` only for a single card. Never fire create calls in parallel (same free spot).
 
 **Many cards at once: `canvas_apply_plan`.** A whole board in one go (a brandbook, frames with HTML cards) is one plan on `board_id` or `board: { folder_id, name }`: steps with `ref`s, played live with the agent cursor. Over ±40 KB, send it in parts: each next part with `append: true` and the `run_id` of the previous answer. With `render: true` the answer brings a check per HTML card and a contact sheet: fix findings before saying done. A long plan answers `running`: follow it with `canvas_plan_status` and that `run_id`. Check cards only through GIMC's render (that answer or `canvas_render_html_card`), never with a local browser or screenshots. Roep GIMC nooit aan buiten de GIMC-tools (geen curl, scripts of tokens).
 
 **Lines.** Two kinds, both via `links` in `canvas_create_items` or via `canvas_link_items`:
 
 - **Lineage** (card → card): the relation from the skill section (`derived`, `variant`, `ab_variant`, `remix`, `repurpose`, `reformat`, `remake`, `structure_clone`) from the card the work came from to the new card. In a run: the chosen hook → the script, the script → the on-screen text, and so on. No lineage back and forth (no cycles).
-- **Arrows** (frame → frame): relation `arrow` with a short `label` in the user's language, at most four words in the form "from → to" ("brief → hooks", "gekozen hook → script"). Only between neighbouring frames, so the label does not hide under cards.
+- **Arrows** (frame → frame): relation `arrow` with a short `label` in the user's language, at most four words in the form "from → to" ("brief → hooks", "gekozen hook → script"). Only between neighbouring frames (labels hide under cards).
 
 **Finding your own work later.** `canvas_list_items` with `run_id` (or `skill`) on the board; `canvas_get_item` for one card in full.
 
@@ -129,7 +129,7 @@ The board should read left to right like the run itself: one frame per step, the
 
 Video and images go on the board as real files, uploaded through a signed URL. Full steps, commands and workarounds: [media.md](references/media.md). The short flow: make the card first (in the step's `canvas_create_items` call), then `canvas_media_upload_url` with its `item_id`, `file_name`, `mime` and exact `bytes`, PUT the file to `signed_url` with `Content-Type` = the mime, and `canvas_media_complete` with `item_id` and `path`. A video also gets a poster (first frame via ffmpeg, uploaded with `role: poster`).
 
-Allowed: mp4, mov, webm, png, jpeg, webp, up to 200 MB. Audio is not accepted (see media.md). A `carousel` card does not take images as its media: slide 1 goes on as its poster, other slides as separate `image` cards (see media.md).
+Allowed: mp4, mov, webm, png, jpeg, webp, up to 200 MB; no audio (media.md). Finished carousel images: slide 1 as poster of the `carousel` card, the rest as `image` cards (media.md).
 
 **When the upload is refused** (`CONNECT tunnel failed, response 403`): keep the card with the local file path in its body, finish the run, and tell the user once to allow the exact host of the `signed_url` under claude.ai → Settings → Capabilities (network egress); details in media.md.
 
