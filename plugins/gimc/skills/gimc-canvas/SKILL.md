@@ -5,24 +5,24 @@ description: How to put work on the GIMC content canvas neatly — boards, frame
 
 # GIMC canvas
 
-This is plugin version 0.5.1. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.5.2. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas is the user's content board at `/marketing/canvas`. People watch it while you work: every finished step appears as cards in a frame, linked with arrows. Make the board read like a clear story of the run, and never let the canvas stop the actual work.
 
 Hard rules — they apply to every section below:
 
 1. **The canvas never blocks the work.** If a canvas call fails, finish the content work anyway and tell the user in one sentence what was skipped and why. Never retry the same failing call more than once.
-2. **Never overwrite human work.** A card a person edited gets a variant, not an update. A card or frame a person placed or moved stays where it is.
-3. **Never lose anything.** Archive only cards you placed yourself in this run and that are truly wrong; never archive or move human cards.
+2. **Work together, never overwrite blindly.** You may change, move or archive any card, also a person's. Read it right before, send `expected_updated_at`, and keep what the person wrote unless the user asks otherwise.
+3. **Never lose anything.** Every text change keeps the old version (a person can restore it); archive only what is truly wrong or what the user asks for.
 4. **Every card you make carries `skill` and `run_id`** (one id per run, see "Lay it out"). `skill` is the exact name of the skill or tool that produced the card; for your own glue cards (a brief, a choice note, a frame not tied to one skill) use `gimc-canvas`.
-5. **Read errors.** GIMC errors are short Dutch sentences that name the cause (an unknown field, a full frame, a human-placed card, multiple workspaces). Fix what they name; don't guess around them.
+5. **Read errors.** GIMC errors are short Dutch sentences that name the cause (an unknown field, a full frame, a card that changed, multiple workspaces). Fix what they name; don't guess around them.
 
 Details live in four references; open the one you need:
 
 - [references/layout.md](references/layout.md) — grid sizes, frame placement, arrows, the full reel run, reusing frames, full frames.
 - [references/media.md](references/media.md) — upload flow, poster, landscape video, audio, carousels, Cowork network and Remotion workarounds.
 - [references/folders.md](references/folders.md) — choosing and matching folders, creating one, how to write the folder note.
-- [references/notes-and-tasks.md](references/notes-and-tasks.md) — `canvas_inbox`, notes, tasks, replies, human work.
+- [references/notes-and-tasks.md](references/notes-and-tasks.md) — `canvas_inbox`, notes, tasks, replies, changing a person's card.
 
 ## 1. Check the connection
 
@@ -120,9 +120,9 @@ The board should read left to right like the run itself: one frame per step, the
 
 ## 6. Update or vary
 
-- Changing your own card: `canvas_get_item` first, then `canvas_update_item` (title, body, data, color, skill, …). `data` replaces the whole object: send it complete.
-- `canvas_update_item` fails because a person edited the card: don't retry. Make a variant with `canvas_create_item` (`parent_id` = that card, relation `variant`, same frame via `frame_id`). Setting `skill` on a human-edited card fails for the same reason; then make a variant as well.
-- Moving or resizing: `canvas_move_item` / `canvas_move_items`, only for things you placed. An error or `skipped` entry ("een mens heeft …"): a person placed it; leave it and work around it.
+- Changing a card: `canvas_get_item` first, then `canvas_update_item` (title, body, data, color, skill, …) with `expected_updated_at` = its `updated_at`. `data` replaces the whole object: send it complete.
+- 409 "De kaart is intussen gewijzigd": apply your change to the `current` card in the error and send again with its `updated_at`. Both versions useful? Make a `variant`. More: [notes-and-tasks.md](references/notes-and-tasks.md).
+- Moving or resizing: `canvas_move_item` / `canvas_move_items`, any card or frame.
 - Changing an arrow label: `canvas_update_link` returns a new link id; use that one afterwards.
 
 ## 7. Media
@@ -157,4 +157,4 @@ Place each step as soon as it is done: one `canvas_create_items` call per step, 
 ## 9. When you are done
 
 1. **Update the folder note** once, if a next session needs something new: where things are, decisions made, open work, what the user wants. Add to the text you read (keep what people wrote) and call `canvas_update_folder_note` with the whole text and the `expected_version` you read. Keep it short: no conversation transcripts, no personal or sensitive data (phone numbers, emails, private details of contacts). On a version conflict, read again, merge your lines into the newer text, retry once — never overwrite. Layout and a sample: [references/folders.md](references/folders.md).
-2. **Close with one or two sentences** in the chat: what is on which `folder › board › frame`, and anything that was skipped (an upload, a human card you left alone, a note you could not save). Don't paste the card contents again.
+2. **Close with one or two sentences** in the chat: what is on which `folder › board › frame`, and anything that was skipped (an upload, a card you left alone, a note you could not save). Don't paste the card contents again.
