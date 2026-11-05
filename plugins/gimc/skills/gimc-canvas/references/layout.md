@@ -61,6 +61,15 @@ The error names what is in the way. Then:
 - **Lineage** = where a card came from, card → card, relation from the skill section. Each new card gets lineage to the card it was built from (chosen hook → script; every shot → final video). A user choice is a `note` "Keuze: Hook B" in the same frame; the chosen card is the parent of the next step.
 - The same link twice returns the existing one, so retrying a link is safe. Lineage can't form a cycle.
 
+## Plans
+
+A whole board in one go (a brandbook, frames with HTML cards) is one `canvas_apply_plan` on `board_id` or `board: { folder_id, name }`: steps with `ref`s, played live with the agent cursor.
+
+- Over ±40 KB, send it in parts: each next part with `append: true` and the `run_id` of the previous answer.
+- With `render: true` the answer brings a check per HTML card and a contact sheet: fix findings before saying done.
+- A long plan answers `running`: follow it with `canvas_plan_status` and that `run_id`.
+- Check cards only through GIMC's render (that answer or `canvas_render_html_card`), never with a local browser or screenshots.
+
 ## The reference run: "TEST Eindvideo · zo is hij gemaakt"
 
 A finished reel run on the dev board of that name. The x positions below follow the rules above (the real board drifted a little); frames all at y = 0, 900×760 unless noted:
