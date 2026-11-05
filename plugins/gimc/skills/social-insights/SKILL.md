@@ -60,10 +60,9 @@ Rules:
    day, so growth over 7 days is a small number; don't overstate it.
 5. Posts with `is_external: true` were posted outside GIMC; they count just the same.
 
-## 3. Boosts, comments and reply campaigns
+## 3. Boosts and comments
 
-- `social_list_boosts`: the boosts with status, budget and results, and the monthly cap with what is already committed
-  (`remaining_this_month`). Starting or changing a boost is done in GIMC (Socials → Advertenties).
+- Boost results and budget: `social_list_boosts` (proposing or pausing a boost: the `social-ads` skill).
 - Comments, reply drafts and reply campaigns: the `social-engagement` skill.
 
 ## 4. Put it on GIMC

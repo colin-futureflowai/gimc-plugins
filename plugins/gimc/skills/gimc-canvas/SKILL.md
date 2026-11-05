@@ -5,7 +5,7 @@ description: The GIMC hub. How to put work on the GIMC canvas (boards, a frame p
 
 # GIMC canvas
 
-This is plugin version 0.11.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.12.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas is the user's content board at `/marketing/canvas`. People watch it while you work: make the board read like the story of the run.
 
@@ -32,7 +32,7 @@ Look for a tool whose name ends in `canvas_list_boards`; the prefix differs per 
 - **Cowork or claude.ai**: "To see this on your GIMC canvas, add GIMC once as a connector: claude.ai → Settings → Connectors → Add custom connector, URL `https://gimc-app.vercel.app/api/mcp`, then sign in ("Log nu in"). Then ask me again to put it on GIMC."
 - **Claude Code**: "Run `/mcp`, pick `gimc` and choose Authenticate; then ask me again."
 
-Use that URL exactly. No rights or an expired token: say so in one sentence and continue without the canvas.
+Use that URL exactly. No rights or an expired token: say so and continue without the canvas.
 
 ## 2. Orient with one call — before any other canvas call
 
@@ -61,7 +61,7 @@ Boards live in folders (per client or campaign). **All steps of a run stay on on
 
 Numbers of a published post: their own run, on "Mijn content". Fitting board missing: create only that one. Seed the default boards (`canvas_seed_default_boards`) only when asked or in a brand-new workspace. Always pass `folder_id` to board tools. A new folder only for a new client or campaign, never for one card; leave out `parent_id` so it goes under the default folder.
 
-**Folder notes are memory**, like a CLAUDE.md per directory: read them at the start (in the context answer, or `canvas_get_folder_note` with `with_parents: true`; the nearest note wins) and write once at the end (section 9).
+**Folder notes are memory**: read them at the start (in the context answer, or `canvas_get_folder_note` with `with_parents: true`; the nearest note wins) and write once at the end (section 9).
 
 ## 4. Check the inbox
 
@@ -118,7 +118,8 @@ A card is the anchor of a piece of content:
 | Brand and design system of a folder | `brandbook` |
 | A ready-to-use email, carousel, post, story | `canvas-builds` |
 | Ask for approval, plan it, put it at the platform, follow its status | `content-planning` |
-| Numbers of accounts and posts, boosts | `social-insights` |
+| Numbers of accounts and posts | `social-insights` |
+| Boosts and ad budget | `social-ads` |
 | Comments, reply drafts, reply campaigns | `social-engagement` |
 
 Approval is a person's decision on the card, with a comment. You can ask for it, never give it. Whether a planned post goes to the platform is GIMC's call: the answer says `at_platform`; otherwise it waits in the calendar for a person.
