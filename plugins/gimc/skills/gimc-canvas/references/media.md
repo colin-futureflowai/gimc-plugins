@@ -44,9 +44,23 @@ ffmpeg -y -ss 0.1 -i final.mp4 -frames:v 1 poster.jpg
 
 Then `canvas_media_upload_url` with the video's `item_id`, `role: "poster"`, `file_name: "poster.jpg"`, `mime: "image/jpeg"`, `bytes`; PUT it; `canvas_media_complete` with `item_id`, `path` and `role: "poster"`. A poster must be an image. If the first frame is black (fade-in), take a later one (`-ss 1`).
 
+## Social video from another account (inspiration, research)
+
+A reel, TikTok or YouTube video you found (scraped, searched, or a link the user gave) is a `link` card, never an uploaded copy of the video (that is someone else's content). GIMC shows it like our own video cards: a phone frame with the thumbnail, the platform and account on top, a play button that opens the platform player only when someone clicks, and the numbers below.
+
+1. **The card** in `canvas_create_items`: `kind: "link"`, `source_url` (the post URL as the platform shows it; GIMC derives `platform`), `title` (the hook or caption's first line, short), `account_handle` (without `@`), `posted_at` (ISO, if known), `body` (why it matters, a few lines), `skill`, `run_id`, `frame_id`.
+2. **Numbers** you have (views, likes, comments, shares, saves): `canvas_record_stats` on the card, with `measured_at` when the scraper says when.
+3. **Thumbnail as poster.** Take the thumbnail or cover URL from the scraper output (Apify `displayUrl`/`thumbnailUrl`, TikTok `cover`, YouTube `https://i.ytimg.com/vi/<id>/hqdefault.jpg`, or the page's `og:image`). Download it right away (platform image links expire), then upload it as the card's poster: `canvas_media_upload_url` with `item_id`, `role: "poster"`, `file_name: "poster.jpg"`, `mime`, `bytes`; PUT; `canvas_media_complete` with `role: "poster"`. Convert webp/avif you can't upload to jpeg first (`ffmpeg -i in.webp poster.jpg`).
+
+```sh
+curl -sSL -o poster.jpg "$THUMB_URL" && file --mime-type -b poster.jpg && wc -c < poster.jpg
+```
+
+No thumbnail (private post, download refused)? Keep the card without poster: it shows the platform and the title, and still plays on click. Never put the scraper's raw JSON in the body.
+
 ## Landscape, square and other shapes
 
-The phone frame on the card follows the real aspect of the file, but inside the card's box. A 16:9 video in the default 240×480 box becomes tiny. So for landscape create the card with `w: 480, h: 300` (square: `w: 320, h: 360`), or after a loose upload use `canvas_move_item` with the same x/y and those w/h.
+The phone frame on the card follows the real aspect of the file, but inside the card's box. A 16:9 video in the default 240×480 box becomes tiny. So for landscape create the card with `w: 480, h: 300` (square: `w: 320, h: 360`), or after a loose upload use `canvas_move_items` with one move: the same x/y and those w/h.
 
 ## Audio (voice-over, podcast)
 

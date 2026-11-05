@@ -5,13 +5,13 @@ description: The GIMC hub. How to put work on the GIMC canvas (boards, a frame p
 
 # GIMC canvas
 
-This is plugin version 0.13.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.14.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
-The GIMC canvas is the user's content board at `/marketing/canvas`. People watch it while you work: make the board read like the story of the run.
+The GIMC canvas (`/marketing/canvas`) is the user's content board. People watch it while you work: make it read like the story of the run.
 
 Hard rules — they apply to every section below:
 
-1. **The canvas never blocks the work.** If a canvas call fails, finish the content work anyway and tell the user in one sentence what was skipped and why. Never retry the same failing call more than once.
+1. **The canvas never blocks the work.** If a canvas call fails, finish the content work anyway and tell the user in one sentence what was skipped and why. Retry a failing call at most once.
 2. **Work together, never overwrite blindly.** You may change, move or archive any card, also a person's. Read it right before, send `expected_updated_at`, and keep what the person wrote.
 3. **Never lose anything.** Text changes keep the old version; archive only what is truly wrong or what the user asks for.
 4. **Every card you make carries `skill` and `run_id`.** `skill` is the exact name of the skill or tool that made the card; your own glue cards (a brief, a choice note) use `gimc-canvas`.
@@ -32,7 +32,7 @@ Look for a tool whose name ends in `canvas_list_boards`; the prefix differs per 
 - **Cowork or claude.ai**: "To see this on your GIMC canvas, add GIMC once as a connector: claude.ai → Settings → Connectors → Add custom connector, URL `https://gimc-app.vercel.app/api/mcp`, then sign in ("Log nu in"). Then ask me again to put it on GIMC."
 - **Claude Code**: "Run `/mcp`, pick `gimc` and choose Authenticate; then ask me again."
 
-Use that URL exactly. No rights or an expired token: say so and continue without the canvas.
+No rights or an expired token: say so and continue without the canvas.
 
 ## 2. Orient with one call — before any other canvas call
 
@@ -40,7 +40,6 @@ The **first** canvas call of a conversation is `canvas_get_context` (with `folde
 
 - `choose_workspace: true` with a list `workspaces`: that is the answer, not a failure. Use the one the user named and say which; otherwise ask **once per conversation**. Then pass that `org_id` in **every** GIMC call, including uploads, plans and links.
 - "Geen bedrijf gekoppeld": the account has no workspace. Say so in one sentence and skip the canvas.
-- An older GIMC without `canvas_get_context`: start with `canvas_list_boards` without `org_id`, then the folders, the folder note and `canvas_inbox`.
 
 ## 3. Pick the folder and board — once per run
 
@@ -59,7 +58,7 @@ Boards live in folders (per client or campaign). **All steps of a run stay on on
 | Hooks, Script, Tekst in beeld, Shotlist, Cover, Eindvideo, Clips, Carrousel, Stories, Publicatie, CTA, Profiel, Outreach, Opvolging, Reacties, Briefing, Bouwwerken | In productie |
 | Brandbook | Brandbook |
 
-Numbers of a published post: their own run, on "Mijn content". Fitting board missing: create only that one. Seed the default boards (`canvas_seed_default_boards`) only when asked or in a brand-new workspace. Always pass `folder_id` to board tools. A new folder only for a new client or campaign, never for one card; leave out `parent_id` so it goes under the default folder.
+Numbers of a published post: own run, on "Mijn content". Fitting board missing: create only that one. Seed the default boards (`canvas_seed_default_boards`) only when asked or in a brand-new workspace. Always pass `folder_id` to board tools. A new folder only for a new client or campaign, never for one card; leave out `parent_id` so it goes under the default folder.
 
 **Folder notes are memory**: read them at the start (in the context answer, or `canvas_get_folder_note` with `with_parents: true`; the nearest note wins) and write once at the end (section 9).
 
@@ -70,7 +69,7 @@ Before you place anything, at the start of every turn with canvas work, and betw
 - A task → `canvas_claim_task`, do it, `canvas_complete_task` with the new card.
 - A note → reply first with `canvas_add_comment` ("Opgepakt: …"), do the work, put a new card with a line to the noted card. A note that is no request ("mooi!") gets a short reply. In doubt, ask in the chat.
 - Review decisions (when the inbox has `reviews`): "changes requested" is work like a note — change the card, then ask for review again; "approved" means ready to plan (`content-planning`).
-- Something new during a run: finish the step, then pick it up and say so in one sentence.
+- New during a run: finish the step, then pick it up and say so.
 
 "Pak mijn notities op" / "pak mijn opdrachten op": work through the whole inbox, oldest first.
 
@@ -80,7 +79,7 @@ The board reads left to right like the run: one frame per step, its cards in a g
 
 **run_id.** One run = one `run_id` for every frame and card: `<topic>-<yyyymmdd>`, lowercase with hyphens (`reel-ochtendroutine-20261030`). Continuing earlier work: find it with `canvas_list_items` (`run_id`) and reuse it. A skill used on its own is its own small run.
 
-**First card within the first minute.** Before you start the actual work, create the board's first frame ("1 · Brief") with a brief or plan card (what you will make, for whom, the steps) in one `canvas_create_items` call. Do this first, in a short or "test" run too. From then on each step goes on the board as soon as it is done. Never save all cards for the end; an empty board defeats the point of watching it.
+**First card within the first minute.** Before you start the actual work, create the board's first frame ("1 · Brief") with a brief or plan card (what you will make, for whom, the steps) in one `canvas_create_items` call. Do it in a short or "test" run too. From then on each step goes on the board as soon as it is done. Never save all cards for the end: people watch the board.
 
 **Frames.** The board overview gives `next_free` and every frame with a `free_spot`. Each step gets a frame (kind `frame`) titled with the frame name from the skill's "Put it on GIMC" section, numbered in a run ("1 · Brief", "2 · Hooks"), with the run's `run_id` and the step's `skill`. Reuse a frame with that title in the run (`frame_id`); otherwise the first frame at `next_free` and every next one 260 px to the right, 900×760 by default.
 
@@ -100,7 +99,7 @@ The board reads left to right like the run: one frame per step, its cards in a g
 
 - Changing a card: `canvas_get_item`, then `canvas_update_item` with `expected_updated_at` = its `updated_at`. `data` replaces the whole object.
 - 409 "De kaart is intussen gewijzigd": apply your change to `current` from the error and send again. Both versions useful? Make a `variant`.
-- Moving or resizing: `canvas_move_items`. An arrow label: `canvas_update_link` returns a new link id.
+- Moving, resizing or to another board: `canvas_move_items`. An arrow label: `canvas_update_link` returns a new link id.
 
 ## 7. Media
 
@@ -127,4 +126,4 @@ Approval is a person's decision on the card, with a comment. You can ask for it,
 ## 9. When you are done
 
 1. **Update the folder note** once, if a next session needs something new: where things are, decisions, open work, what the user wants. Keep what people wrote, add your lines, and call `canvas_update_folder_note` with the whole text and the `expected_version` you read. Short; no transcripts, no personal data. On a conflict, read again, merge, retry once — never overwrite ([references/folders.md](references/folders.md)).
-2. **Close with one or two sentences**: what is on which `folder › board › frame`, and anything skipped. Don't paste the card contents again.
+2. **Close with one to three sentences, never the content again**: what is ready on which `folder › board › frame`, the link (`app_url` from the answer) and what the user can do now; no list of the cards. Paste card text in the chat only when the user asks for it there, or when the canvas failed (then say so).

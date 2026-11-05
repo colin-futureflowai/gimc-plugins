@@ -199,7 +199,7 @@ user exactly which card and what.
 
 ## 6. Close
 
-In at most four sentences: where it is (`folder › Brandbook`), how many proposals wait for confirmation (the most
+In at most four sentences, without repeating the brand in the chat: where it is (`folder › Brandbook`, with the `app_url`), how many proposals wait for confirmation (the most
 important first), what is missing (a logo, photos, a font file) and that every content skill now uses this brand
 automatically. Later changes: a new brand version with `canvas_set_brand`, then new cards as `variant` of the old
 ones; old cards stay as they were.

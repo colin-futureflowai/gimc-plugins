@@ -100,4 +100,5 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
 - If this work came from a card on the board, draw a line with relation `structure_clone` from that source card to the new card(s).
 - The result has media (video): upload it as described in `gimc-canvas` (media) and attach it to the card.
 - Render the video with Remotion by default (free). Use paid video services (for example Seedance or Runway) only when the user explicitly asks for it.
-- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.
+- Then close in the chat with 1–3 sentences: what is ready, on which board or card, the link (`app_url` from the answer) and what the user can do now. Don't repeat in the chat what is on the canvas (no card texts, no list of titles), unless the user asks for the text there.
+- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway, give the result in the chat and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.

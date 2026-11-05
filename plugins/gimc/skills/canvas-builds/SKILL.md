@@ -70,6 +70,6 @@ message, fix and call again (a slide that did not render, a slide over 1 MB, mor
 
 ## Afterwards
 
-Say in two or three short lines what is on the board and how to use it ("Open de kaart: HTML kopiëren of
-downloaden", "Download ZIP in het paneel"). If the canvas fails, give the content in the chat and say once why the
+Say in two or three short lines what is on the board, the link (`app_url`) and how to use it ("Open de kaart: HTML kopiëren of
+downloaden", "Download ZIP in het paneel"); don't repeat the content in the chat. If the canvas fails, give the content in the chat and say once why the
 canvas was skipped.

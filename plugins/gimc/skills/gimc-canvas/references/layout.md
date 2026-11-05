@@ -8,7 +8,7 @@ The board is read left to right, step by step. All steps of a run stay on one bo
 |---|---|---|
 | Text card (`note`, `hook`, `script`, `analysis`, `idea`, `doc`) | 280×180 | default; don't pass w/h |
 | Media card (`video`, `image`, `carousel`, `link`) | 240×480 | 9:16 phone frame; the frame follows the real aspect of the file |
-| Landscape video or image (16:9) | 480×300 | pass w/h when creating the card, or `canvas_move_item` with same x/y and new w/h |
+| Landscape video or image (16:9) | 480×300 | pass w/h when creating the card, or `canvas_move_items` with one move: same x/y, new w/h |
 | Square image (1:1) | 320×360 | idem |
 | Frame | 900×760 | default; grow it for many cards (see below) |
 
@@ -52,7 +52,7 @@ Leave x/y off cards that have a `frame_id`: GIMC places them on a free spot insi
 
 The error names what is in the way. Then:
 
-- The frame is yours (you created it this run): grow it with `canvas_move_item` (same x/y, larger w/h; the cards stay put) and place again. Check first in the overview that the larger frame does not run into the next frame; if it would, grow it downward (h) instead of sideways.
+- The frame is yours (you created it this run): grow it with `canvas_move_items` (one move: same x/y, larger w/h; the cards stay put) and place again. Check first in the overview that the larger frame does not run into the next frame; if it would, grow it downward (h) instead of sideways.
 - The frame was placed or moved by a person: don't touch it. Create a continuation frame directly below it ("2 · Hooks (vervolg)", same width, 60 px gap) if the board overview shows free space there, otherwise at `next_free`, with an `arrow` from the full frame, and place the cards there.
 
 ## Arrows and lineage
@@ -61,14 +61,20 @@ The error names what is in the way. Then:
 - **Lineage** = where a card came from, card → card, relation from the skill section. Each new card gets lineage to the card it was built from (chosen hook → script; every shot → final video). A user choice is a `note` "Keuze: Hook B" in the same frame; the chosen card is the parent of the next step.
 - The same link twice returns the existing one, so retrying a link is safe. Lineage can't form a cycle.
 
+## HTML cards
+
+One self-contained page of at most 1 MB, styles in `<style>`. Allowed: scripts inline or from cdnjs, jsdelivr or unpkg, Google Fonts and https images. GIMC removes forms, frames, outside links and scripts from other hosts and names them in `removed`. A card can't reach GIMC data. A new version is a new card with `parent_id` and relation `variant`.
+
 ## Plans
 
 A whole board in one go (a brandbook, frames with HTML cards) is one `canvas_apply_plan` on `board_id` or `board: { folder_id, name }`: steps with `ref`s, played live with the agent cursor.
 
-- Over ±40 KB, send it in parts: each next part with `append: true` and the `run_id` of the previous answer.
-- With `render: true` the answer brings a check per HTML card and a contact sheet: fix findings before saying done.
-- A long plan answers `running`: follow it with `canvas_plan_status` and that `run_id`.
-- Check cards only through GIMC's render (that answer or `canvas_render_html_card`), never with a local browser or screenshots.
+- Steps (`op`): `create_frame`, `create_item`, `create_html_card`, `link` (`from`, `to`, `relation`, `label`), `move` (`item`, x, y, w, h) and `update_item` (`item` plus the fields to change). Refer to an earlier step with its `ref` in `frame_id`, `parent_id`, `from`, `to` or `item`; an existing card id works too. Archiving is not a plan step.
+- Up to 80 steps and 6 MB; one running plan per board and user. A failed step stops the plan; what is done stays.
+- Over ±40 KB, send it in parts: each next part with `append: true` and the `run_id` of the previous answer (done, within 15 minutes), without `board_id` or `board`; refs stay valid and `render: true` covers all parts.
+- With `render: true` the answer (up to 90 s) brings a check per HTML card and a contact sheet: fix findings before saying done.
+- A long plan answers `running` after 25 s: follow it with `canvas_plan_status` and that `run_id`.
+- Check cards only through GIMC's render (that answer or `canvas_render_html_card`), never with a local browser or screenshots. The render runs the card's scripts (`scripts: true`, as in the side panel); without scripts it shows the card as on the board.
 
 ## The reference run: "TEST Eindvideo · zo is hij gemaakt"
 

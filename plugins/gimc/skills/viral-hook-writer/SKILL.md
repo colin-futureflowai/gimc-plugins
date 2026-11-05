@@ -54,4 +54,6 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
 
 - Create the card(s) with kind `hook` in frame "Hooks", with `skill: "viral-hook-writer"` and the `run_id` of this run.
 - If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
-- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.
+- A reference video a hook is modelled on is a `link` card with its thumbnail as poster, with a line to the hooks; see `gimc-canvas` (media, "Social video from another account").
+- Then close in the chat with 1–3 sentences: what is ready, on which board or card, the link (`app_url` from the answer) and what the user can do now. Don't repeat in the chat what is on the canvas (no card texts, no list of titles), unless the user asks for the text there.
+- If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway, give the result in the chat and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.
