@@ -5,7 +5,7 @@ description: The GIMC hub. How to put work on the GIMC canvas (boards, a frame p
 
 # GIMC canvas
 
-This is plugin version 0.14.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.15.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas (`/marketing/canvas`) is the user's content board. People watch it while you work: make it read like the story of the run.
 
@@ -19,7 +19,7 @@ Hard rules — they apply to every section below:
 
 References — open the one you need:
 
-- [references/layout.md](references/layout.md) — sizes, placing frames, lines, plans, the full reel run, full frames.
+- [references/layout.md](references/layout.md) — tidy-board principles, sizes, frames, lines, plans.
 - [references/media.md](references/media.md) — uploads, posters, carousels, Cowork network and Remotion workarounds.
 - [references/folders.md](references/folders.md) — matching folder names, creating a folder, writing the folder note.
 - [references/notes-and-tasks.md](references/notes-and-tasks.md) — the inbox, notes, tasks, replies, changing a person's card.
@@ -81,7 +81,7 @@ The board reads left to right like the run: one frame per step, its cards in a g
 
 **First card within the first minute.** Before you start the actual work, create the board's first frame ("1 · Brief") with a brief or plan card (what you will make, for whom, the steps) in one `canvas_create_items` call. Do it in a short or "test" run too. From then on each step goes on the board as soon as it is done. Never save all cards for the end: people watch the board.
 
-**Frames.** The board overview gives `next_free` and every frame with a `free_spot`. Each step gets a frame (kind `frame`) titled with the frame name from the skill's "Put it on GIMC" section, numbered in a run ("1 · Brief", "2 · Hooks"), with the run's `run_id` and the step's `skill`. Reuse a frame with that title in the run (`frame_id`); otherwise the first frame at `next_free` and every next one 260 px to the right, 900×760 by default.
+**Frames.** The board overview gives `next_free` and every frame with a `free_spot`. Each step gets a frame (kind `frame`) titled with the frame name from the skill's "Put it on GIMC" section, numbered in a run ("1 · Brief", "2 · Hooks"), with the run's `run_id` and the step's `skill`. Reuse a frame with that title in the run (`frame_id`); otherwise the first frame at `next_free` and every next one 260 px to the right; GIMC fits frames to their cards; tidy-board principles: [layout.md](references/layout.md).
 
 **Cards.** Create them with `frame_id` and no x/y: GIMC finds a free spot and nothing overlaps.
 

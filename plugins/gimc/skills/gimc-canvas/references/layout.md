@@ -10,7 +10,7 @@ The board is read left to right, step by step. All steps of a run stay on one bo
 | Media card (`video`, `image`, `carousel`, `link`) | 240×480 | 9:16 phone frame; the frame follows the real aspect of the file |
 | Landscape video or image (16:9) | 480×300 | pass w/h when creating the card, or `canvas_move_items` with one move: same x/y, new w/h |
 | Square image (1:1) | 320×360 | idem |
-| Frame | 900×760 | default; grow it for many cards (see below) |
+| Frame | 900×760 | start size; GIMC fits your frames to their cards after each call (see "Design principles") |
 
 Inside a frame: 40 px padding left, 56 px from the top (room for the title).
 
@@ -48,11 +48,26 @@ Frames go first in `items`; cards refer to a new frame by its `ref`, to an exist
 
 Leave x/y off cards that have a `frame_id`: GIMC places them on a free spot inside the frame. Pass `frame_id` or x/y, never both.
 
+## Design principles (a tidy board)
+
+Check them with `tidy` in `canvas_board_overview`: `ok: true` means none of the problems below. Fix what it lists before you say a board is done.
+
+1. **Reading direction.** A series or the steps of a run go left → right, frames on one row with the same `y`; detail goes top → bottom inside a frame. The number goes in the frame title ("#1 · …", "2 · Hooks").
+2. **Grid and sizes.** Default card widths per kind (table above), 40 px between cards, 260 px between frames. Never overlap (`overlaps`), never a card sticking out of its frame (`sticking_out`), no loose cards outside frames (`outside_frames`).
+3. **Frames fit their content.** Never make a frame larger than its cards need. GIMC fits frames you placed after each call; a frame a person made too large you fit only when the user asks to tidy the board: `canvas_move_items` with `fit_frames` (frame ids). `oversized_frames` lists them.
+4. **Arrows only when they mean something:** real order or origin, between neighbours, with a label of ≤ 4 words. No long arrows across the board (`long_arrows`); archive them with `canvas_archive_link`.
+5. **One place per thing.** Change an existing card instead of placing a new version next to it. Old versions: archive them, or move them to a separate frame "Oude versies" at the end of the row or below it — never between current work. No duplicate titles (`duplicate_titles`).
+6. **Status is visible and single.** Approval goes through the approve button (`canvas_request_review`), not through a status card that says the same. Colours only with their fixed meaning (the app's colours), never random.
+7. **Keep it small.** No duplicate cards, no long explanation on the board that is already in a card; per frame only the cards it needs.
+8. **Clean up after a run.** Archive empty or temporary cards; titles match the content and the current numbering.
+
+**"Maak dit bord netjes".** `canvas_board_overview` → read `tidy` → one `canvas_move_items` call that moves cards apart and into their frames, aligns frame rows and fits the frames (`fit_frames`); archive duplicates and long arrows; overview again until `tidy.ok` is true. Moving a person's cards is allowed here, because the user asked.
+
 ## "Het kader is vol"
 
 The error names what is in the way. Then:
 
-- The frame is yours (you created it this run): grow it with `canvas_move_items` (one move: same x/y, larger w/h; the cards stay put) and place again. Check first in the overview that the larger frame does not run into the next frame; if it would, grow it downward (h) instead of sideways.
+- The frame is yours (you created it this run): grow it with `canvas_move_items` (one move: same x/y, larger w/h; the cards stay put) and place again; GIMC fits it to its cards after that placement. Check first in the overview that the larger frame does not run into the next frame; if it would, grow it downward (h) instead of sideways.
 - The frame was placed or moved by a person: don't touch it. Create a continuation frame directly below it ("2 · Hooks (vervolg)", same width, 60 px gap) if the board overview shows free space there, otherwise at `next_free`, with an `arrow` from the full frame, and place the cards there.
 
 ## Arrows and lineage
@@ -104,5 +119,5 @@ One skill, no larger run (e.g. "write five hooks about X"): one frame with the f
 - Cards outside a frame, unless the user asks.
 - Parallel create calls (they can land on the same spot): one `canvas_create_items` per step.
 - One card holding a list of alternatives: one card per alternative.
-- Moving or resizing what a person placed.
+- Moving or resizing what a person placed, unless the user asks to tidy the board.
 - Re-creating a step that is already on the board: look it up by `run_id` and add a variant if it changed.

@@ -50,6 +50,19 @@ for approval, never give it.
   `canvas_request_review` with their `item_ids` and a one-line `comment` (what, where, when), then schedule them
   anyway. They wait in the calendar; tell the user they go to the platform once someone approves the card.
 - Under `human` you schedule and a person takes it from there; no need to ask for approval unless the user wants it.
+- **"Klaar om in te plannen" means: ask for approval.** When a card is ready (the user says "zet klaar", or you
+  finished it), call `canvas_request_review` for every ready card that is not approved, in one call, instead of only
+  saying or writing "klaar". The approve button on the card is the status: no separate "Klaar"-card or status note.
+  Never put a card at the platform without approval under `approved` or `approval_required`.
+
+**Renumbering.** When you renumber or reorder posts (#3 becomes #2), update every reference in one pass: frame titles,
+card titles, evaluation and analysis cards that name the number, arrow labels and the folder note. Change the texts
+first and move cards or frames last: a move gives a card a new version, so an update with the version you read before
+it fails with 409. Then `canvas_list_items` on the board and check that no old number is left.
+
+**Comment keyword → DM.** A post with a "comment WORD" CTA gets its reply campaign in GIMC before it is published:
+`social_save_reply_campaign` with `item_id` (the card) and `platform`. GIMC hangs it on the post once it is live and
+tells a person, who sets it live. Never an outside tool for this.
 
 ## 3. Pick the times
 
