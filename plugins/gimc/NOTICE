@@ -1,4 +1,4 @@
 The content skills in this plugin are based on claude-content-skills by Ootto (MIT License),
 maintained as content-skills 1.5.1 by FutureFlowAI. See LICENSE.
 Each content skill is the unchanged original with a "Put it on GIMC" section appended.
-The skills gimc-canvas, brandbook, canvas-builds, content-planning are made by GIMC.
+The skills gimc-canvas, brandbook, canvas-builds, content-planning, social-insights are made by GIMC.

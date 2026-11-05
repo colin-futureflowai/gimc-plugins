@@ -47,6 +47,10 @@ hypothesis.
 
 **Next:** [content-calendar](../content-calendar/SKILL.md)
 
+## Take the input from GIMC
+
+- Numbers of the company's own social accounts and posts: when GIMC is connected (a tool whose name ends in `social_get_insights`), read them there instead of asking the user to paste them, as the `social-insights` skill describes, and say which accounts and period you used. Pasted numbers still work when GIMC has no connected account or the user brings other numbers.
+
 ## Put it on GIMC
 
 When the work above is done, put the result on the GIMC canvas. Follow the `gimc-canvas` skill for how.

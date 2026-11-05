@@ -46,6 +46,10 @@ Recommend where each proof unit helps: a post, profile, campaign brief, creator 
 
 Use social-listening to identify recurring customer language; use this skill to isolate approved evidence. Feed the output into positioning-audit, campaign-brief, linkedin-thought-leadership, and influencer-partnerships. Use audience-personas only for grouped patterns, never to disclose individual customer data.
 
+## Take the input from GIMC
+
+- Comments on the company's own posts: when GIMC is connected (a tool whose name ends in `social_list_comments`), read them there instead of asking the user to paste them: first the posts with comments, then the comments of the post the user means. Use commenters' names only to follow the conversation; never put them on a card.
+
 ## Put it on GIMC
 
 When the work above is done, put the result on the GIMC canvas. Follow the `gimc-canvas` skill for how.

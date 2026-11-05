@@ -2,7 +2,7 @@
 
 GIMC is a plugin that brings 54 content skills (hooks, reels, carousels, captions, research and more) and
 GIMC's own skills together with a connection to your GIMC workspace. When you ask for it, a skill puts its
-result as a card on your GIMC canvas, so the whole content process stays in one place. Version 0.8.0.
+result as a card on your GIMC canvas, so the whole content process stays in one place. Version 0.9.0.
 
 ## Skills at a glance
 
@@ -12,7 +12,7 @@ result as a card on your GIMC canvas, so the whole content process stays in one 
 | Strategy and planning | Pillars, calendars, series, campaigns, briefs and budgets on paper. | `best-time-scheduler`, `campaign-brief`, `community-engagement-plan`, `content-calendar`, `content-pillar-builder`, `cross-platform-distribution`, `going-viral`, `influencer-partnerships`, `paid-social-brief`, `series-planner`, `utm-campaign-plan`, `virality` |
 | Create | Hooks, scripts, reels, carousels, captions, covers and ready-to-use builds. | `ab-hook-tester`, `b-roll-shot-list`, `canvas-builds`, `caption-and-hashtags`, `carousel-builder`, `content-factory`, `content-repurposer`, `cover-thumbnail-brief`, `cross-platform-reformatter`, `cta-writer`, `linkedin-thought-leadership`, `on-screen-text-writer`, `reel-builder`, `reel-scripter`, `story-sequencer`, `ugc-creator-brief`, `viral-carousel`, `viral-hook-writer`, `x-thread-strategy` |
 | Plan and publish | Approval, the content calendar and posting at the platform. | `content-planning` |
-| Measure | Numbers, audits, readouts and retrospectives. | `analytics-readout`, `bio-profile-optimizer`, `content-audit`, `launch-retrospective`, `profile-conversion-audit`, `reel-analyzer`, `social-analytics-report` |
+| Measure | Numbers, audits, readouts and retrospectives. | `analytics-readout`, `bio-profile-optimizer`, `content-audit`, `launch-retrospective`, `profile-conversion-audit`, `reel-analyzer`, `social-analytics-report`, `social-insights` |
 | Engage and outreach | Comments, DMs, collaborations and creators. | `collab-outreach`, `comment-mining`, `comment-responder`, `creator-outreach`, `dm-script-writer` |
 | Brand | The brand and design system of a folder. | `brandbook` |
 | Hub | Canvas rules and which skill takes the next step | `gimc-canvas` |

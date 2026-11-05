@@ -46,6 +46,10 @@ Return a decision table: observation, confidence, likely explanation, action, ow
 
 Use campaign-brief and utm-campaign-plan before publishing so the report has a decision and attribution plan. Use this skill during a campaign for operating reviews. Use launch-retrospective after the reporting window to combine results, qualitative evidence, and process lessons.
 
+## Take the input from GIMC
+
+- Numbers of the company's own social accounts and posts: when GIMC is connected (a tool whose name ends in `social_get_insights`), read them there instead of asking the user to paste them, as the `social-insights` skill describes, and say which accounts and period you used. Pasted numbers still work when GIMC has no connected account or the user brings other numbers.
+
 ## Put it on GIMC
 
 When the work above is done, put the result on the GIMC canvas. Follow the `gimc-canvas` skill for how.

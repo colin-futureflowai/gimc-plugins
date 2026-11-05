@@ -5,7 +5,7 @@ description: The GIMC hub. How to put work on the GIMC canvas (boards, a frame p
 
 # GIMC canvas
 
-This is plugin version 0.8.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.9.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas is the user's content board at `/marketing/canvas`. People watch it while you work: make the board read like the story of the run.
 
@@ -27,7 +27,7 @@ References — open the one you need:
 
 ## 1. Check the connection
 
-Look for a tool whose name ends in `canvas_list_boards` (the prefix differs per app). If it is there, go on. If not, GIMC is not connected: do the content work anyway, then say once per conversation how to connect:
+Look for a tool whose name ends in `canvas_list_boards`; the prefix differs per app. None: GIMC is not connected: do the content work anyway, then say once per conversation how to connect:
 
 - **Cowork or claude.ai**: "To see this on your GIMC canvas, add GIMC once as a connector: claude.ai → Settings → Connectors → Add custom connector, URL `https://gimc-app.vercel.app/api/mcp`, then sign in ("Log nu in"). Then ask me again to put it on GIMC."
 - **Claude Code**: "Run `/mcp`, pick `gimc` and choose Authenticate; then ask me again."
@@ -110,14 +110,15 @@ Make the card first, then `canvas_media_upload_url` (`item_id`, `file_name`, `mi
 
 ## 8. From card to post: the chain and which skill
 
-A card is the anchor of everything that happens to a piece of content:
+A card is the anchor of a piece of content:
 
 | Step | Skill |
 |---|---|
 | Make it (research, hooks, script, reel, carousel, caption, …) | the content skill itself |
 | Brand and design system of a folder | `brandbook` |
 | A ready-to-use email, carousel, post or story | `canvas-builds` |
-| Ask for approval, plan it, put it at the platform, follow its status and numbers | `content-planning` |
+| Ask for approval, plan it, put it at the platform, follow its status | `content-planning` |
+| Numbers, comments, boosts and reply campaigns | `social-insights` |
 
 Approval is a person's decision on the card, with a comment. You can ask for it, never give it. Whether a planned post goes to the platform is GIMC's call: the answer says `at_platform`; otherwise it waits in the calendar for a person.
 
