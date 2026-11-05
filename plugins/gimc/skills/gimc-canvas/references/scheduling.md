@@ -4,10 +4,11 @@ A plan with dates belongs in the GIMC content calendar, not only in a document. 
 card per month or week at `/marketing/kalender` and as a layer in the user's agenda (`/agenda`). The full steps are in
 the `content-planning` skill; this is the short version.
 
-**Posting goes through the connected accounts.** With an account for every chosen platform (Socials → Accounts) the
-post is scheduled at the platform (`at_platform: true`, empty `publish_note`) and goes out at the chosen time.
-Otherwise it stays in the calendar and `publish_note` says why. Say that once; promise a post goes out only when
-`at_platform` is true.
+**Posting goes through the connected accounts and the company's rule.** With an account for every chosen platform
+(Socials → Accounts) and the company's `publish_policy` letting it through (by default: you only for a card a person
+approved), the post is scheduled at the platform (`at_platform: true`, empty `publish_note`) and goes out at the chosen
+time. Otherwise it stays in the calendar and `publish_note` says why (for example "Wacht op goedkeuring"). Say that
+once; promise a post goes out only when `at_platform` is true. Approval and the rest: the `content-planning` skill.
 
 ## Tools
 
