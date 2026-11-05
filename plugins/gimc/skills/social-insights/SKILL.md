@@ -60,15 +60,11 @@ Rules:
    day, so growth over 7 days is a small number; don't overstate it.
 5. Posts with `is_external: true` were posted outside GIMC; they count just the same.
 
-## 3. Comments, boosts and reply campaigns (reading)
+## 3. Boosts, comments and reply campaigns
 
-- `social_list_comments` without `post_id`: the posts that have comments (25 per page, `next_cursor`). With
-  `account_id` and `post_id`: the comments and replies on that post. Use names only to follow the conversation; never
-  put commenters' names on a card. Replying is a person's work in GIMC (Socials → Reacties).
 - `social_list_boosts`: the boosts with status, budget and results, and the monthly cap with what is already committed
   (`remaining_this_month`). Starting or changing a boost is done in GIMC (Socials → Advertenties).
-- `social_list_reply_campaigns`: the reply campaigns with status and counts; with `campaign_id` the log of one campaign
-  (`outcomes` per result, no names).
+- Comments, reply drafts and reply campaigns: the `social-engagement` skill.
 
 ## 4. Put it on GIMC
 

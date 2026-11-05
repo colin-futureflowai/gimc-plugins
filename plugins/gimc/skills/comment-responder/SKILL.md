@@ -64,4 +64,5 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
 
 - Create the card(s) with kind `note` in frame "Reacties", with `skill: "comment-responder"` and the `run_id` of this run.
 - If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
+- For real comments from GIMC: put each answer in GIMC as a draft with `social_draft_comment_reply` (one per comment), as the `social-engagement` skill describes, so a person can read and post it. Never post replies yourself.
 - If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.
