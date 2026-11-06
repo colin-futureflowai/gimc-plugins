@@ -5,7 +5,7 @@ description: The GIMC hub. How to put work on the GIMC canvas (boards, a frame p
 
 # GIMC canvas
 
-This is plugin version 0.17.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 0.18.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas (`/marketing/canvas`) is the user's content board. People watch it while you work: make it read like the story of the run.
 

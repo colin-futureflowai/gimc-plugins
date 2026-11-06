@@ -72,6 +72,8 @@ tells a person, who sets it live. Never an outside tool for this.
 ## 3. Pick the times
 
 - Amsterdam time, written without offset: `2026-11-12T10:00`. Only future times.
+- A whole week made and scheduled from one sentence ("maak de content voor volgende week") is the `week-planner`
+  skill; it uses this skill for scheduling, music, post settings and approval.
 - "Volgende week" = Monday to Sunday of the coming week. Spread posts over different days unless the user says
   otherwise; default posting time 10:00, or the times `best-time-scheduler` gave.
 - Check what is already planned first: `canvas_list_schedule` with `from`/`to` for that week, and avoid two posts on
@@ -141,8 +143,12 @@ something does not fit; `options` replaces the whole object, so send all setting
 When the inbox (`canvas_inbox`, or `include_inbox` in the context call) lists a card under `reviews` as approved, or the
 user says a card is approved, and its planning is not at the platform yet (`publication.schedule.at_platform` is
 false on `canvas_get_item`): call `canvas_reschedule_post` with only its `schedule_id`. Without changes GIMC tries the
-platform again; check `at_platform` in the answer and tell the user. "Changes requested" is work: change the card as
-the comment asks, then `canvas_request_review` again.
+platform again; check `at_platform` in the answer and tell the user. "Changes requested" is work and an open task in
+the inbox (instruction "Wijziging gevraagd: …"): `canvas_claim_task` (taken by someone else: skip it), change the card
+as asked, `canvas_complete_task`, then `canvas_request_review` again. Approving cancels open change tasks. Asking a
+change (or withdrawing approval) takes a post that was already at the platform back to waiting; the next approval
+sends the new version. If the planning still shows `at_platform: true` with `publish_note` "Staat al bij het
+platform…", GIMC could not take it back: tell the user to cancel or move it first, or the old post goes live.
 
 ## 6. Move, cancel, follow
 
