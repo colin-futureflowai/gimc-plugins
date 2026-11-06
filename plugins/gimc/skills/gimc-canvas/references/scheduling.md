@@ -14,9 +14,9 @@ once; promise a post goes out only when `at_platform` is true. Approval and the 
 
 | Tool | What it does |
 |---|---|
-| `canvas_schedule_posts` | `posts: [{ item_id, scheduled_at, platforms?, account? }]`, up to 50, all or nothing. |
+| `canvas_schedule_posts` | `posts: [{ item_id, scheduled_at, platforms?, account?, options? }]`, up to 50, all or nothing. `options` = post settings per platform (trial reel, cover, music, first comment); see `content-planning`. |
 | `canvas_list_schedule` | Read the calendar: `from` + `to` (≤ 62 days), or `board_id`, or `item_ids`. |
-| `canvas_reschedule_post` | Move or edit one post: `schedule_id` plus `scheduled_at`, `platforms`, `caption` or `account`. |
+| `canvas_reschedule_post` | Move or edit one post: `schedule_id` plus `scheduled_at`, `platforms`, `caption`, `account` or `options` (only `options` + `expected_updated_at` changes only the settings). |
 | `canvas_cancel_scheduled_post` | Cancel one post (status `cancelled`; nothing is deleted). |
 
 ## Rules

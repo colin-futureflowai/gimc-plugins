@@ -96,6 +96,46 @@ One `canvas_schedule_posts` call for all posts of the run (max 50, all or nothin
 - An error names the post (`posts.1: …`) and the cause. A card that is already scheduled: use
   `canvas_reschedule_post` with the `schedule_id` from the error instead.
 
+## 4b. Instagram settings (and Facebook)
+
+Choose the post settings with the user before scheduling, and pass them as `options` per post in
+`canvas_schedule_posts` (or later on the planning: `canvas_reschedule_post` with only `schedule_id`, `options` and the
+`updated_at` from `canvas_list_schedule` as `expected_updated_at`). GIMC checks every field and says per field why
+something does not fit; `options` replaces the whole object, so send all settings you want to keep.
+
+```json
+{ "instagram": { "trial": { "strategy": "SS_PERFORMANCE" }, "cover": { "kind": "frame", "offsetMs": 1500 },
+                 "firstComment": "…", "collaborators": ["partner.account"] },
+  "facebook":  { "contentType": "reel", "title": "…" } }
+```
+
+- **Trial reel** (`trial`, Reels only): for experimental content (new format, new hook, a test), so non-followers see it
+  first. `MANUAL` = the user decides in the Instagram app; `SS_PERFORMANCE` = Instagram passes it on to followers when it
+  does well. Not for the main post of a launch.
+- **Cover** (`cover`, Reels only): `{ "kind": "frame", "offsetMs": … }` at the strongest frame. An own image is only the
+  card's poster (`{ "kind": "image", "mediaPath": <poster_path> }`).
+- **First comment** (`firstComment`, not for Stories): hashtags or the link explanation; keep the caption clean. It is
+  own text outside the card's approval, so a person puts such a post at the platform.
+- **Collaborators** (`collaborators`, up to 3 usernames, not for Stories): only accounts the user named.
+- Other fields: `contentType` (`reel`, `feed`, `story`, `carousel`; default follows the media), `shareToFeed`,
+  `userTags`, `locationId`, `commentsEnabled`, `isAiGenerated`, `isPaidPartnership`, `audioName`, `muteAudio`,
+  `altText`. Facebook: `contentType` (`feed`, `reel`, `story`), `title` (Reel), `firstComment`, `draft`,
+  `geoCountries` (ISO codes, up to 25), `isAiGenerated`, `altText`.
+- No settings needed: leave `options` out. Never invent settings the user did not want.
+
+## 4c. Recommend music (Reels)
+
+1. Find tracks with `social_search_audio`: trending without `q`, or by mood, genre or artist with `q`. An error that the
+   account must be connected via Facebook: tell the user in one sentence (Socials → Accounts) and skip music.
+2. Recommend 2–3 tracks with one reason each (fits the mood, trending now, length fits the reel). Never store or paste
+   `preview_url`: it expires; the user can listen in GIMC.
+3. Put the choice on the post as `options.instagram.audio`: `{ "audioId": "…", "title": "…", "artist": "…",
+   "audioVolume": 80, "videoVolume": 30 }` (lower `videoVolume` when the reel has its own voice-over, raise it otherwise).
+   Not scheduled yet: put it in `options` of `canvas_schedule_posts`; scheduled: `canvas_reschedule_post` with
+   `options` (all settings, they replace the old ones).
+4. A person confirms the scheduling. Music works only on a Reel, and a track can disappear from the catalogue before
+   the post goes out: GIMC then holds the post and says why.
+
 ## 5. Approved later: put it at the platform
 
 When the inbox (`canvas_inbox`, or `include_inbox` in the context call) lists a card under `reviews` as approved, or the
