@@ -29,6 +29,11 @@ published" before it is.
   posts, reels, carousels, images — not frames, notes or analyses), in board order (top to bottom, left to right).
 - The posts do not exist yet: make them first as cards (follow `gimc-canvas`; a social post card has
   `data.platform` and `data.caption`), then schedule those cards.
+
+**The caption lives on the card.** The text under the post is `data.caption` of the card, separate from the card text
+(`body`: script, notes, idea). Before you ask for approval, write it: `canvas_get_item`, then `canvas_update_item` with
+the whole `data` plus `caption` (`data` replaces the object) and `expected_updated_at`. Never use the script or card
+text as caption. The approval covers the caption; changing it later makes the approval stale.
 - Never schedule a card from another workspace or a card you cannot find; ask instead.
 
 ## 2. Approval: who may put a post at the platform
@@ -86,8 +91,8 @@ One `canvas_schedule_posts` call for all posts of the run (max 50, all or nothin
 
 - `platforms` may be left out when the card has a platform; otherwise give it (`instagram`, `linkedin`, `facebook`,
   `tiktok`, `x`, `youtube`).
-- `caption` defaults to the card's caption or text; give one only when the user wrote a different caption. An
-  approval covers the card's own text: a different caption waits for a person. Change the card instead and ask again.
+- No `caption`: GIMC takes `data.caption` of each card, exactly what was approved. A card without it goes without
+  text, so write it on the card first. Another caption: change the card and ask for approval again.
 - An error names the post (`posts.1: …`) and the cause. A card that is already scheduled: use
   `canvas_reschedule_post` with the `schedule_id` from the error instead.
 
@@ -103,6 +108,8 @@ the comment asks, then `canvas_request_review` again.
 
 - Move: `canvas_reschedule_post` with `schedule_id` and the new `scheduled_at` (the old time stays in the history).
   Text or platforms of a post that is already at the platform only a person changes.
+- Changed `data.caption` of a scheduled card: give the planning the same text (`canvas_reschedule_post` with
+  `caption`) and ask for approval again.
 - Cancel: `canvas_cancel_scheduled_post`. Nothing is deleted; the card can be scheduled again later.
 - Find a `schedule_id` with `canvas_list_schedule` (by `board_id`, `item_ids` or a date window).
 - Where a card stands after scheduling: `publication` on `canvas_get_item` (status, at the platform, links per

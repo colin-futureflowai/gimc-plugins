@@ -14,7 +14,7 @@ once; promise a post goes out only when `at_platform` is true. Approval and the 
 
 | Tool | What it does |
 |---|---|
-| `canvas_schedule_posts` | `posts: [{ item_id, scheduled_at, platforms?, caption?, account? }]`, up to 50, all or nothing. |
+| `canvas_schedule_posts` | `posts: [{ item_id, scheduled_at, platforms?, account? }]`, up to 50, all or nothing. |
 | `canvas_list_schedule` | Read the calendar: `from` + `to` (≤ 62 days), or `board_id`, or `item_ids`. |
 | `canvas_reschedule_post` | Move or edit one post: `schedule_id` plus `scheduled_at`, `platforms`, `caption` or `account`. |
 | `canvas_cancel_scheduled_post` | Cancel one post (status `cancelled`; nothing is deleted). |
@@ -22,7 +22,8 @@ once; promise a post goes out only when `at_platform` is true. Approval and the 
 ## Rules
 
 1. **Every post is a card.** Schedule the cards you put on the board in this run (or cards the user points to). Any card
-   kind works; a social post card (`data.platform`, `data.caption`) fills platform and caption by itself.
+   kind works. The caption under the post is always `data.caption` of the card (never its script or `body`): write it
+   on the card before you ask for approval; GIMC posts exactly that text.
 2. **Times are Amsterdam time.** Give `scheduled_at` without offset (`2026-11-12T10:00`): GIMC reads it as
    Europe/Amsterdam. Only future times. "Next week" means Monday to Sunday of the coming week.
 3. **One running schedule per card.** If a card is already scheduled, the error names its `schedule_id`: move that one
