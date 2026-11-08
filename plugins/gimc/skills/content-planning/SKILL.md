@@ -3,7 +3,8 @@ name: content-planning
 description: >
   GIMC Content Planning skill. Puts posts into the GIMC content calendar and follows them to the platform: schedules
   canvas cards on dates and platforms, moves or cancels them, and reads what is planned and what went live. Use when
-  the user says "plan these posts", "schedule this", "zet het in de contentkalender", "inplannen", "verzet de post",
+  the user says "plan these posts", "schedule this", "zet het in de contentkalender", "inplannen", "plan in voor
+  donderdag", "zet klaar om in te plannen", "klaar zetten", "verzet de post",
   "annuleer de planning", "wat staat er gepland", or when content-calendar, best-time-scheduler or series-planner
   produced dated posts.
 user-invokable: true
@@ -37,6 +38,25 @@ published" before it is.
 (`body`: script, notes, idea). Before you ask for approval, write it: `gimc.canvas_get_item`, then `gimc.canvas_update_item` with
 the whole `data` plus `caption` (`data` replaces the object) and `expected_updated_at`. Never use the script or card
 text as caption. The approval covers the caption; changing it later makes the approval stale.
+
+In one execute (recipe `edit-safe`; for the caption, `change` becomes `item => ({ data: { ...item.data, caption: 'CAPTION' } })`):
+
+```js
+async () => {
+  const change = item => ({ body: (item.body ?? '') + '\nNEW_LINE' })
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const item = await gimc.canvas_get_item({ item_id: 'ITEM_ID' })
+    try {
+      const u = await gimc.canvas_update_item({ item_id: item.id, expected_updated_at: item.updated_at, ...change(item) })
+      return { item_id: u.id, updated_at: u.updated_at }
+    } catch (e) {
+      if (e.status !== 409) throw e
+    }
+  }
+  return { conflict: 'ITEM_ID' }
+}
+```
+
 - Never schedule a card from another workspace or a card you cannot find; ask instead.
 
 ## 2. Approval: who may put a post at the platform
@@ -88,12 +108,14 @@ tells a person, who sets it live. Never an outside tool for this.
 
 One `gimc.canvas_schedule_posts` call for all posts of the run (max 50, all or nothing):
 
-```json
-{ "posts": [
-    { "item_id": "<card>", "scheduled_at": "2026-11-10T10:00", "platforms": ["instagram"] },
-    { "item_id": "<card>", "scheduled_at": "2026-11-12T10:00" }
-  ],
-  "skill": "content-planning", "run_id": "<this run>" }
+```js
+async () => {
+  const planned = await gimc.canvas_schedule_posts({ skill: 'content-planning', run_id: 'RUN_ID', posts: [
+    { item_id: 'ITEM_1', scheduled_at: '2026-11-10T10:00', platforms: ['instagram'] },
+    { item_id: 'ITEM_2', scheduled_at: '2026-11-12T10:00' },
+  ] })
+  return { schedule: planned.schedule.map(p => ({ id: p.id, at_platform: p.at_platform, note: p.publish_note })), app_url: planned.app_url }
+}
 ```
 
 - `platforms` may be left out when the card has a platform; otherwise give it (`instagram`, `linkedin`, `facebook`,

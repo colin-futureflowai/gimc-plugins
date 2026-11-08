@@ -4,7 +4,7 @@ description: >
   GIMC Social Ads skill. Reads the company's boosts and monthly ad budget in GIMC, proposes a boost of a published
   post (no money is committed: a person confirms the amount and starts it) and pauses a running boost. Use when the
   user says "boost deze post", "zet er budget op", "welke boosts lopen er", "hoeveel budget is er nog", "pauzeer de
-  boost", "stop de advertentie", "promote this post", or when paid-social-brief proposes boosting a post.
+  boost", "stop de advertentie", "promote this post", "stel een boost voor", "maak een boostvoorstel", or when paid-social-brief proposes boosting a post.
 user-invokable: true
 argument-hint: "[post, budget, goal or boost]"
 license: MIT
@@ -55,6 +55,27 @@ One `gimc.social_propose_boost` call: `account_id`, `schedule_id`, `goal` (`enga
   views of a video → `video_views`.
 - Tell the user once: the proposal waits under Socials → Advertenties (`app_url`), nothing is spent until a person
   creates and starts it.
+
+In one execute (fill in platform, goal, budget, days and note; it stops on a cap of 0, no published post or an open
+proposal for that post):
+
+```js
+async () => {
+  const today = new Date(), from = new Date(today.getTime() - 60 * 86400000)
+  const [b, s, a] = await Promise.all([
+    gimc.social_list_boosts({}),
+    gimc.canvas_list_schedule({ from: from.toISOString().slice(0, 10), to: today.toISOString().slice(0, 10) }), // max 62 days
+    gimc.social_list_accounts({}),
+  ])
+  if (!b.budget.monthly_cap) return { cap: 0, app_url: b.app_url }
+  const post = s.schedule.filter(p => p.status === 'published' && p.platforms.includes('instagram')).at(-1)
+  if (!post) return { no_published_post: true }
+  if (b.proposals.some(p => p.schedule_id === post.id)) return { already_proposed: post.id }
+  const account = a.accounts.find(x => x.platform === 'instagram' && x.status === 'active')
+  const r = await gimc.social_propose_boost({ account_id: account.account_id, schedule_id: post.id, goal: 'engagement', budget_amount: 5, budget_type: 'daily', days: 3, note: 'NOTE' })
+  return { proposal_id: r.proposal_id, committed: r.committed_amount, remaining: r.remaining_this_month, app_url: r.app_url }
+}
+```
 
 ## 3. Pause
 

@@ -1,11 +1,11 @@
 ---
 name: gimc-canvas
-description: The GIMC hub. How to put work on the GIMC canvas (boards, a frame per step, cards, arrows, run_id and skill, media, notes and tasks on cards) and which GIMC skill takes the next step (brand, builds, planning and publishing). Use when a skill says "Put it on GIMC" or "follow gimc-canvas", or the user says "put it on GIMC", "zet het op het canvas", "op het bord", "pak mijn notities op", "pak mijn opdrachten op", "what's waiting for me on the canvas", or asks why the canvas or an upload failed.
+description: The GIMC hub. How to put work on the GIMC canvas (boards, frames, cards, arrows, run_id and skill, media, notes and tasks) and which GIMC skill takes the next step. Use when a skill says "Put it on GIMC" or "follow gimc-canvas", or the user says "put it on GIMC", "zet het op het canvas", "op het bord", "zet deze kaart", "maak het bord netjes", "zet de afbeelding op het canvas", "pak mijn notities op", "pak mijn opdrachten op", or asks why the canvas or an upload failed.
 ---
 
 # GIMC canvas
 
-This is plugin version 1.0.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 1.1.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas (`/marketing/canvas`) is the user's content board. People watch it while you work: make it read like the story of the run.
 
@@ -17,7 +17,7 @@ Hard rules — they apply to every section below:
 4. **Every card you make carries `skill` and `run_id`.** `skill` is the exact name of the skill or tool that made the card; your own glue cards (a brief, a choice note) use `gimc-canvas`.
 5. **Read errors.** GIMC errors are short Dutch sentences that name the cause. Fix what they name; don't guess around them.
 
-**Calling GIMC.** Each `gimc.<tool>(…)` below runs inside `gimc_execute`; other signatures via `gimc_search`. One step = one execute: read and write in one script, `Promise.all` for independent reads, return only ids and counts. A refusal is an exception (`message`, `status`). Examples: [references/code-mode.md](references/code-mode.md).
+**Calling GIMC.** Each `gimc.<tool>(…)` below runs inside `gimc_execute` (signatures: `gimc_search`). One step = one execute; return only ids and counts. A refusal is an exception (`message`, `status`). Every answer carries `org_id`: pass it on every next `gimc_execute`. Ready code: `ctx.recipes`; examples: [references/code-mode.md](references/code-mode.md).
 
 References — open the one you need:
 
@@ -100,7 +100,8 @@ The board reads left to right like the run: one frame per step, its cards in a g
 ## 6. Update or vary
 
 - Changing a card: `gimc.canvas_get_item`, then `gimc.canvas_update_item` with `expected_updated_at` = its `updated_at`; `data` replaces the object.
-- 409 "De kaart is intussen gewijzigd": apply your change to `current` from the error and send again. Both versions useful? Make a `variant`.
+- 409 "De kaart is intussen gewijzigd": read the card again and apply your change once more (both useful: a `variant`); recipe `edit-safe` ([references/code-mode.md](references/code-mode.md) §5).
+
 - Moving, resizing or to another board: `gimc.canvas_move_items`. An arrow label: `gimc.canvas_update_link` returns a new link id.
 
 ## 7. Media

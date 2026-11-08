@@ -55,10 +55,15 @@ Read the reference for the type before you build:
 
 ## The call
 
-```json
-{ "type": "carousel", "board_id": "…", "title": "Carrousel: …", "size": "4:5",
-  "slides": [{ "html": "<!DOCTYPE html>…", "alt": "Slide 1: the hook" }, …],
-  "platform": "instagram", "caption": "…", "skill": "canvas-builds", "run_id": "…" }
+```js
+async () => {
+  const r = await gimc.canvas_create_build({
+    type: 'carousel', board_id: 'BOARD_ID', title: 'Carrousel: …', size: '4:5', use_brand: true,
+    slides: [{ html: '<!DOCTYPE html>…', alt: 'Slide 1: the hook' }, { html: '<!DOCTYPE html>…', alt: 'Slide 2' }],
+    platform: 'instagram', caption: 'CAPTION', skill: 'canvas-builds', run_id: 'RUN_ID',
+  })
+  return { item_id: r.id, slides: r.slides, ok: r.ok, problems: r.reports.filter(x => !x.ok).map(x => x.title) }
+}
 ```
 
 | type | required | slides | size |

@@ -32,6 +32,8 @@ async () => {
 
 Rules of the sandbox:
 
+- Every answer carries `org_id` at the top: pass it on every next `gimc_execute`. A first execute without it may get a
+  choice list (`choose_workspace`) or an error naming the workspaces; then run it again with `org_id`.
 - No network, files or timers. Uploads and downloads happen outside it (example 1b).
 - Limits per execute: 30 s, 64 MB, 60 tool calls, an answer of 24 000 characters (longer is cut off with
   "…ingekort, geef minder terug").
@@ -43,6 +45,8 @@ Rules of the sandbox:
 - Forgiving inputs: `gimc.canvas_list_items` drops unknown `fields` (`ignored_fields`, `allowed_fields`) and also knows
   `updated_at` and `caption`; `gimc.canvas_list_schedule` takes `from`/`to` as a date `YYYY-MM-DD` (Amsterdam day, `to`
   through 23:59:59); `gimc.canvas_get_context` with `include_overview` but no `board_id` answers `overview_skipped`.
+- Ready-made code for the four most common steps (find-and-act, put-on-canvas, schedule, edit-safe):
+  `async (ctx) => ctx.recipes.find(r => r.name === 'find-and-act').code`.
 - Not sure about a field? Search first: `async (ctx) => ctx.catalog.find(t => t.name === 'canvas_apply_plan').declaration`.
 
 ## 1. Context and inbox at the start
@@ -124,3 +128,24 @@ async () => {
 
 The model sees three posts and a few totals, not twenty posts with every field. Explaining what the numbers mean is
 the job of the `social-insights` skill.
+
+## 5. Change a card safely (recipe `edit-safe`)
+
+```js
+async () => {
+  const change = item => ({ body: (item.body ?? '') + '\nNEW_LINE' })
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const item = await gimc.canvas_get_item({ item_id: 'ITEM_ID' })
+    try {
+      const u = await gimc.canvas_update_item({ item_id: item.id, expected_updated_at: item.updated_at, ...change(item) })
+      return { item_id: u.id, updated_at: u.updated_at }
+    } catch (e) {
+      if (e.status !== 409) throw e
+    }
+  }
+  return { conflict: 'ITEM_ID' }
+}
+```
+
+A 409 means a person changed the card meanwhile: the code reads it again and applies your change to the new version, once.
+Still a conflict: tell the user, or make a `variant`.

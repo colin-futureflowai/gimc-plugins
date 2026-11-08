@@ -50,6 +50,17 @@ the error, and pass it on every next call.
   saves and engagement rate. `sort: "top"` orders them by views; `limit` sets how many (10 by default, at most 50);
   `posts_total` says how many there are in the period.
 
+In one execute, returning a summary and never every post (adjust `period_days`, `sort` and `limit`):
+
+```js
+async () => {
+  const i = await gimc.social_get_insights({ period_days: 30, sort: 'top', limit: 20 })
+  const top = i.posts.slice(0, 5).map(p => ({ platform: p.platform, at: p.published_at, views: p.views, er: p.engagement_rate, text: (p.excerpt ?? '').slice(0, 60) }))
+  const accounts = i.accounts.map(a => ({ account: a.username ?? a.platform, followers: a.followers, growth: a.followers_growth }))
+  return { org_id: i.workspace?.org_id, period: i.period_days, has_accounts: i.has_accounts, totals: i.totals, accounts, top, posts_total: i.posts_total }
+}
+```
+
 Rules:
 
 1. **Pick the period from the question** ("deze week" → 7, "deze maand" → 30, "dit kwartaal" → 90). Say which one you

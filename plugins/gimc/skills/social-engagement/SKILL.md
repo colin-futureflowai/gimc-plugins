@@ -4,7 +4,7 @@ description: >
   GIMC Social Engagement skill. Reads the comments on the company's own posts in GIMC, writes reply drafts that a
   person posts, and sets up, changes, pauses or ends reply campaigns (a keyword in a comment gets a public reply
   and/or a DM). Use when the user says "beantwoord de reacties", "welke reacties staan open", "schrijf antwoorden op
-  de comments", "reactie-campagne", "comment to DM", "zet een trefwoord-campagne op", "pauzeer de campagne", or when
+  de comments", "zet een conceptantwoord klaar", "reactie-campagne", "comment to DM", "zet een trefwoord-campagne op", "pauzeer de campagne", or when
   comment-responder or comment-mining worked on real comments.
 user-invokable: true
 argument-hint: "[post, account or campaign, what to do]"
@@ -40,6 +40,19 @@ list in the error).
 - Names are for following the conversation only. Never put commenters' names or handles on a card or in a folder
   note.
 
+In one execute (pick the post the user means):
+
+```js
+async () => {
+  const { posts } = await gimc.social_list_comments({})
+  const post = posts[0] // the post the user means: match on excerpt or platform
+  if (!post) return { posts: 0 }
+  const t = await gimc.social_list_comments({ account_id: post.account_id, post_id: post.post_id })
+  const open = t.comments.filter(c => !c.is_owner && c.can_reply && !(t.drafts ?? []).some(d => d.comment_id === c.comment_id))
+  return { org_id: t.workspace?.org_id, account_id: post.account_id, post_id: post.post_id, open: open.map(c => ({ comment_id: c.comment_id, message: c.message.slice(0, 200) })), drafts_waiting: (t.drafts ?? []).length }
+}
+```
+
 ## 2. Write reply drafts
 
 For each comment that needs an answer, one `gimc.social_draft_comment_reply` call: `account_id`, `post_id`, `comment_id`
@@ -51,6 +64,18 @@ For each comment that needs an answer, one `gimc.social_draft_comment_reply` cal
 - A new draft for the same comment replaces the waiting one (the old one is kept). Already a draft from a person?
   Leave it.
 - Complaints, legal, health or anything sensitive: no draft; list them for the user instead.
+
+All drafts in one execute:
+
+```js
+async () => {
+  const account_id = 'ACCOUNT_ID', post_id = 'POST_ID'
+  const replies = [{ comment_id: 'COMMENT_ID', message: 'REPLY' }]
+  const made = []
+  for (const r of replies) made.push((await gimc.social_draft_comment_reply({ account_id, post_id, comment_id: r.comment_id, message: r.message })).draft_id)
+  return { drafts: made.length, app_url: '/social/reacties' }
+}
+```
 
 Close with one sentence: how many drafts wait, and the `app_url` where a person reads and posts them.
 

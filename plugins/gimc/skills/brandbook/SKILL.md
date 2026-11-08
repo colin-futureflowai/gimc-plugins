@@ -139,6 +139,17 @@ The plan (±27 steps) goes in **two parts of at most ±40 KB each**, as in the e
   [references/plan-example-part2.json](references/plan-example-part2.json). Part 1 still `running`: one
   `gimc.canvas_plan_status`, then part 2.
 
+Part 1 in one execute (part 2 the same, with `run_id`, `append: true` and `render: true` instead of `board`):
+
+```js
+async () => {
+  const steps = [] // frames and first cards, as in references/plan-example.json
+  let plan = await gimc.canvas_apply_plan({ board: { folder_id: 'FOLDER_ID', name: 'Brandbook' }, render: false, steps })
+  if (plan.status === 'running') plan = await gimc.canvas_plan_status({ run_id: plan.run_id })
+  return { org_id: plan.workspace?.org_id, run_id: plan.run_id, board_id: plan.board_id, status: plan.status, done: plan.done, total: plan.total, failed: plan.failed?.length ?? 0, app_url: plan.app_url }
+}
+```
+
 The board is new and empty, so place
 everything with your own x/y from 0,0 as in the example. (Frames without x/y also get a free spot, but cards of
 mixed sizes with `frame_id` can fill a frame badly or not fit at all; own coordinates are tidier and certain.)
