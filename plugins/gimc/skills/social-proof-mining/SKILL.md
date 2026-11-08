@@ -48,7 +48,7 @@ Use social-listening to identify recurring customer language; use this skill to 
 
 ## Take the input from GIMC
 
-- Comments on the company's own posts: when GIMC is connected (a tool whose name ends in `social_list_comments`), read them there instead of asking the user to paste them: first the posts with comments, then the comments of the post the user means. Use commenters' names only to follow the conversation; never put them on a card.
+- Comments on the company's own posts: when GIMC is connected (a tool whose name ends in `gimc_execute`), read them with `gimc.social_list_comments` inside `gimc_execute` instead of asking the user to paste them: first the posts with comments, then the comments of the post the user means. Use commenters' names only to follow the conversation; never put them on a card.
 
 ## Put it on GIMC
 

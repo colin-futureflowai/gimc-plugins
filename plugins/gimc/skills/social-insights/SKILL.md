@@ -18,6 +18,9 @@ metadata:
 # Social insights in GIMC
 
 > **GIMC skill.** Call it "the GIMC Social Insights skill" in the user's language.
+>
+> **GIMC tools run in code:** each `gimc.<tool>(…)` below is a call inside `gimc_execute` (find signatures with
+> `gimc_search`); do a step in one execute and return only what you need. Examples: `gimc-canvas`, references/code-mode.md.
 
 GIMC keeps the numbers of every connected social account and post (synced from the platforms once a day, and on
 request). You read them, explain what they mean, and put a short readout on the canvas. You never invent a number: if
@@ -29,8 +32,8 @@ to the right screen.
 
 ## 1. Which accounts
 
-`social_list_accounts` lists the connected accounts (`account_id`, platform, username, status). With several GIMC
-workspaces every `social_` call needs the workspace's `org_id`: take it from `canvas_get_context` or from the list in
+`gimc.social_list_accounts` lists the connected accounts (`account_id`, platform, username, status). With several GIMC
+workspaces every `social_` call needs the workspace's `org_id`: take it from `gimc.canvas_get_context` or from the list in
 the error, and pass it on every next call.
 
 - No accounts: tell the user in one sentence that a person connects them in GIMC under Socials → Accounts
@@ -40,7 +43,7 @@ the error, and pass it on every next call.
 
 ## 2. The numbers
 
-`social_get_insights` gives, for a period of 7, 30 or 90 days (or `0` for everything):
+`gimc.social_get_insights` gives, for a period of 7, 30 or 90 days (or `0` for everything):
 
 - `totals` for the whole company, and per account `followers` and `followers_growth` in the period;
 - `posts`: per post platform, date, excerpt, link, media type, and impressions, reach, views, likes, comments, shares,
@@ -62,7 +65,7 @@ Rules:
 
 ## 3. Boosts and comments
 
-- Boost results and budget: `social_list_boosts` (proposing or pausing a boost: the `social-ads` skill).
+- Boost results and budget: `gimc.social_list_boosts` (proposing or pausing a boost: the `social-ads` skill).
 - Comments, reply drafts and reply campaigns: the `social-engagement` skill.
 
 ## 4. Put it on GIMC
@@ -74,7 +77,7 @@ Follow `gimc-canvas` for the board itself. A readout is its own small run:
 - One `analysis` card with the readout: the question, the period and accounts, three to five findings with the numbers
   behind them, and one or two concrete next steps. Use a table only for a handful of posts, never the full list.
 - Posts that were planned through GIMC get their numbers on their own card automatically (once a day); don't add them
-  again with `canvas_record_stats`. Use that tool only for a post that has no card numbers from GIMC (posted elsewhere,
+  again with `gimc.canvas_record_stats`. Use that tool only for a post that has no card numbers from GIMC (posted elsewhere,
   or numbers the user gives you), on the card of that post.
 - If the readout came from a card (a reel, a campaign), draw a `derived` line from that card to the readout.
 

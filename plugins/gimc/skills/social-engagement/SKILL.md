@@ -18,18 +18,21 @@ metadata:
 # Social engagement in GIMC
 
 > **GIMC skill.** Call it "the GIMC Social Engagement skill" in the user's language.
+>
+> **GIMC tools run in code:** each `gimc.<tool>(…)` below is a call inside `gimc_execute` (find signatures with
+> `gimc_search`); do a step in one execute and return only what you need. Examples: `gimc-canvas`, references/code-mode.md.
 
 You help the company answer people on its own posts. You read comments, write reply **drafts**, and prepare reply
 campaigns. You never post in public yourself: a person reads your draft in GIMC (Socials → Reacties), may change it,
 and posts it. A reply campaign goes live only when a person switches it on (Socials → Reactie-campagnes). Each answer
 has an `app_url` to send them there.
 
-With several GIMC workspaces, every `social_` call needs the workspace's `org_id` (from `canvas_get_context` or the
+With several GIMC workspaces, every `social_` call needs the workspace's `org_id` (from `gimc.canvas_get_context` or the
 list in the error).
 
 ## 1. Read the comments
 
-- `social_list_comments` without `post_id`: the posts that have comments (25 per page, `next_cursor`), with
+- `gimc.social_list_comments` without `post_id`: the posts that have comments (25 per page, `next_cursor`), with
   `account_id`, platform, excerpt and `comment_count`. Narrow to one account with `account_id`.
 - With `account_id` and `post_id`: the comments and replies on that post (`comment_id`, `author_username`, `message`,
   `is_owner`, `can_reply`), plus `drafts` that are already waiting.
@@ -39,11 +42,11 @@ list in the error).
 
 ## 2. Write reply drafts
 
-For each comment that needs an answer, one `social_draft_comment_reply` call: `account_id`, `post_id`, `comment_id`
+For each comment that needs an answer, one `gimc.social_draft_comment_reply` call: `account_id`, `post_id`, `comment_id`
 (leave it out for a reaction to the post itself) and `message`.
 
 - Short, warm and specific to what the person wrote; in the language of the comment; in the brand's voice (the folder
-  brand from `canvas_get_context` has it). No promises about prices, deals or dates the user did not give.
+  brand from `gimc.canvas_get_context` has it). No promises about prices, deals or dates the user did not give.
 - Questions you can't answer from what you know: a draft that says you'll come back to it, and tell the user which.
 - A new draft for the same comment replaces the waiting one (the old one is kept). Already a draft from a person?
   Leave it.
@@ -56,12 +59,12 @@ Close with one sentence: how many drafts wait, and the `app_url` where a person 
 A reply campaign watches one post: a comment with a keyword gets a public reply and/or a DM (DM only on Instagram and
 Facebook), once per person, up to a daily maximum.
 
-- Read: `social_list_reply_campaigns` (status and counts); with `campaign_id` the log (`outcomes` per result, no names).
-- Make or change: `social_save_reply_campaign`. A new one needs `account_id`, `platform_post_id` (the `post_id` from
+- Read: `gimc.social_list_reply_campaigns` (status and counts); with `campaign_id` the log (`outcomes` per result, no names).
+- Make or change: `gimc.social_save_reply_campaign`. A new one needs `account_id`, `platform_post_id` (the `post_id` from
   the comments), `name`, `keywords`, and `public_reply` and/or `dm_message`; `daily_max` defaults to 25, `match_mode`
   to `word`. With `campaign_id` only the fields you give change. It is always saved as a draft or keeps its status.
 - `{{first_name}}` in a reply or DM is filled in with the commenter's first name; keep messages useful without it.
-- Pause or end: `social_set_reply_campaign_status` with `paused` or `ended`. Ending is final.
+- Pause or end: `gimc.social_set_reply_campaign_status` with `paused` or `ended`. Ending is final.
 - Going live: tell the user to switch it on in GIMC (`app_url`); a person confirms the daily maximum there.
 
 ## 4. Put it on GIMC

@@ -18,10 +18,13 @@ metadata:
 # Builds — email, carousel, post and story in one GIMC call
 
 > **GIMC skill.** Call it "the GIMC Builds skill" in the user's language.
+>
+> **GIMC tools run in code:** each `gimc.<tool>(…)` below is a call inside `gimc_execute` (find signatures with
+> `gimc_search`); do a step in one execute and return only what you need. Examples: `gimc-canvas`, references/code-mode.md.
 
 You design the piece yourself, in the brand of the folder, and GIMC turns it into a card that people can use right
 away: an email they can copy into their mail tool, slides they can download as PNG or ZIP, a post the content
-calendar can schedule. One tool does all four: `canvas_create_build` with a `type`.
+calendar can schedule. One tool does all four: `gimc.canvas_create_build` with a `type`.
 
 Read the reference for the type before you build:
 
@@ -31,8 +34,8 @@ Read the reference for the type before you build:
 
 ## Hard rules
 
-1. **Three GIMC calls, sometimes four:** `canvas_get_context` (with `workspace` and `folder` from the request) →
-   `canvas_create_build` → look at the answer → at most one corrected build as a variant (`parent_id` = the first
+1. **Three GIMC calls, sometimes four:** `gimc.canvas_get_context` (with `workspace` and `folder` from the request) →
+   `gimc.canvas_create_build` → look at the answer → at most one corrected build as a variant (`parent_id` = the first
    card, `relation: "variant"`). Pass `workspace.org_id` from the first answer on every later call.
 2. **The brand comes from the folder.** Read `brand` in the context answer (colours, fonts, logos, photos, voice).
    Slides get the brand layer automatically: use `var(--brand-color-accent)`, `var(--brand-font-heading)` and so on.
@@ -45,7 +48,7 @@ Read the reference for the type before you build:
    Never check with a local browser, screenshots or curl: only GIMC's answer counts. Never call GIMC outside the GIMC
    tools.
 5. **Where it lands.** The board from the request; otherwise "In productie" in the folder (create it with
-   `canvas_create_board` if it is missing). Give the card a short title ("Carrousel: 5 fouten bij je offerte"),
+   `gimc.canvas_create_board` if it is missing). Give the card a short title ("Carrousel: 5 fouten bij je offerte"),
    `skill: "canvas-builds"` (or the content skill that asked for it) and a `run_id`. A frame is optional; with
    `frame_id` GIMC finds a free spot.
 6. **Never send anything.** GIMC does not send email or publish posts; people copy, download or schedule.

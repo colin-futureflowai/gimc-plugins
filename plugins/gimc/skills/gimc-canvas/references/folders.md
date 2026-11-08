@@ -4,10 +4,10 @@ Boards live in folders, usually one per client or campaign, and folders can hold
 
 ## What you get from the tools
 
-- `canvas_list_folders` (optional `parent_id`: only the subfolders of that folder, `null` only the top level): each folder has `folder_id`, `path` ("Content › Client X › Launch", separated by ` › `), `board_count`, `folder_count` and `note_version`.
-- Boards carry `folder_id` and `folder_path`. Pass `folder_id` to `canvas_list_boards`, `canvas_create_board`, `canvas_update_board` (moves the board) and `canvas_seed_default_boards`.
-- `canvas_create_folder`: `name` (1–60 characters), optional `parent_id`, `seed_defaults`. Without `parent_id` the folder goes under the default folder, which is named after the company.
-- `canvas_update_folder` renames or moves a folder. Archiving a folder is for people only.
+- `gimc.canvas_list_folders` (optional `parent_id`: only the subfolders of that folder, `null` only the top level): each folder has `folder_id`, `path` ("Content › Client X › Launch", separated by ` › `), `board_count`, `folder_count` and `note_version`.
+- Boards carry `folder_id` and `folder_path`. Pass `folder_id` to `gimc.canvas_list_boards`, `gimc.canvas_create_board`, `gimc.canvas_update_board` (moves the board) and `gimc.canvas_seed_default_boards`.
+- `gimc.canvas_create_folder`: `name` (1–60 characters), optional `parent_id`, `seed_defaults`. Without `parent_id` the folder goes under the default folder, which is named after the company.
+- `gimc.canvas_update_folder` renames or moves a folder. Archiving a folder is for people only.
 
 ## Matching names
 
@@ -22,18 +22,18 @@ Match on the end of the `path` first, case-insensitive: "client x" matches "Cont
 
 Create one only when the user names it ("maak een map voor Client Y") or the work clearly needs its own place (a new client or campaign that has no folder). Never create a folder for a single card or a one-off run: use the default folder or the folder the user is working in.
 
-1. Check `canvas_list_folders` first; the folder may already exist under another parent.
+1. Check `gimc.canvas_list_folders` first; the folder may already exist under another parent.
 2. Ask once "standaardborden of vanaf nul?" (in the user's language), unless the user already said. Standaardborden = `seed_defaults: true`.
 3. The very first folder of a workspace is the default folder and always gets the five default boards; do not ask there.
 4. A subfolder: pass `parent_id`. A top-level folder next to the default folder: `parent_id: null`, but only when the user asks for that.
 
-A folder without boards (made "vanaf nul") stays that way on purpose: give it only the boards a run needs, with `canvas_create_board` and its `folder_id`. Seed the default boards there only when the user asks. Without asking, seed them only in a brand-new workspace that has no folders or boards yet.
+A folder without boards (made "vanaf nul") stays that way on purpose: give it only the boards a run needs, with `gimc.canvas_create_board` and its `folder_id`. Seed the default boards there only when the user asks. Without asking, seed them only in a brand-new workspace that has no folders or boards yet.
 
 ## The folder note
 
-Read it with `canvas_get_folder_note` (`with_parents: true` gives the parents' notes too, top-down). The answer has the text and the `version`; an empty text means there is no note yet. With `version` you read an older version.
+Read it with `gimc.canvas_get_folder_note` (`with_parents: true` gives the parents' notes too, top-down). The answer has the text and the `version`; an empty text means there is no note yet. With `version` you read an older version.
 
-Write it with `canvas_update_folder_note`: the **whole** text as `body`, plus the `expected_version` you read (`0` when there was no note). Old versions stay, so nothing is lost, but a stale `expected_version` is refused.
+Write it with `gimc.canvas_update_folder_note`: the **whole** text as `body`, plus the `expected_version` you read (`0` when there was no note). Old versions stay, so nothing is lost, but a stale `expected_version` is refused.
 
 Keep it short, a screen or less. Headings that work:
 
@@ -65,4 +65,4 @@ Rules:
 
 ## Conflicts
 
-`canvas_update_folder_note` fails when the note changed since you read it (a person or another session saved a newer version). Never overwrite. Read the note again, merge your new lines into the newer text, and write once more with the new `version` as `expected_version`. If it fails a second time, skip the update and tell the user in one sentence that the note was not saved.
+`gimc.canvas_update_folder_note` fails when the note changed since you read it (a person or another session saved a newer version). Never overwrite. Read the note again, merge your new lines into the newer text, and write once more with the new `version` as `expected_version`. If it fails a second time, skip the update and tell the user in one sentence that the note was not saved.

@@ -17,18 +17,21 @@ metadata:
 # Social ads in GIMC
 
 > **GIMC skill.** Call it "the GIMC Social Ads skill" in the user's language.
+>
+> **GIMC tools run in code:** each `gimc.<tool>(…)` below is a call inside `gimc_execute` (find signatures with
+> `gimc_search`); do a step in one execute and return only what you need. Examples: `gimc-canvas`, references/code-mode.md.
 
 A boost turns a post that went out through GIMC into an ad. It costs the company real money, so the rules are strict:
 you **propose**, a person **decides**. A proposal commits nothing and calls no platform; in GIMC (Socials →
 Advertenties) a person picks the ad account, confirms the amount and creates the boost (paused), and starts it in a
 separate step. You may **pause** a running boost: that only stops spending.
 
-With several GIMC workspaces, every `social_` call needs the workspace's `org_id` (from `canvas_get_context` or the
+With several GIMC workspaces, every `social_` call needs the workspace's `org_id` (from `gimc.canvas_get_context` or the
 list in the error).
 
 ## 1. Look first
 
-`social_list_boosts` gives:
+`gimc.social_list_boosts` gives:
 
 - `budget`: the monthly cap (`monthly_cap`, 0 = boosting is off), what is committed this month and
   `remaining_this_month`. Cap 0: tell the user an admin sets a monthly cap first (Socials → Advertenties) and stop.
@@ -39,10 +42,10 @@ list in the error).
 ## 2. Propose a boost
 
 Only a post that went out through GIMC can be boosted: a planning with `status` `published` (find its `schedule_id`
-with `canvas_list_schedule`, or in `publication` on `canvas_get_item`) on an account from `social_list_accounts` with
+with `gimc.canvas_list_schedule`, or in `publication` on `gimc.canvas_get_item`) on an account from `gimc.social_list_accounts` with
 the same platform.
 
-One `social_propose_boost` call: `account_id`, `schedule_id`, `goal` (`engagement`, `traffic`, `awareness`,
+One `gimc.social_propose_boost` call: `account_id`, `schedule_id`, `goal` (`engagement`, `traffic`, `awareness`,
 `video_views`, `lead_generation`, `conversions`), `budget_amount` with `budget_type` (`daily` or `lifetime`), `days`
 (1–90) and a one-line `note` on why (the numbers that make this post worth it).
 
@@ -55,7 +58,7 @@ One `social_propose_boost` call: `account_id`, `schedule_id`, `goal` (`engagemen
 
 ## 3. Pause
 
-`social_pause_boost` with the `boost_id` of an `active` boost, when the user asks or when the numbers clearly go wrong
+`gimc.social_pause_boost` with the `boost_id` of an `active` boost, when the user asks or when the numbers clearly go wrong
 (spend without results). Say what you paused and why. Starting or resuming is always a person's work.
 
 ## 4. Put it on GIMC

@@ -149,5 +149,5 @@ everything must fit inside it.
   out); find the brand variables via `document.styleSheets` instead, as the example's light/dark switch does.
 - Each card ≤ 1 MB (aim for ±2–9 KB without the base); each plan part at most ±40 KB; images are URLs, never base64
   photos.
-- Checking happens only through GIMC's render (the plan answer, `canvas_plan_status` or `canvas_render_html_card`):
+- Checking happens only through GIMC's render (the plan answer, `gimc.canvas_plan_status` or `gimc.canvas_render_html_card`):
   never a local browser or your own screenshots, and never GIMC outside the GIMC tools (no curl, scripts or tokens).

@@ -52,6 +52,6 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
 
 - Create the card(s) with kind `note` in frame "Publicatie", with `skill: "linkedin-thought-leadership"` and the `run_id` of this run.
 - If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
-- When the user wants the post ready to schedule: one `canvas_create_build` call (type `post`, platform `linkedin`, the post text as `caption`, optionally one image slide) as described in the `canvas-builds` skill, instead of a note card.
+- When the user wants the post ready to schedule: one `gimc.canvas_create_build` call (type `post`, platform `linkedin`, the post text as `caption`, optionally one image slide) as described in the `canvas-builds` skill, instead of a note card.
 - Then close in the chat with 1–3 sentences: what is ready, on which board or card, the link (`app_url` from the answer) and what the user can do now. Don't repeat in the chat what is on the canvas (no card texts, no list of titles), unless the user asks for the text there.
 - If the canvas fails (no connection, no rights, a refused upload such as `CONNECT tunnel failed, response 403`), finish the work anyway, give the result in the chat and say in one sentence that the canvas was skipped and why. For a refused upload, point to `gimc-canvas`. The canvas never blocks this skill.

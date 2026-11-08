@@ -18,10 +18,13 @@ metadata:
 # Brandbook — a design system in five GIMC calls
 
 > **GIMC skill.** Call it "the GIMC Brandbook skill" in the user's language.
+>
+> **GIMC tools run in code:** each `gimc.<tool>(…)` below is a call inside `gimc_execute` (find signatures with
+> `gimc_search`); do a step in one execute and return only what you need. Examples: `gimc-canvas`, references/code-mode.md.
 
 You build the brand's **design system** on the GIMC canvas: calm, specimen-like pages in the brand's own fonts,
 colours and photos, plus real applications. It should feel like the design system Claude Design makes, not like a
-filled-in template. You save the brand as data first (`canvas_set_brand`), so every card — now and later, from any
+filled-in template. You save the brand as data first (`gimc.canvas_set_brand`), so every card — now and later, from any
 skill — reads the same `--brand-*` variables.
 
 Read before you build: [references/design-system.md](references/design-system.md) (grid, labels, section recipes,
@@ -33,11 +36,11 @@ example for the made-up brand "TEST-Studio Noord": [references/brand-example.jso
 
 ## Hard rules
 
-1. **Four or five GIMC calls:** `canvas_get_context` → `canvas_set_brand` → the plan in two parts (part 1 finds
+1. **Four or five GIMC calls:** `gimc.canvas_get_context` → `gimc.canvas_set_brand` → the plan in two parts (part 1 finds
    or creates the board; part 2 with `append: true` and `render: true`) → look at the result → at most one
-   correction plan. Honest extras: +1 `canvas_create_folder` only when the client has no folder yet, +1
-   `canvas_plan_status` only when a plan answer says `running`. Never place cards one by one, never use
-   `canvas_create_items` or `canvas_create_html_card` for the brandbook.
+   correction plan. Honest extras: +1 `gimc.canvas_create_folder` only when the client has no folder yet, +1
+   `gimc.canvas_plan_status` only when a plan answer says `running`. Never place cards one by one, never use
+   `gimc.canvas_create_items` or `gimc.canvas_create_html_card` for the brandbook.
 2. **Gather with your own tools, not with GIMC calls.** Website, Canva brand kit, files in the chat, the folder
    notes from step 1. Gathering happens before call 1 or between call 1 and call 2.
 3. **Everything real or visibly a proposal.** Every value has a source (client, website, Canva, the user) or is a
@@ -53,14 +56,14 @@ example for the made-up brand "TEST-Studio Noord": [references/brand-example.jso
 7. **Not done until the render is clean.** The render reports overflow, clipped text, broken images and font
    fallback per card. Never say "klaar" while a card has a finding or looks off in the contact sheet.
 8. **Only through the GIMC tools.** Roep GIMC nooit aan buiten de GIMC-tools (geen curl, scripts of tokens). Check
-   cards only through GIMC's render (the plan answer with its contact sheet and findings, `canvas_plan_status`, or
-   `canvas_render_html_card`); never open them in a local browser and never make your own screenshots.
+   cards only through GIMC's render (the plan answer with its contact sheet and findings, `gimc.canvas_plan_status`, or
+   `gimc.canvas_render_html_card`); never open them in a local browser and never make your own screenshots.
 9. **The canvas never blocks the work** (see `gimc-canvas`). If GIMC fails, still give the user the HTML pages as
    files and say in one sentence what was skipped.
 
 ## 1. Context — call 1
 
-`canvas_get_context` with `include_inbox: true`, plus `workspace` and `folder` **by name** when the user named them
+`gimc.canvas_get_context` with `include_inbox: true`, plus `workspace` and `folder` **by name** when the user named them
 ("brandbook for Studio Noord in workspace X": `workspace: "X"`, `folder: "Studio Noord"`), so one call lands in the
 client folder. Ids win when you have them: `org_id`, the client's `folder_id` (or the `board_id` of their Brandbook
 board). No workspace match (or several workspaces and none named): `choose_workspace: true` with a list: pick the
@@ -71,9 +74,9 @@ gives `folders` (every active folder: `id`, `name`, `parent_id`), the folder pat
 folder's boards and the inbox.
 
 - **`org_id` on every later call.** The answer names the workspace (`workspace.org_id`). Pass that `org_id` on
-  every GIMC call after call 1 (`canvas_set_brand`, uploads, the plan, a render): without it a call can fail or land
+  every GIMC call after call 1 (`gimc.canvas_set_brand`, uploads, the plan, a render): without it a call can fail or land
   in another workspace.
-- **Pick the client folder from `folders`** (match the company name). Not there: `canvas_create_folder`, once.
+- **Pick the client folder from `folders`** (match the company name). Not there: `gimc.canvas_create_folder`, once.
 - **Board:** the plan targets `board: { folder_id, name: "Brandbook" }`; GIMC reuses that board or creates it. Is
   there already a "Brandbook" board in `boards` (an earlier brandbook), name the new one "Brandbook v2" (v3, …):
   the old board stays as it was, and the new board is empty, so the coordinates below fit.
@@ -97,14 +100,14 @@ Keep a list `what → source`; it becomes `provenance` and the colophon.
      product). No generic landscapes or sunsets unless the brand is about that.
 3. **Canva brand kit**, only if a Canva connector is available and the kit has this company's name.
 4. **Files in the chat**: logo (svg preferred), fonts, an older style guide. Upload a logo or font file with
-   `canvas_brand_asset_upload_url` → PUT → `canvas_brand_asset_complete` and use its `id` as `asset_id`.
+   `gimc.canvas_brand_asset_upload_url` → PUT → `gimc.canvas_brand_asset_complete` and use its `id` as `asset_id`.
 
 **Ask at most three questions**, once, only about gaps that matter and that you cannot derive, each with a default
 ("…or shall I propose one from your website?"). No answer or "just make it": continue with proposals.
 
 ## 3. The brand — call 2
 
-`canvas_set_brand` with `folder_id`, `expected_version` and the whole `brand` (shape:
+`gimc.canvas_set_brand` with `folder_id`, `expected_version` and the whole `brand` (shape:
 [references/brand-example.json](references/brand-example.json)):
 
 - **tokens.colors.light**: `bg`, `surface`, `text`, `muted`, `accent`, `accent_text`, `border` (+ `success`,
@@ -123,18 +126,18 @@ Keep a list `what → source`; it becomes `provenance` and the colophon.
   field path.
 
 The answer gives `version`, the CSS layer, `warnings` and `assets`. A 409 means someone saved a newer version: read it again
-via `canvas_get_brand`, merge, retry once.
+via `gimc.canvas_get_brand`, merge, retry once.
 
 ## 4. The pages — calls 3 and 4
 
 The plan (±27 steps) goes in **two parts of at most ±40 KB each**, as in the example:
 
-- **Part 1:** `canvas_apply_plan` with `board: { folder_id, name: "Brandbook" }`, `render: false`, all eight frames
+- **Part 1:** `gimc.canvas_apply_plan` with `board: { folder_id, name: "Brandbook" }`, `render: false`, all eight frames
   and the first cards (Overzicht to Logo). Shape: [references/plan-example.json](references/plan-example.json).
-- **Part 2:** `canvas_apply_plan` with `run_id` = the `run_id` from the part 1 answer, `append: true`,
+- **Part 2:** `gimc.canvas_apply_plan` with `run_id` = the `run_id` from the part 1 answer, `append: true`,
   `render: true`, no `board`: the other cards and the arrows. Refs from part 1 (the frames) still work. Shape:
   [references/plan-example-part2.json](references/plan-example-part2.json). Part 1 still `running`: one
-  `canvas_plan_status`, then part 2.
+  `gimc.canvas_plan_status`, then part 2.
 
 The board is new and empty, so place
 everything with your own x/y from 0,0 as in the example. (Frames without x/y also get a free spot, but cards of
@@ -180,7 +183,7 @@ parts), `render.reports` (per card of both parts `overflow`, `blocked`, `ok`, `s
 image. `scripts: false`
 means the render shows the card as the board does, without its scripts. Mind the two `run_id`s:
 the card label you put on the steps, and the plan's own `run_id` (a uuid) in this answer. Still `running`:
-`canvas_plan_status` with the plan's uuid `run_id`; it brings the render once the plan is done.
+`gimc.canvas_plan_status` with the plan's uuid `run_id`; it brings the render once the plan is done.
 
 ## 5. Look — and correct once (call 5 at most)
 
@@ -201,5 +204,5 @@ user exactly which card and what.
 
 In at most four sentences, without repeating the brand in the chat: where it is (`folder › Brandbook`, with the `app_url`), how many proposals wait for confirmation (the most
 important first), what is missing (a logo, photos, a font file) and that every content skill now uses this brand
-automatically. Later changes: a new brand version with `canvas_set_brand`, then new cards as `variant` of the old
+automatically. Later changes: a new brand version with `gimc.canvas_set_brand`, then new cards as `variant` of the old
 ones; old cards stay as they were.

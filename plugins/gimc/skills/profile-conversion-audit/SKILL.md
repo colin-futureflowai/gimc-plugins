@@ -48,7 +48,7 @@ Use positioning-audit to settle the central message and social-proof-mining to s
 
 ## Take the input from GIMC
 
-- Numbers of the company's own social accounts and posts: when GIMC is connected (a tool whose name ends in `social_get_insights`), read them there instead of asking the user to paste them, as the `social-insights` skill describes, and say which accounts and period you used. Pasted numbers still work when GIMC has no connected account or the user brings other numbers.
+- Numbers of the company's own social accounts and posts: when GIMC is connected (a tool whose name ends in `gimc_execute`), read them with `gimc.social_get_insights` inside `gimc_execute` instead of asking the user to paste them, as the `social-insights` skill describes, and say which accounts and period you used. Pasted numbers still work when GIMC has no connected account or the user brings other numbers.
 
 ## Put it on GIMC
 

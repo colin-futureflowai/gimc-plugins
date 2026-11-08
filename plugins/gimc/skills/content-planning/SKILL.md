@@ -16,6 +16,9 @@ You put dated posts into the GIMC content calendar and follow them to the platfo
 `/marketing/kalender` (month, week, filter per platform, drag to move) and as a layer in their agenda. Follow
 `gimc-canvas` for the board itself; the short calendar rules are in its reference `references/scheduling.md`.
 
+> **GIMC tools run in code:** each `gimc.<tool>(…)` below is a call inside `gimc_execute` (find signatures with
+> `gimc_search`); do a step in one execute and return only what you need. Examples: `gimc-canvas`, references/code-mode.md.
+
 **Be honest about posting.** A post goes to the platform only when the company connected an account for every chosen
 platform **and** the company's rule lets it through (see 2). Then the answer has `at_platform: true` and an empty
 `publish_note`, and the platform posts it at the chosen time. Otherwise it stays in the calendar and `publish_note` says
@@ -24,21 +27,21 @@ published" before it is.
 
 ## 1. Find the cards
 
-- The user names a board ("het bord TEST-Lancering"): `canvas_get_context`, then `canvas_list_boards` and
-  `canvas_list_items` on that board. Pick the cards the user means (for "de 3 posts": the post-like cards — social
+- The user names a board ("het bord TEST-Lancering"): `gimc.canvas_get_context`, then `gimc.canvas_list_boards` and
+  `gimc.canvas_list_items` on that board. Pick the cards the user means (for "de 3 posts": the post-like cards — social
   posts, reels, carousels, images — not frames, notes or analyses), in board order (top to bottom, left to right).
 - The posts do not exist yet: make them first as cards (follow `gimc-canvas`; a social post card has
   `data.platform` and `data.caption`), then schedule those cards.
 
 **The caption lives on the card.** The text under the post is `data.caption` of the card, separate from the card text
-(`body`: script, notes, idea). Before you ask for approval, write it: `canvas_get_item`, then `canvas_update_item` with
+(`body`: script, notes, idea). Before you ask for approval, write it: `gimc.canvas_get_item`, then `gimc.canvas_update_item` with
 the whole `data` plus `caption` (`data` replaces the object) and `expected_updated_at`. Never use the script or card
 text as caption. The approval covers the caption; changing it later makes the approval stale.
 - Never schedule a card from another workspace or a card you cannot find; ask instead.
 
 ## 2. Approval: who may put a post at the platform
 
-Each company has one rule, `publish_policy` (in the answer of `social_list_accounts`, set by an admin under Socials →
+Each company has one rule, `publish_policy` (in the answer of `gimc.social_list_accounts`, set by an admin under Socials →
 Publiceren):
 
 | `publish_policy` | Who puts a post at the platform |
@@ -47,26 +50,26 @@ Publiceren):
 | `human` | only a person; your posts wait in the calendar |
 | `approval_required` | anyone, but only for an approved card |
 
-A card's approval is in `review` on `canvas_get_item` and `canvas_list_items` (`status` `approved`, `requested` or
+A card's approval is in `review` on `gimc.canvas_get_item` and `gimc.canvas_list_items` (`status` `approved`, `requested` or
 `changes_requested`; `stale: true` means the card changed after the decision and needs a new approval). You can ask
 for approval, never give it.
 
 - The cards are not approved (or stale) and the rule is `approved` or `approval_required`: call
-  `canvas_request_review` with their `item_ids` and a one-line `comment` (what, where, when), then schedule them
+  `gimc.canvas_request_review` with their `item_ids` and a one-line `comment` (what, where, when), then schedule them
   anyway. They wait in the calendar; tell the user they go to the platform once someone approves the card.
 - Under `human` you schedule and a person takes it from there; no need to ask for approval unless the user wants it.
 - **"Klaar om in te plannen" means: ask for approval.** When a card is ready (the user says "zet klaar", or you
-  finished it), call `canvas_request_review` for every ready card that is not approved, in one call, instead of only
+  finished it), call `gimc.canvas_request_review` for every ready card that is not approved, in one call, instead of only
   saying or writing "klaar". The approve button on the card is the status: no separate "Klaar"-card or status note.
   Never put a card at the platform without approval under `approved` or `approval_required`.
 
 **Renumbering.** When you renumber or reorder posts (#3 becomes #2), update every reference in one pass: frame titles,
 card titles, evaluation and analysis cards that name the number, arrow labels and the folder note. Change the texts
 first and move cards or frames last: a move gives a card a new version, so an update with the version you read before
-it fails with 409. Then `canvas_list_items` on the board and check that no old number is left.
+it fails with 409. Then `gimc.canvas_list_items` on the board and check that no old number is left.
 
 **Comment keyword → DM.** A post with a "comment WORD" CTA gets its reply campaign in GIMC before it is published:
-`social_save_reply_campaign` with `item_id` (the card) and `platform`. GIMC hangs it on the post once it is live and
+`gimc.social_save_reply_campaign` with `item_id` (the card) and `platform`. GIMC hangs it on the post once it is live and
 tells a person, who sets it live. Never an outside tool for this.
 
 ## 3. Pick the times
@@ -76,12 +79,14 @@ tells a person, who sets it live. Never an outside tool for this.
   skill; it uses this skill for scheduling, music, post settings and approval.
 - "Volgende week" = Monday to Sunday of the coming week. Spread posts over different days unless the user says
   otherwise; default posting time 10:00, or the times `best-time-scheduler` gave.
-- Check what is already planned first: `canvas_list_schedule` with `from`/`to` for that week, and avoid two posts on
-  the same platform at the same hour.
+- Check what is already planned first: `gimc.canvas_list_schedule` with `from`/`to` for that week, and avoid two posts on
+  the same platform at the same hour. Titles are not unique (other boards can hold a card with the same title): a
+  planning belongs to this card only when its `item_id` is the card's id. GIMC itself refuses a second planning of the
+  same card, so never cancel a planning to remove a "duplicate"; cancel only when the user asks.
 
 ## 4. Schedule
 
-One `canvas_schedule_posts` call for all posts of the run (max 50, all or nothing):
+One `gimc.canvas_schedule_posts` call for all posts of the run (max 50, all or nothing):
 
 ```json
 { "posts": [
@@ -96,13 +101,13 @@ One `canvas_schedule_posts` call for all posts of the run (max 50, all or nothin
 - No `caption`: GIMC takes `data.caption` of each card, exactly what was approved. A card without it goes without
   text, so write it on the card first. Another caption: change the card and ask for approval again.
 - An error names the post (`posts.1: …`) and the cause. A card that is already scheduled: use
-  `canvas_reschedule_post` with the `schedule_id` from the error instead.
+  `gimc.canvas_reschedule_post` with the `schedule_id` from the error instead.
 
 ## 4b. Instagram settings (and Facebook)
 
 Choose the post settings with the user before scheduling, and pass them as `options` per post in
-`canvas_schedule_posts` (or later on the planning: `canvas_reschedule_post` with only `schedule_id`, `options` and the
-`updated_at` from `canvas_list_schedule` as `expected_updated_at`). GIMC checks every field and says per field why
+`gimc.canvas_schedule_posts` (or later on the planning: `gimc.canvas_reschedule_post` with only `schedule_id`, `options` and the
+`updated_at` from `gimc.canvas_list_schedule` as `expected_updated_at`). GIMC checks every field and says per field why
 something does not fit; `options` replaces the whole object, so send all settings you want to keep.
 
 ```json
@@ -127,43 +132,43 @@ something does not fit; `options` replaces the whole object, so send all setting
 
 ## 4c. Recommend music (Reels)
 
-1. Find tracks with `social_search_audio`: trending without `q`, or by mood, genre or artist with `q`. An error that the
+1. Find tracks with `gimc.social_search_audio`: trending without `q`, or by mood, genre or artist with `q`. An error that the
    account must be connected via Facebook: tell the user in one sentence (Socials → Accounts) and skip music.
 2. Recommend 2–3 tracks with one reason each (fits the mood, trending now, length fits the reel). Never store or paste
    `preview_url`: it expires; the user can listen in GIMC.
 3. Put the choice on the post as `options.instagram.audio`: `{ "audioId": "…", "title": "…", "artist": "…",
    "audioVolume": 80, "videoVolume": 30 }` (lower `videoVolume` when the reel has its own voice-over, raise it otherwise).
-   Not scheduled yet: put it in `options` of `canvas_schedule_posts`; scheduled: `canvas_reschedule_post` with
+   Not scheduled yet: put it in `options` of `gimc.canvas_schedule_posts`; scheduled: `gimc.canvas_reschedule_post` with
    `options` (all settings, they replace the old ones).
 4. A person confirms the scheduling. Music works only on a Reel, and a track can disappear from the catalogue before
    the post goes out: GIMC then holds the post and says why.
 
 ## 5. Approved later: put it at the platform
 
-When the inbox (`canvas_inbox`, or `include_inbox` in the context call) lists a card under `reviews` as approved, or the
+When the inbox (`gimc.canvas_inbox`, or `include_inbox` in the context call) lists a card under `reviews` as approved, or the
 user says a card is approved, and its planning is not at the platform yet (`publication.schedule.at_platform` is
-false on `canvas_get_item`): call `canvas_reschedule_post` with only its `schedule_id`. Without changes GIMC tries the
+false on `gimc.canvas_get_item`): call `gimc.canvas_reschedule_post` with only its `schedule_id`. Without changes GIMC tries the
 platform again; check `at_platform` in the answer and tell the user. "Changes requested" is work and an open task in
-the inbox (instruction "Wijziging gevraagd: …"): `canvas_claim_task` (taken by someone else: skip it), change the card
-as asked, `canvas_complete_task`, then `canvas_request_review` again. Approving cancels open change tasks. Asking a
+the inbox (instruction "Wijziging gevraagd: …"): `gimc.canvas_claim_task` (taken by someone else: skip it), change the card
+as asked, `gimc.canvas_complete_task`, then `gimc.canvas_request_review` again. Approving cancels open change tasks. Asking a
 change (or withdrawing approval) takes a post that was already at the platform back to waiting; the next approval
 sends the new version. If the planning still shows `at_platform: true` with `publish_note` "Staat al bij het
 platform…", GIMC could not take it back: tell the user to cancel or move it first, or the old post goes live.
 
 ## 6. Move, cancel, follow
 
-- Move: `canvas_reschedule_post` with `schedule_id` and the new `scheduled_at` (the old time stays in the history).
+- Move: `gimc.canvas_reschedule_post` with `schedule_id` and the new `scheduled_at` (the old time stays in the history).
   Text or platforms of a post that is already at the platform only a person changes.
-- Changed `data.caption` of a scheduled card: give the planning the same text (`canvas_reschedule_post` with
+- Changed `data.caption` of a scheduled card: give the planning the same text (`gimc.canvas_reschedule_post` with
   `caption`) and ask for approval again.
-- Cancel: `canvas_cancel_scheduled_post`. Nothing is deleted; the card can be scheduled again later.
-- Find a `schedule_id` with `canvas_list_schedule` (by `board_id`, `item_ids` or a date window).
-- Where a card stands after scheduling: `publication` on `canvas_get_item` (status, at the platform, links per
+- Cancel: `gimc.canvas_cancel_scheduled_post`. Nothing is deleted; the card can be scheduled again later.
+- Find a `schedule_id` with `gimc.canvas_list_schedule` (by `board_id`, `item_ids` or a date window).
+- Where a card stands after scheduling: `publication` on `gimc.canvas_get_item` (status, at the platform, links per
   platform, boosts, reply campaigns). Numbers after posting: the `social-insights` skill.
 
 ## 7. Report
 
-Call `canvas_list_schedule` for the window you planned and tell the user in a short list: day, time, platform, card
+Call `gimc.canvas_list_schedule` for the window you planned and tell the user in a short list: day, time, platform, card
 title, and per post whether it is at the platform or waiting (and for what: approval, a person, a connection). Add that
 they can see and drag everything in the content calendar.
 
