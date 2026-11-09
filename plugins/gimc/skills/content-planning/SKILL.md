@@ -76,7 +76,8 @@ for approval, never give it.
 
 - The cards are not approved (or stale) and the rule is `approved` or `approval_required`: call
   `gimc.canvas_request_review` with their `item_ids` and a one-line `comment` (what, where, when), then schedule them
-  anyway. They wait in the calendar; tell the user they go to the platform once someone approves the card.
+  anyway. They wait in the calendar; tell the user that GIMC puts them at the platform itself the moment someone
+  approves the card. That step is not yours: never wait, poll or set a timer for the approval.
 - Under `human` you schedule and a person takes it from there; no need to ask for approval unless the user wants it.
 - **"Klaar om in te plannen" means: ask for approval.** When a card is ready (the user says "zet klaar", or you
   finished it), call `gimc.canvas_request_review` for every ready card that is not approved, in one call, instead of only
@@ -165,12 +166,16 @@ something does not fit; `options` replaces the whole object, so send all setting
 4. A person confirms the scheduling. Music works only on a Reel, and a track can disappear from the catalogue before
    the post goes out: GIMC then holds the post and says why.
 
-## 5. Approved later: put it at the platform
+## 5. Approved later: GIMC puts it at the platform
 
-When the inbox (`gimc.canvas_inbox`, or `include_inbox` in the context call) lists a card under `reviews` as approved, or the
-user says a card is approved, and its planning is not at the platform yet (`publication.schedule.at_platform` is
-false on `gimc.canvas_get_item`): call `gimc.canvas_reschedule_post` with only its `schedule_id`. Without changes GIMC tries the
-platform again; check `at_platform` in the answer and tell the user. "Changes requested" is work and an open task in
+Approving a card puts its waiting plannings at the platform within seconds; GIMC does that itself, so there is nothing
+to do and nothing to wait for. Only when the inbox (`gimc.canvas_inbox`, or `include_inbox` in the context call) lists a
+card under `reviews` as approved, or the user says a card is approved, and its planning is still not at the platform
+(`publication.schedule.at_platform` is false on `gimc.canvas_get_item`), read its `publish_note`: it says why and who
+acts (too late: a person picks a new time or places it now; a person must place it; the caption differs: change the
+card and ask for approval again). Tell the user that in one sentence; a retry does not change it. Only when no note
+explains it: try once more with `gimc.canvas_reschedule_post` with only its `schedule_id`, check `at_platform` in the
+answer and tell the user. "Changes requested" is work and an open task in
 the inbox (instruction "Wijziging gevraagd: …"): `gimc.canvas_claim_task` (taken by someone else: skip it), change the card
 as asked, `gimc.canvas_complete_task`, then `gimc.canvas_request_review` again. Approving cancels open change tasks. Asking a
 change (or withdrawing approval) takes a post that was already at the platform back to waiting; the next approval
