@@ -121,6 +121,9 @@ async () => {
 
 - `platforms` may be left out when the card has a platform; otherwise give it (`instagram`, `linkedin`, `facebook`,
   `tiktok`, `x`, `youtube`).
+- Card titles name the subject, with an optional number: `#2 · Walmart laat AI inkopen`. Never a day, date or time in
+  a card title (not `#2 · ma 9 nov 19:00 · …`): GIMC shows the moment next to the title everywhere, and a date in the
+  title is wrong as soon as the post moves. Rename such cards before scheduling them.
 - No `caption`: GIMC takes `data.caption` of each card, exactly what was approved. A card without it goes without
   text, so write it on the card first. Another caption: change the card and ask for approval again.
 - An error names the post (`posts.1: …`) and the cause. A card that is already scheduled: use
