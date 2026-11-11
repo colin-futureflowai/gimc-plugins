@@ -51,14 +51,15 @@ answer.
 
 ## Take the input from GIMC
 
-- Numbers of the company's own social accounts and posts: when GIMC is connected (a tool whose name ends in `gimc_execute`), read them with `gimc.social_get_insights` inside `gimc_execute` instead of asking the user to paste them, as the `social-insights` skill describes, and say which accounts and period you used. Pasted numbers still work when GIMC has no connected account or the user brings other numbers.
+- Numbers of the company's own social accounts and posts: when GIMC is connected (a tool whose name ends in `gimc_execute`), read them with `gimc.social_get_insights` inside `gimc_execute` instead of asking the user to paste them, as the `social-insights` skill describes, and say which accounts and period you used. Pasted numbers still work when GIMC has no connected account or the user brings other numbers. More blocks on request with `include` (`growth`, `engagement`, `formats`, `online`, `audience`, `stories`): each has a `status`; on `no_data` give its `reason` in plain words (for example "Instagram geeft dit pas vanaf 100 volgers."), never a 0. Live analyses (content decay, posting frequency, a competitor by handle) come from `gimc.social_get_analysis`, also with a status and reason. When the result is an HTML card on the canvas, its numbers, charts and post cards may be canvas code (`live-*` tags that GIMC fills with real data; see the `marketing-report` skill and `gimc.canvas_code`), so no number is typed by hand.
 
   ```js
   async () => {
-    const i = await gimc.social_get_insights({ period_days: 30, sort: 'top', limit: 20 })
+    const i = await gimc.social_get_insights({ period_days: 30, sort: 'top', limit: 20, include: ['growth', 'engagement', 'formats'] })
     const top = i.posts.slice(0, 5).map(p => ({ platform: p.platform, views: p.views, er: p.engagement_rate, text: (p.excerpt ?? '').slice(0, 60) }))
     const accounts = i.accounts.map(a => ({ account: a.username ?? a.platform, followers: a.followers, growth: a.followers_growth }))
-    return { org_id: i.workspace?.org_id, period: i.period_days, has_accounts: i.has_accounts, totals: i.totals, accounts, top, posts_total: i.posts_total }
+    const blocks = Object.fromEntries(['growth', 'engagement', 'formats'].map(b => [b, i[b]?.status]))
+    return { org_id: i.workspace?.org_id, period: i.period_days, has_accounts: i.has_accounts, totals: i.totals, accounts, top, posts_total: i.posts_total, blocks, profile_views: i.engagement?.totals?.profile_views ?? null }
   }
   ```
 

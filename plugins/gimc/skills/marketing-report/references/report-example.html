@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekrapport · 2–8 november</title>
+<style>
+  body { margin: 0; padding: 40px 24px; font-family: var(--brand-font-body, Inter, system-ui, sans-serif); color: var(--brand-text, #1a1a1a); background: var(--brand-background, #fff); }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 30px; margin: 0 0 4px; }
+  .sub { opacity: .65; margin: 0 0 32px; }
+  h2 { font-size: 18px; margin: 36px 0 12px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .kpi { padding: 14px 16px; border-radius: 12px; border: 1px solid var(--brand-border, rgba(0,0,0,.1)); }
+  .kpi span { display: block; font-size: 12px; opacity: .65; }
+  .kpi .live-value { font-size: 22px; }
+  .findings li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Weekrapport</h1>
+  <p class="sub">2 tot en met 8 november, alle accounts, vergeleken met de week ervoor</p>
+
+  <h2>Wat opviel</h2>
+  <ul class="findings">
+    <li>Je kreeg er <live-value data="followers.gained" from="2026-11-02" to="2026-11-08" compare="previous"></live-value> volgers bij.</li>
+    <li>Je posts werden <live-value data="views" from="2026-11-02" to="2026-11-08" compare="previous"></live-value> keer bekeken; de reel van dinsdag droeg het grootste deel.</li>
+    <li>Reels haalden het meeste bereik; zie de formaten hieronder.</li>
+    <li><live-value data="profile_views" from="2026-11-02" to="2026-11-08"></live-value> mensen bekeken je profiel.</li>
+  </ul>
+
+  <h2>Kerncijfers</h2>
+  <div class="kpis">
+    <div class="kpi"><span>Volgers</span><live-value data="followers.count" from="2026-11-02" to="2026-11-08"></live-value></div>
+    <div class="kpi"><span>Weergaven</span><live-value data="views" from="2026-11-02" to="2026-11-08" compare="previous"></live-value></div>
+    <div class="kpi"><span>Bereik</span><live-value data="reach" from="2026-11-02" to="2026-11-08" compare="previous"></live-value></div>
+    <div class="kpi"><span>Interacties</span><live-value data="interactions" from="2026-11-02" to="2026-11-08" compare="previous"></live-value></div>
+    <div class="kpi"><span>Engagement</span><live-value data="engagement_rate" from="2026-11-02" to="2026-11-08"></live-value></div>
+  </div>
+
+  <h2>Groei, bereik en posts</h2>
+  <!-- Eigen grafiek (Vega-Lite): bereik als staven, volgers als lijn, elke post als stip op de lijn (groter = meer weergaven). -->
+  <live-chart from="2026-11-02" to="2026-11-08">
+  {
+    "width": 760, "height": 260,
+    "encoding": {"x": {"field": "day", "type": "temporal", "title": null, "axis": {"format": "%a %e %b", "grid": false}}},
+    "layer": [
+      {"data": {"name": "reach"}, "mark": {"type": "bar", "color": "var(--brand-secondary, #c2410c)", "opacity": 0.3, "cornerRadiusEnd": 2},
+       "encoding": {"y": {"field": "value", "type": "quantitative", "title": "Bereik", "axis": {"orient": "right", "grid": false}}}},
+      {"layer": [
+        {"data": {"name": "followers.count"}, "mark": {"type": "line", "strokeWidth": 3, "color": "var(--brand-primary, #0b6e99)"},
+         "encoding": {"y": {"field": "value", "type": "quantitative", "title": "Volgers", "scale": {"zero": false}}}},
+        {"data": {"name": "posts"},
+         "transform": [{"lookup": "day", "from": {"data": {"name": "followers.count"}, "key": "day", "fields": ["value"]}}],
+         "mark": {"type": "point", "filled": true, "opacity": 1, "color": "var(--brand-primary, #0b6e99)", "stroke": "white", "strokeWidth": 2},
+         "encoding": {"y": {"field": "value", "type": "quantitative"}, "size": {"field": "views", "type": "quantitative", "legend": null, "scale": {"range": [60, 400]}}}}
+      ]}
+    ],
+    "resolve": {"scale": {"y": "independent"}}
+  }
+  </live-chart>
+
+  <h2>Beste posts</h2>
+  <live-posts data="posts.top" from="2026-11-02" to="2026-11-08" limit="5" show="media,views,reach,interactions"></live-posts>
+
+  <h2>Formaten</h2>
+  <live-chart data="formats.reach" from="2026-11-02" to="2026-11-08" view="bars"></live-chart>
+
+  <h2>Volgers online</h2>
+  <live-chart data="online.heatmap" from="2026-11-02" to="2026-11-08" view="heatmap"></live-chart>
+
+  <h2>Wat nu</h2>
+  <ul>
+    <li>Maak een remix van de beste reel (kaart "Remix van de winnaar").</li>
+    <li>Plan de volgende reel op het sterkste moment (kaart "Post dinsdag 19:00").</li>
+  </ul>
+</main>
+</body>
+</html>

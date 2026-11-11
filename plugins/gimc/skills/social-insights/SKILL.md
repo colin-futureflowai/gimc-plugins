@@ -96,6 +96,8 @@ Follow `gimc-canvas` for the board itself. A readout is its own small run:
 
 - The user wants a full report, an audit or a retrospective: run that analysis skill (for example
   `social-analytics-report`, `content-audit`, `launch-retrospective`) with the numbers from here as its input.
+- The user wants a report on the canvas with charts, the posts themselves and numbers that GIMC fills in (week,
+  month, best times, versus a competitor): the `marketing-report` skill.
 - The numbers point to a posting time or a series: `best-time-scheduler` or `content-calendar`, then the
   `content-planning` skill to put it in the calendar.
 

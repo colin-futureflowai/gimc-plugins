@@ -5,7 +5,7 @@ description: The GIMC hub. How to put work on the GIMC canvas (boards, frames, c
 
 # GIMC canvas
 
-This is plugin version 1.1.2. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 1.2.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas (`/marketing/canvas`) is the user's content board. People watch it while you work: make it read like the story of the run.
 
@@ -38,7 +38,7 @@ No rights or an expired token: say so and continue without the canvas.
 
 ## 2. Orient with one call — before any other canvas call
 
-The **first** canvas call of a conversation is `gimc.canvas_get_context` (with `folder_id` or `board_id` when you know one, otherwise `workspace` and `folder` by name when the user named them, and `include_inbox: true`). One answer gives workspace, folder path, folder notes up the chain, brand, boards and subfolders, and with `board_id` the board overview and inbox.
+The **first** canvas call of a conversation is `gimc.canvas_get_context` (with `folder_id` or `board_id` when you know one, otherwise `workspace` and `folder` by name when the user named them, and `include_inbox: true`). One answer gives workspace, folder notes up the chain, brand, boards and subfolders, and with `board_id` the board overview and inbox.
 
 - `choose_workspace: true` with a list `workspaces`: that is the answer, not a failure. Use the one the user named and say which; otherwise ask **once per conversation**. Then pass that `org_id` in **every** GIMC call, including uploads, plans and links.
 - "Geen bedrijf gekoppeld": the account has no workspace. Say so in one sentence and skip the canvas.
@@ -56,7 +56,7 @@ Boards live in folders (per client or campaign). **All steps of a run stay on on
 |---|---|
 | Ideeën, Planning, Strategie, Notities | Ideeën |
 | Onderzoek | Onderzoek & concurrentie |
-| Analyse | Analyses |
+| Analyse, Rapport | Analyses |
 | Hooks, Script, Tekst in beeld, Shotlist, Cover, Eindvideo, Clips, Carrousel, Stories, Publicatie, CTA, Profiel, Outreach, Opvolging, Reacties, Briefing, Bouwwerken | In productie |
 | Brandbook | Brandbook |
 
@@ -88,7 +88,7 @@ The board reads left to right like the run: one frame per step, its cards in a g
 **Cards.** Create them with `frame_id` and no x/y: GIMC finds a free spot and nothing overlaps.
 
 - Kind, frame and relation come from the skill's "Put it on GIMC" section. Kinds are exactly: `video`, `image`, `carousel`, `note`, `hook`, `script`, `analysis`, `idea`, `link`, `doc`, `frame`, `html` (a self-contained page, made only with `gimc.canvas_create_html_card` or a plan step; the board shows it without scripts, so scripts only enrich). **Building** an email, carousel, post or story: one `gimc.canvas_create_build` call, see `canvas-builds`.
-- **Title** short and specific, the thing itself (max ~80 characters). **Body** the full result in Markdown, in the user's language, usable without the chat.
+- **Title** short and specific (max ~80 characters). **Body** the full result in Markdown, in the user's language, usable without the chat.
 - Alternatives: one card each. A choice: a `note` "Keuze: Hook B".
 
 **One call per step.** Make one `gimc.canvas_create_items` call per step: frame, cards and links together (frames first; refs only for items in this call, ids for existing ones). Never in parallel.
@@ -121,6 +121,7 @@ A card is the anchor of a piece of content:
 | A ready-to-use email, carousel, post, story | `canvas-builds` |
 | Ask for approval, plan it, put it at the platform, follow its status | `content-planning` |
 | Numbers of accounts and posts | `social-insights` |
+| Reports; numbers in HTML cards (canvas code) | `marketing-report` |
 | Boosts and ad budget | `social-ads` |
 | Comments, reply drafts, reply campaigns | `social-engagement` |
 
@@ -129,4 +130,4 @@ Approval is a person's decision on the card, with a comment. You can ask for it,
 ## 9. When you are done
 
 1. **Update the folder note** once, if a next session needs something new: where things are, decisions, open work, what the user wants. Keep what people wrote, add your lines, and call `gimc.canvas_update_folder_note` with the whole text and the `expected_version` you read. Short; no transcripts, no personal data. On a conflict, read again, merge, retry once — never overwrite ([references/folders.md](references/folders.md)).
-2. **Close with one to three sentences, never the content again**: what is ready on which `folder › board › frame`, the link (`app_url` from the answer) and what the user can do now; no list of the cards. Paste card text in the chat only when the user asks for it there, or when the canvas failed (then say so).
+2. **Close with one to three sentences, never the content again**: what is ready on which `folder › board › frame`, the link (`app_url` from the answer) and what the user can do now. Paste card text in the chat only when the user asks for it there, or when the canvas failed (then say so).
