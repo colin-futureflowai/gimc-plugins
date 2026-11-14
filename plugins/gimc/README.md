@@ -2,7 +2,7 @@
 
 GIMC is a plugin that brings 54 content skills (hooks, reels, carousels, captions, research and more) and
 GIMC's own skills together with a connection to your GIMC workspace. When you ask for it, a skill puts its
-result as a card on your GIMC canvas, so the whole content process stays in one place. Version 1.3.0.
+result as a card on your GIMC canvas, so the whole content process stays in one place. Version 1.4.0.
 
 ## Skills at a glance
 

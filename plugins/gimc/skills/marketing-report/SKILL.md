@@ -10,7 +10,7 @@ argument-hint: "[setup name, period, account or competitor]"
 license: MIT
 metadata:
   author: GIMC
-  version: "1.1.0"
+  version: "1.2.0"
   category: analytics
 ---
 
@@ -100,6 +100,10 @@ or 90 (pick the one that covers the period), `include` the blocks the parts need
 `gimc.social_get_analysis` with `kind: 'competitor'` and `username`. Each block has a `status`; a `no_data` block has a
 `reason` — the report then shows that reason (the tag does it for you), and your finding says it in plain words, never
 "0".
+
+**Instagram and Facebook do not add up.** They count views and reach differently. With accounts on both, read each
+with `platform: 'instagram'` / `platform: 'facebook'` and give findings per platform; on the card use
+`account="<handle>"` per tag, never one total over both.
 
 **Only parts with data for the whole period.** With any `include`, the answer has `coverage`: per kind of data the
 first day it exists (`null` = never measured). A part whose day is `null` or later than the run's `from` is **left out of

@@ -11,7 +11,7 @@
       "name": "gimc",
       "source": "./plugins/gimc",
       "description": "Content skills that put their result on the GIMC canvas",
-      "version": "1.3.0"
+      "version": "1.4.0"
     }
   ]
 }
