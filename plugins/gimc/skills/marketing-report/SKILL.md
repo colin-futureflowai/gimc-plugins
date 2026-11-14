@@ -10,7 +10,7 @@ argument-hint: "[setup name, period, account or competitor]"
 license: MIT
 metadata:
   author: GIMC
-  version: "1.0.0"
+  version: "1.1.0"
   category: analytics
 ---
 
@@ -82,6 +82,12 @@ Turn the setup's period into fixed dates for **this** run, in Amsterdam time:
 - "vorige maand" = the first to the last day of last month;
 - "laatste 30/90 dagen" = 30/90 days up to and including yesterday.
 
+**Older periods are fine** ("oktober", "Q3", "de zomer"): a report can go back as far as the data does (see §4,
+`coverage`). Posts usually go back 90 days from the connection; account figures 90 days; growth per day only from the
+day GIMC started measuring. Need posts from before `coverage.posts_from`? Read once with
+`gimc.social_get_insights({ period_days: 0, refresh: true })` (only reads from the platforms, at most once every 15
+minutes) and read `coverage` again.
+
 **A report always uses `from` and `to`, never `range`.** A report is fixed per run: a setup "always the last week" means
 every run makes a new report with the dates of that week, and GIMC freezes those numbers once the data is complete
 (until then the card shows "voorlopig"). `range` is only for a live numbers card without written conclusions.
@@ -95,12 +101,29 @@ or 90 (pick the one that covers the period), `include` the blocks the parts need
 `reason` — the report then shows that reason (the tag does it for you), and your finding says it in plain words, never
 "0".
 
+**Only parts with data for the whole period.** With any `include`, the answer has `coverage`: per kind of data the
+first day it exists (`null` = never measured). A part whose day is `null` or later than the run's `from` is **left out of
+the report entirely**: no tag, no heading, no sentence about it. Do not show a part before there is data for it.
+
+| Part | Needs |
+|---|---|
+| groei, `followers.gained`/`lost` | `follower_changes_from` ≤ F (GIMC measures this from the connection; there is no history) |
+| `followers.growth`, kerncijfer volgers | `followers_from` ≤ F (otherwise leave out growth; `followers.count` alone is fine) |
+| resultaten (`profile_views`, `website_clicks`) | `account_metrics_from` ≤ F |
+| formaten | `formats_from` ≤ F |
+| volgers online | `online_from` set (it averages what is there) |
+| posts, views, reach, interactions, tijdlijn | `posts_from` ≤ F |
+
+`compare="previous"` only when the same day is also ≤ the start of the period before (F minus the period's length);
+otherwise drop `compare` on that tag. Left parts out? Add one small grey line at the bottom ("Groei per dag volgt zodra
+GIMC die heeft gemeten."), no numbers, no reasons per part.
+
 ```js
 async () => {
   const i = await gimc.social_get_insights({ period_days: 30, sort: 'top', limit: 20, include: ['growth', 'engagement', 'formats', 'online'] })
   const top = i.posts.slice(0, 6).map(p => ({ id: p.id, type: p.media_type, at: p.published_at, views: p.views, reach: p.reach, er: p.engagement_rate, card: p.canvas_item_id, media: !!p.media_url, text: (p.excerpt ?? '').slice(0, 60) }))
   const status = Object.fromEntries(['growth', 'engagement', 'formats', 'online'].map(b => [b, i[b]?.status]))
-  return { org_id: i.workspace?.org_id, totals: i.totals, accounts: i.accounts.map(a => ({ u: a.username, f: a.followers, g: a.followers_growth })), top, status }
+  return { org_id: i.workspace?.org_id, coverage: i.coverage, totals: i.totals, accounts: i.accounts.map(a => ({ u: a.username, f: a.followers, g: a.followers_growth })), top, status }
 }
 ```
 
@@ -113,7 +136,7 @@ One self-contained page (format `page`), short and visual, in the user's languag
 
 1. Headline with the report name and the period in words ("Weekrapport · 2–8 november").
 2. **Three to five findings** in plain sentences. **Every number is a `<live-value>`** with the same `from`/`to`, for
-   example: `Je kreeg er <live-value data="followers.gained" from="2026-11-02" to="2026-11-08" compare="previous"></live-value> volgers bij.`
+   example: `Je posts werden <live-value data="views" from="2026-11-02" to="2026-11-08" compare="previous"></live-value> keer bekeken.`
    No typed digits in the findings (dates in the headline are fine). A part without data: the tag shows the reason;
    don't repeat it in your own sentence.
 3. The parts of the setup, in order, each as its tags (the mapping per part: [references/setups.md](references/setups.md)).

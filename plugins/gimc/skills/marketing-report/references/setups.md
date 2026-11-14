@@ -35,11 +35,11 @@ setup names one account.
 |---|---|
 | kerncijfers | `<live-value data="followers.count" from="F" to="T">`, `views`, `reach`, `interactions`, `engagement_rate`, each with `compare="previous"` when the setup compares |
 | resultaten | `<live-value data="profile_views" …>`, `<live-value data="website_clicks" …>` (profile visits and link clicks are separate numbers; no funnel) |
-| groei | `<live-chart data="followers.growth" from="F" to="T" view="line">` + `<live-value data="followers.gained" …>` and `followers.lost` |
+| groei | `<live-chart data="followers.growth" from="F" to="T" view="line">` + `<live-value data="followers.gained" …>` and `followers.lost`; only the tags whose `coverage` day is ≤ F (SKILL §4), otherwise leave the part out |
 | tijdlijn | `<live-chart data="views" from="F" to="T" view="bars">` (views of posts per day) |
 | beste posts (n) | `<live-posts data="posts.top" from="F" to="T" limit="n" show="media,views,reach,interactions">`; one featured post: `<live-post post="ID" show="media,views,reach,watch_time,skip_rate,follows">` |
 | formaten | `<live-chart data="formats.reach" from="F" to="T" view="bars">` |
-| volgers online | `<live-chart data="online.heatmap" from="F" to="T" view="heatmap">` (hours as Meta gives them; the chart says so) |
+| volgers online | `<live-chart data="online.heatmap" from="F" to="T" view="heatmap">` (hours in Amsterdam time; GIMC converts Meta's Pacific hours) |
 | doelgroep | `<live-chart data="audience.country" view="bars">`, `audience.city`, `audience.age` (latest measurement; with `to="T"` the latest up to that day) |
 | stories | `<live-value data="stories" from="F" to="T">` (count) + `<live-table data="stories" from="F" to="T">` |
 | beste tijden | `<live-table data="best_times">` (always current, no period) |
@@ -49,6 +49,8 @@ setup names one account.
 follows, profile_views, date, caption`. `<live-posts>`: `limit` 1–12 (default 5), `sort` `views|reach|interactions|engagement_rate`.
 
 ## What the reader sees
+
+- Only parts with data for the whole period (SKILL §4, `coverage`); a part without it is not in the report.
 
 - A number with a reason instead of a value (for example "Instagram geeft dit pas vanaf 100 volgers.") — never a 0.
 - "voorlopig" next to a number whose period ended less than a day ago (two days for followers online); it freezes
