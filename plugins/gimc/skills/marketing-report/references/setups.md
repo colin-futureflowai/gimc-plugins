@@ -37,7 +37,7 @@ setup names one account.
 | resultaten | `<live-value data="profile_views" …>`, `<live-value data="website_clicks" …>` (profile visits and link clicks are separate numbers; no funnel) |
 | groei | `<live-chart data="followers.growth" from="F" to="T" view="line">` + `<live-value data="followers.gained" …>` and `followers.lost`; only the tags whose `coverage` day is ≤ F (SKILL §4), otherwise leave the part out |
 | tijdlijn | `<live-chart data="views" from="F" to="T" view="bars">` (views of posts per day) |
-| beste posts (n) | `<live-posts data="posts.top" from="F" to="T" limit="n" show="media,views,reach,interactions">`; one featured post: `<live-post post="ID" show="media,views,reach,watch_time,skip_rate,follows">` |
+| beste posts (n) | `<live-posts data="posts.top" from="F" to="T" limit="n" show="media,views,reach,interactions">`; one featured post: `<live-post post="ID" show="media,views,reach,watch_time,skip_rate,follows">`; a featured Facebook reel or TikTok video also gets `<live-chart data="post.retention" post="ID" view="retention">` and one sentence with `<live-value data="post.retention" post="ID">` (the median in seconds; never for Instagram) |
 | formaten | `<live-chart data="formats.reach" from="F" to="T" view="bars">` |
 | volgers online | `<live-chart data="online.heatmap" from="F" to="T" view="heatmap">` (hours in Amsterdam time; GIMC converts Meta's Pacific hours) |
 | doelgroep | `<live-chart data="audience.country" view="bars">`, `audience.city`, `audience.age` (latest measurement; with `to="T"` the latest up to that day) |

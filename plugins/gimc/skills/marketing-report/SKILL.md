@@ -10,7 +10,7 @@ argument-hint: "[setup name, period, account or competitor]"
 license: MIT
 metadata:
   author: GIMC
-  version: "1.2.0"
+  version: "1.3.0"
   category: analytics
 ---
 
@@ -125,7 +125,7 @@ GIMC die heeft gemeten."), no numbers, no reasons per part.
 ```js
 async () => {
   const i = await gimc.social_get_insights({ period_days: 30, sort: 'top', limit: 20, include: ['growth', 'engagement', 'formats', 'online'] })
-  const top = i.posts.slice(0, 6).map(p => ({ id: p.id, type: p.media_type, at: p.published_at, views: p.views, reach: p.reach, er: p.engagement_rate, card: p.canvas_item_id, media: !!p.media_url, text: (p.excerpt ?? '').slice(0, 60) }))
+  const top = i.posts.slice(0, 6).map(p => ({ id: p.id, platform: p.platform, type: p.media_type, at: p.published_at, views: p.views, reach: p.reach, er: p.engagement_rate, card: p.canvas_item_id, media: !!p.media_url, text: (p.excerpt ?? '').slice(0, 60) }))
   const status = Object.fromEntries(['growth', 'engagement', 'formats', 'online'].map(b => [b, i[b]?.status]))
   return { org_id: i.workspace?.org_id, coverage: i.coverage, totals: i.totals, accounts: i.accounts.map(a => ({ u: a.username, f: a.followers, g: a.followers_growth })), top, status }
 }
@@ -146,6 +146,13 @@ One self-contained page (format `page`), short and visual, in the user's languag
 3. The parts of the setup, in order, each as its tags (the mapping per part: [references/setups.md](references/setups.md)).
 4. Posts as `<live-post>` (one featured post, video big) or `<live-posts>` (a ranking). GIMC shows the post's own video
    or image from GIMC storage, or "Beeld niet bewaard".
+   **A featured Facebook reel (or TikTok video) gets its watch graph** right under it:
+   `<live-chart data="post.retention" post="ID" view="retention"></live-chart>` (who is still watching, drop-off per
+   second as bars with a smooth curve, and the median), plus **one sentence about the median** with the number as a tag:
+   `De helft van de kijkers is na <live-value data="post.retention" post="ID"></live-value> weg.` Same `ID` as the
+   `<live-post>`. Never for Instagram: Instagram gives no curve per second (the tag would only show that reason). Want
+   your own design? `{"data": {"name": "post.retention"}}` in a spec with `post="ID"` on `<live-chart>` (fields:
+   `chart_spec.row_fields.retention`).
 5. **Charts are yours to design.** The short form `<live-chart data="…" view="line|bars|heatmap">` is a quick default.
    For a chart that tells the story, put a **Vega-Lite spec** (JSON) inside `<live-chart from="…" to="…">…</live-chart>`:
    layers, a second axis, posts as dots on the follower line, `@previous` for last period as a faint line, a trend

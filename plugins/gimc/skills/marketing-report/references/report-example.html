@@ -63,6 +63,11 @@
   <h2>Beste posts</h2>
   <live-posts data="posts.top" from="2026-11-02" to="2026-11-08" limit="5" show="media,views,reach,interactions"></live-posts>
 
+  <h2>Uitgelichte reel</h2>
+  <live-post post="ID-VAN-DE-FACEBOOK-REEL" show="media,views,reach,watch_time,follows"></live-post>
+  <p>De helft van de kijkers is na <live-value data="post.retention" post="ID-VAN-DE-FACEBOOK-REEL"></live-value> weg; daarna haken ze langzamer af.</p>
+  <live-chart data="post.retention" post="ID-VAN-DE-FACEBOOK-REEL" view="retention"></live-chart>
+
   <h2>Formaten</h2>
   <live-chart data="formats.reach" from="2026-11-02" to="2026-11-08" view="bars"></live-chart>
 
