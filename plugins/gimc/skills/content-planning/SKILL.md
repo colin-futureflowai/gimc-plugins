@@ -33,6 +33,11 @@ published" before it is.
   posts, reels, carousels, images — not frames, notes or analyses), in board order (top to bottom, left to right).
 - The posts do not exist yet: make them first as cards (follow `gimc-canvas`; a social post card has
   `data.platform` and `data.caption`), then schedule those cards.
+- **Only posts can be scheduled.** Videos, images, carousels, post builds and cards with `data.platform` count as posts;
+  an HTML card counts when it has a post format (`1:1`, `4:5`, `9:16`). Notes, scripts, analyses, reports and other
+  cards are refused (409). A card that is meant as a post but is not one of those (a text card, an HTML page): mark it
+  with `data.post = true` (`gimc.canvas_update_item` with the whole `data` plus `post: true`). A card that looks like a
+  post but is not one: `data.post = false`. Never mark a report or an analysis as a post.
 
 **The caption lives on the card.** The text under the post is `data.caption` of the card, separate from the card text
 (`body`: script, notes, idea). Before you ask for approval, write it: `gimc.canvas_get_item`, then `gimc.canvas_update_item` with
