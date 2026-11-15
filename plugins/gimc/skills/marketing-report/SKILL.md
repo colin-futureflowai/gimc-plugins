@@ -10,7 +10,7 @@ argument-hint: "[setup name, period, account or competitor]"
 license: MIT
 metadata:
   author: GIMC
-  version: "1.3.0"
+  version: "1.4.0"
   category: analytics
 ---
 
@@ -133,6 +133,13 @@ async () => {
 
 Use these numbers to decide **what** to say (which post won, which format carries reach, whether growth sped up). The
 card itself shows the numbers through tags; post ids for `<live-post post="…">` come from `posts[].id`.
+
+**See every post before you pick.** Full post rows stop at 50. When `posts_total` is larger than what you got (or the
+report is about a long period), read them all in short form in the same script:
+`gimc.social_get_insights({ period_days: 90, sort: 'top', limit: 500 })` gives `id, platform, published_at, media_type,
+views, reach, interactions, engagement_rate, text` per post. Pick featured posts from that full list, never only from
+the top 50. On the card, series per day and
+`posts` already use every post in the period (up to the newest 500).
 
 ## 5. Write the HTML
 
