@@ -10,7 +10,7 @@ argument-hint: "[setup name, period, account or competitor]"
 license: MIT
 metadata:
   author: GIMC
-  version: "1.4.0"
+  version: "1.4.1"
   category: analytics
 ---
 
@@ -166,6 +166,10 @@ One self-contained page (format `page`), short and visual, in the user's languag
    line (`regression` or `loess`), annotations, brand colours as `var(--brand-primary, #hex)`. Every `data` is only `{"name": "<data-name>"}`; GIMC
    fills in the rows and draws it, so you still type no numbers. Fields, data names and a full example:
    `chart_spec` in `gimc.canvas_code({ mode: 'reference' })`.
+   **Posts stay clickable.** A click on a post opens its panel (numbers, video, watch graph), on the board too: post
+   cards, table rows and chart marks with one mark per post (a dot, a bar) do this by themselves. A post you draw
+   yourself in HTML (a phone with its image, a label) needs `data-live-post="<post id>"` on its outer element, with the
+   `id` from `gimc.social_get_insights`; without it, it is just a picture.
 6. A short "Wat nu" list that matches the next-step cards (section 6).
 
 A full example: [references/report-example.html](references/report-example.html). The tag reference (elements,
