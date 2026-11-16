@@ -1,2 +1,4 @@
 Many content skills in this plugin are based on claude-content-skills by Ootto (MIT License). See LICENSE.
 GIMC maintains and adapts them; a "Put it on GIMC" section is appended to most skills when the plugin is built.
+The hook library in skills/viral-hook-writer/references/hook-library.md comes from viral-hooks-skill by Roman Knox
+(MIT License, https://github.com/rediumvex/viral-hooks-skill); see hook-library-LICENSE.md next to it.

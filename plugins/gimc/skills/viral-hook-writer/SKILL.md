@@ -1,49 +1,96 @@
 ---
 name: viral-hook-writer
 description: >
-  Write scroll-stopping hooks for a short-form video (the first 1-3 seconds). Use when the user says
-  "hook", "reel hook", "opening line", "scroll stopper", "first three seconds", "TikTok hook", or "how
-  do I start this video".
+  Writes scroll-stopping hooks for a short-form video (the first 1-3 seconds) in three modes: new
+  hooks from a topic, an A/B pair with a test plan, or remixes of proven hooks from a CSV of real
+  performance data. Use when the user says "hook", "reel hook", "opening line", "scroll stopper",
+  "first three seconds", "how do I start this video", "A/B this hook", "two hooks to test", "hook
+  variants", "mine hooks", "remix hooks" or "make hooks from this CSV".
 user-invokable: true
-argument-hint: "[reel topic / what the video is about]"
+argument-hint: "[reel topic, a script to A/B, or a hooks CSV]"
 license: MIT
 metadata:
   author: Ootto
-  version: "1.0.0"
+  version: "2.0.0"
   category: content
 ---
 
 # Viral Hook Writer
 
-Generate a batch of scroll-stopping hooks for a reel — the make-or-break first 1-3 seconds.
+Hooks for a reel — the make-or-break first 1-3 seconds. One skill, three modes; pick the mode from what
+the user brings.
 
-## When to use
+| The user brings | Mode | Result |
+|---|---|---|
+| A topic or idea (default) | **1 · New hooks** | 10 hooks from the hook library, top 3 to test |
+| A script or idea + "which opening?" / "A/B this" | **2 · A/B test** | 2 hooks with different mechanisms + a test plan |
+| A CSV or list of hooks with numbers (views, likes, score) | **3 · From data** | ranked patterns + 3-5 remixes per proven hook |
+
+Not sure? Ask one question: "Do you have a topic, two openings to test, or a list of hooks that already performed?"
+
+## The hook library
+
+[references/hook-library.md](references/hook-library.md) holds 100 proven hook formulas in 10 psychology
+categories (01 Curiosity Gap, 02 Contrarian, 03 Authority & Proof, 04 Emotional Trigger, 05 Listicle,
+06 Question, 07 Story, 08 Negation / Myth Buster, 09 Specificity & Data, 10 Personal Confession), each with
+an ID, an example and the best platform. Read it before you write hooks in mode 1 or 2.
+
+- **Mix categories.** The best pair is usually one **stop-scroll** hook (08 negation, 09 specificity,
+  06 question) and one **retention** hook (07 story, 10 confession, 04 emotional).
+- **Fill the brackets** with the user's own topic, numbers and audience. A number must be theirs and true;
+  if you don't have one, ask or pick a formula without a number. Never leave a bracket or a library example in.
+- **Write in the user's language** (the formulas are English; translate the structure, not word for word)
+  and native to the platform: TikTok / Instagram casual, LinkedIn punchy and declarative, YouTube
+  title-style, X short and contrarian.
+- **Tag every hook** with its formula ID and category, e.g. `#087 · 09 Specificity`, so you can see later
+  which formulas win.
+
+Source: [rediumvex/viral-hooks-skill](https://github.com/rediumvex/viral-hooks-skill), MIT, see
+[references/hook-library-LICENSE.md](references/hook-library-LICENSE.md).
+
+## Mode 1 — new hooks
+
 You have a reel topic but the opening is weak. The hook is ~80% of whether anyone watches — this gives you options to test.
 
-## What you'll need
+### What you'll need
 The topic, who it's for (your audience/niche), and the one thing you want them to feel or do. Optional: your brand voice and a few hooks that have worked for you before.
 
-## Instructions
-Collect the topic and audience, then run this prompt:
+### Instructions
+Collect the topic, audience and platform, read the hook library, then run this prompt:
 
 ```
-You are my short-form video hook writer. Topic: [topic]. Audience: [who it's for]. Desired reaction: [stop scrolling / save it / comment / DM me].
+You are my short-form video hook writer. Topic: [topic]. Audience: [who it's for]. Platform: [platform]. Desired reaction: [stop scrolling / save it / comment / DM me].
 
-Write 10 hooks for the first 1-3 seconds. Use a spread of proven angles:
-- Bold claim / contrarian take
-- "If you [situation], do this"
-- Mistake / "stop doing X"
-- Number + payoff ("3 ways to…")
-- Curiosity gap / open loop
-- Result-first ("I went from X to Y")
-- Question that names the pain
+Write 10 hooks for the first 1-3 seconds, each built on a formula from the hook library, from at least
+5 different categories, with stop-scroll and retention categories both represented.
 
-Rules: under 12 words each, spoken-language, no fluff, no hashtags. For each hook add a 3-5 word on-screen text version. Mark the 3 you'd test first and say why in one line.
+Rules: under 12 words each, spoken-language, no fluff, no hashtags. For each hook give its formula ID and
+category, and a 3-5 word on-screen text version. Mark the 3 you'd test first and say why in one line.
 ```
 
 **Obsidian memory tip:** If you've connected your Obsidian vault (Filesystem MCP), point Claude at your notes of past reels — "use the hooks that performed best in my vault as the pattern." Hooks grounded in *your* winners beat generic ones.
 
 **Tip:** Always generate 10 and test 2-3. The hook you love is rarely the one that wins.
+
+## Mode 2 — A/B test
+
+Two genuinely distinct hooks for the same reel, each with a different mechanism (not one hook reworded;
+take them from two different library categories, ideally one stop-scroll and one retention),
+plus the hypothesis, what stays constant, which metric decides and how many views you need. One variable:
+if the cover or caption changes too, it isn't a test. Full prompt and rules:
+[references/ab-test.md](references/ab-test.md).
+
+On the canvas: the two hooks are `hook` cards; the second links to the first with relation `ab_variant`.
+
+## Mode 3 — from data (hook mining)
+
+Keep the psychology, swap only the power words. Mine a CSV of hooks that actually performed with
+`python skills/viral-hook-writer/scripts/mine_hooks.py hooks.csv [--top 40]` (auto-detects the hook and
+performance columns, buckets by pattern, writes `hooks.mined.json`), then write 3-5 remixes per proven
+hook that keep its structure. Never ship a mined hook verbatim. Steps, hard rules and failure modes:
+[references/mining.md](references/mining.md).
+
+On the canvas: each remix is a `hook` card linked to its source hook with relation `variant`.
 
 ## Put it on GIMC
 
