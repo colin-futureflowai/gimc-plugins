@@ -1,11 +1,12 @@
 ---
 name: campaign-brief
-description: FutureFlowAI Campaign Brief skill. Use when a social campaign needs a decision-ready brief before anyone writes posts, books creators, or spends budget. Trigger phrases include "brief this launch", "turn this into a campaign plan", "what should this campaign say?", "make a social brief", and "align the team on this promotion". Do not use this for a content calendar, a single caption, or an unapproved product claim; use content-calendar for scheduling, caption-and-hashtags for a post, and positioning-audit when the core message is still unclear.
+description: >
+  Use when a social campaign needs a decision-ready brief before anyone writes posts, books creators,
+  or spends budget. Also when the user says "brief this launch", "turn this into a campaign plan",
+  "what should this campaign say?", "make a social brief", or "align the team on this promotion".
 ---
 
 # Campaign Brief
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Campaign Brief skill", e.g. "I'll use the FutureFlowAI Campaign Brief skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Create the shared decision document that keeps a social campaign focused on one real outcome, one truthful promise, and clear channel roles.
 

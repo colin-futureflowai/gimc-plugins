@@ -1,33 +1,32 @@
-# 搜索工具
+# Search
 
-Exa AI 搜索引擎。
+Exa AI search engine.
 
-## Exa AI 搜索
+## Exa AI search
 
-高质量 AI 搜索引擎，擅长技术和代码搜索。
+High-quality AI search engine, strong on technical and code search.
 
 ```bash
 mcporter call 'exa.web_search_exa(query: "query", numResults: 5)'
 mcporter call 'exa.get_code_context_exa(query: "code question", tokensNum: 3000)'
 ```
 
-### 使用场景
+### When to use which call
 
-| 场景 | 参数 |
-|-----|------|
-| 网页搜索 | `web_search_exa(query: "...", numResults: 5)` |
-| 代码搜索 | `get_code_context_exa(query: "...", tokensNum: 3000)` |
+| Need | Call |
+|---|---|
+| Web search | `web_search_exa(query: "...", numResults: 5)` |
+| Code search | `get_code_context_exa(query: "...", tokensNum: 3000)` |
 
-### 特点
+### Strengths
 
-- 擅长英文内容和技术文档
-- 支持代码上下文搜索
-- 结果质量高
+- Strong on English content and technical docs
+- Supports code-context search
+- High-quality results
 
-## 与其他搜索工具对比
+## Compared with other search tools
 
-| 工具 | 来源 | 适用场景 |
-|-----|------|---------|
-| Exa | agent-reach | 英文/技术/代码搜索 |
-| 智谱搜索 | my-mcp-tools | 中文搜索 |
-| GitHub 搜索 | agent-reach (dev.md) | 仓库/代码搜索 |
+| Tool | Best for |
+|---|---|
+| Exa | English / technical / code search |
+| GitHub search ([dev.md](dev.md)) | Repos and code |

@@ -1,11 +1,13 @@
 ---
 name: competitor-positioning
-description: FutureFlowAI Competitor Positioning skill. Use when you need to compare supplied competitor messaging with your approved product facts and find a credible point of difference. Trigger phrases include "how are competitors positioned?", "compare our message to theirs", "where are we different?", "audit these competitor pages", and "what should we not say?". Do not use this to make unverified claims about competitors, copy their language, or write the final brand message in isolation; use agent-reach to collect public sources, positioning-audit to decide your message, and campaign-brief to apply it.
+description: >
+  Use when you need to compare supplied competitor messaging with your approved product facts and find
+  a credible point of difference. Also when the user says "how are competitors positioned?", "compare
+  our message to theirs", "where are we different?", "audit these competitor pages", or "what should
+  we not say?".
 ---
 
 # Competitor Positioning
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Competitor Positioning skill", e.g. "I'll use the FutureFlowAI Competitor Positioning skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Compare observable market messages without turning a competitor scan into a claim sheet or imitation exercise.
 

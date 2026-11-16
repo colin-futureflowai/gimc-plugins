@@ -1,11 +1,11 @@
 ---
 name: comment-responder
 description: >
-  FutureFlowAI Comment Responder skill.
-  Turn every comment into a lead on autopilot. Claude watches your new comments, posts a friendly
-  public reply (never a link), and DMs the commenter your lead magnet / resource — then logs them as a
-  lead. Use when the user says "auto reply to comments", "DM everyone who comments", "comment to DM",
-  "lead magnet automation", "turn comments into leads", "auto-respond", or "capture leads from a reel".
+  Turns comments into leads: sets up a keyword campaign (link-free public reply + a DM with your lead
+  magnet) that a person checks and sets live, after which GIMC answers every matching comment. Also
+  drafts replies to single comments for a person to post. Use when the user says "auto reply to
+  comments", "DM everyone who comments", "comment to DM", "lead magnet automation", "turn comments
+  into leads", "auto-respond", or "capture leads from a reel".
 user-invokable: true
 argument-hint: "[the comment keyword + what to DM, e.g. SKILLS → the repo link]"
 license: MIT
@@ -17,42 +17,45 @@ metadata:
 
 # Comment Responder — every comment becomes a lead
 
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Comment Responder skill", e.g. "I'll use the FutureFlowAI Comment Responder skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
+Post a reel with a "comment WORD and I'll send it" CTA, and this sets up the back half: a rule that
+answers each matching comment publicly (warm, **link-free**) and sends the resource by DM. **You write
+the rule; a person checks it and sets it live.** From then on GIMC runs it, so you don't have to type
+"sent you a DM 🙌" by hand.
 
-Post a reel with a "comment WORD and I'll send it" CTA, and this runs the back half for you: it detects
-each new comment, replies publicly (warm, **link-free**), and slides the resource into the commenter's
-DMs — so you wake up to a list of leads instead of a pile of "sent you a DM 🙌" you have to do by hand.
+## What you never do yourself
+- **Never post a reply or send a DM yourself**, and never set a campaign live: a person does that in GIMC.
+- **Never use an outside tool** for this (no ManyChat, comment monitor, cron job, GitHub Action or
+  `auto_responses.json`). The rule lives in GIMC.
 
 ## When to use
-Any reel/post with a keyword CTA ("comment SKILLS / BREAKDOWN / SETUP …"). Set the rule once; it handles
-every commenter the same way, 24/7.
+- **A keyword CTA** ("comment SKILLS / BREAKDOWN / SETUP …") on a reel or post, before or after it is
+  published: make a reply campaign.
+- **Single comments** that need a personal answer (questions, objections): write reply drafts.
 
 ## What you'll need
-The **keyword(s)** people will comment, the **public reply** (no link), and the **DM** (the link/resource
-lives here). Optional: the specific post to scope it to.
+The **keyword(s)** people will comment, the **public reply** (no link), and the **DM** (the link or
+resource goes here). Optional: the post it belongs to, and a daily maximum (default 25).
 
 ## Instructions
-Define one rule per CTA — it slots straight into a comment monitor's `auto_responses.json`:
 
-```
-You are my comment-to-lead responder. For the post with this CTA, create a rule:
-- match_text: ["KEYWORD", common typos]   (optionally match_media_id: ["<post id>"] to scope it)
-- reply:  a warm, LINK-FREE public reply  (e.g. "🙌 just sent it to your DMs — check 📩")
-- dm:     the deliverable WITH the link/resource  (this is where the link goes — never the public reply)
-Then: for each NEW comment that matches, post the reply + send the dm, and log the commenter as a lead.
-Rules: ONE link, in the DM only. If a comment doesn't match any rule, defer it to me (don't guess).
-```
+1. **Write the rule:**
+   - `keywords`: the keyword plus common typos.
+   - `public_reply`: warm and **link-free** (e.g. "🙌 just sent it to your DMs — check 📩").
+   - `dm_message`: the deliverable **with** the link or resource. One link, in the DM only.
+2. **Save it as a concept campaign in GIMC** (see "Put it on GIMC" below): on a post card that is not
+   live yet, or on a published post.
+3. **Tell the user** that the campaign waits for a person to check it and set it live in GIMC.
+4. **Comments that don't match the keyword:** write a reply draft per comment, or leave them for a
+   person. Never guess an answer to a question you can't answer from the brand or the post.
 
-**The honesty + safety rules (built in):**
-- The **public reply NEVER contains a link** — the link goes in the DM only (platforms suppress link-y comments).
-- Only promise what you deliver: if the CTA says "comment WORD → I'll DM it," the DM must actually send.
-- No match → **defer to a human**, don't auto-reply with a guess.
+**The honesty + safety rules:**
+- The **public reply NEVER contains a link**; the link goes in the DM only (platforms suppress link-y comments).
+- Only promise what gets delivered: if the CTA says "comment WORD → I'll DM it", the DM must hold the resource.
+- No match → **leave it for a human**; no auto-reply with a guess.
 
-**Runs unattended:** point it at a scheduled runner (e.g. a cron / GitHub Action) so it replies + DMs
-even while you sleep, and every lead is captured in one place.
-
-**Pairs with:** [reel-builder](../reel-builder/SKILL.md) ends the reel on a keyword CTA → this turns the
-comments that CTA earns into DMs + leads.
+**Pairs with:** [reel-builder](../reel-builder/SKILL.md) ends the reel on a keyword CTA → this sets up
+the campaign that answers the comments that CTA earns. For reading comments, numbers and running
+campaigns use `social-engagement`.
 
 ## Take the input from GIMC
 

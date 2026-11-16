@@ -1,11 +1,11 @@
 ---
 name: canvas-builds
 description: >
-  GIMC Builds skill. Builds ready-to-use pieces on the GIMC canvas in the folder's brand: an email template (email-
-  safe HTML and plain text), a carousel (slides as PNG), a social post or a story (1080×1920). Use when the user says
-  "email template", "newsletter", "nieuwsbrief", "maak een carousel", "carrousel van 6 slides", "social post",
-  "LinkedIn-post", "Instagram-post", "maak een story", or when another skill hands over finished copy for a carousel,
-  post, story or email.
+  Builds ready-to-use pieces on the GIMC canvas in the folder's brand: an email template (email- safe
+  HTML and plain text), a carousel (slides as PNG), a social post or a story (1080×1920). Use when the
+  user says "email template", "newsletter", "nieuwsbrief", "maak een carousel", "carrousel van 6
+  slides", "social post", "LinkedIn-post", "Instagram-post", "maak een story", or when another skill
+  hands over finished copy for a carousel, post, story or email.
 user-invokable: true
 argument-hint: "[what to build, topic, folder or company]"
 license: MIT

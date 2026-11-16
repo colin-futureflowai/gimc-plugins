@@ -2,7 +2,7 @@
 
 GIMC is a plugin that brings 54 content skills (hooks, reels, carousels, captions, research and more) and
 GIMC's own skills together with a connection to your GIMC workspace. When you ask for it, a skill puts its
-result as a card on your GIMC canvas, so the whole content process stays in one place. Version 1.7.1.
+result as a card on your GIMC canvas, so the whole content process stays in one place. Version 1.8.0.
 
 ## Skills at a glance
 
@@ -35,8 +35,8 @@ them and ask for that step, and they stop and ask you first if a connection is m
 - Composio, as a bridge to post to or message from your own Instagram account (`content-factory`).
 - Runway (Seedance image-to-video) for acting beats in a reel, billed in your own Runway credits (`reel-builder`).
 - Remotion and ffmpeg, which run on your own machine to render video.
-- Research sources through `agent-reach`: Twitter/X, Reddit, YouTube, LinkedIn, GitHub, Bilibili, Xiaohongshu, podcasts and
-  RSS feeds, optionally with Exa, Jina, Groq or OpenAI for search and transcription.
+- Research sources through `agent-reach`: Twitter/X, Reddit, YouTube, LinkedIn, GitHub and RSS
+  feeds, optionally with Exa, Jina, Groq or OpenAI for search and transcription.
 
 Review the permissions each of these services asks for. This plugin never stores your keys for them.
 

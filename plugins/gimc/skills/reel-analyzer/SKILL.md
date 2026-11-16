@@ -1,11 +1,10 @@
 ---
 name: reel-analyzer
 description: >
-  FutureFlowAI Reel Analyzer skill.
-  Feed Claude any viral reel (a link or a file) and it studies the whole thing — frame by frame
-  plus the transcript — then breaks down exactly why it works: the hook, the beat structure, the
-  pacing, and the on-screen visuals. Use when the user says "study this reel", "break down this
-  video", "analyze this reel", "why did this go viral", "what's the structure of this", or pastes a
+  Feed Claude any viral reel (a link or a file) and it studies the whole thing — frame by frame plus
+  the transcript — then breaks down exactly why it works: the hook, the beat structure, the pacing,
+  and the on-screen visuals. Use when the user says "study this reel", "break down this video",
+  "analyze this reel", "why did this go viral", "what's the structure of this", or pastes a
   reel/TikTok/Short link and wants to model it.
 user-invokable: true
 argument-hint: "[reel/TikTok/Short URL or video file]"
@@ -17,8 +16,6 @@ metadata:
 ---
 
 # Reel Analyzer — Claude watches the reel so you can model it
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Reel Analyzer skill", e.g. "I'll use the FutureFlowAI Reel Analyzer skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Stop guessing why something went viral. Feed Claude the reel you want to take inspiration from and it
 **watches the whole thing** — the visuals frame by frame and the spoken words — then hands you a

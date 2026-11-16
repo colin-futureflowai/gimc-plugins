@@ -1,13 +1,11 @@
 ---
 name: hook-mining
 description: >
-  FutureFlowAI Hook Mining skill.
-  Mine a CSV of REAL top-performing hooks and generate alternatives that keep what made them work:
-  hold the storytelling psychology and structure fixed, hot-swap only the power words.
-  Use when the user has hook performance data (a Sandcastles / social-analytics export, scraped
-  competitor hooks, their own analytics) and says "mine hooks", "remix hooks", "hook variations",
-  "make hooks from this CSV", or "give me hook options from what's working".
-  NOT for inventing hooks from nothing — that's viral-hook-writer.
+  Mines a CSV of real top-performing hooks and generates alternatives that keep what made them work:
+  same storytelling psychology and structure, only the power words swapped. Use when the user has hook
+  performance data (an analytics export or scraped competitor hooks) and says "mine hooks", "remix
+  hooks", "hook variations", "make hooks from this CSV", or "give me hook options from what's
+  working". Not for hooks from nothing: that's viral-hook-writer.
 user-invokable: true
 argument-hint: "[path to your hooks CSV]"
 license: MIT
@@ -17,8 +15,6 @@ metadata:
 ---
 
 # Hook mining
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Hook Mining skill", e.g. "I'll use the FutureFlowAI Hook Mining skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Most AI hook writing is slop for one of two reasons: it copy-pastes a hook that worked for someone
 else, or it "rewrites" it until the English is flat and the psychology is gone.

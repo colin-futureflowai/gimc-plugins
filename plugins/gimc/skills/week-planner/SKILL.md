@@ -1,10 +1,11 @@
 ---
 name: week-planner
 description: >
-  GIMC Week Planner skill. Makes and schedules a whole week of reels from one sentence: one intake (or "same as last
-  time?"), one approval of the week plan, then every reel is made, put in the content calendar and waits for approval
-  in the agenda. It directs the other skills and does none of their work. Use when the user says "maak de content voor
-  volgende week", "plan mijn week", "vul volgende week", "content voor de week", "make next week's content".
+  Makes and schedules a whole week of reels from one sentence: one intake (or "same as last time?"),
+  one approval of the week plan, then every reel is made, put in the content calendar and waits for
+  approval in the agenda. It directs the other skills and does none of their work. Use when the user
+  says "maak de content voor volgende week", "plan mijn week", "vul volgende week", "content voor de
+  week", "make next week's content".
 user-invokable: true
 argument-hint: "[optional: how many reels, platforms, or 'same as last week']"
 ---

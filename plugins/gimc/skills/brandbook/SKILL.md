@@ -1,11 +1,11 @@
 ---
 name: brandbook
 description: >
-  GIMC Brandbook skill. Builds a brand design system on the GIMC canvas (colour, type, logo, imagery, components,
-  voice, applied examples) from what the company already has, and saves the brand as data that every skill and HTML
-  card uses. Use when the user says "brandbook", "brand guide", "design system", "designsysteem", "style guide",
-  "huisstijl", "huisstijlgids", "merkboek", "maak een brandbook", "zet onze huisstijl op een rij", or asks to update a
-  brandbook.
+  Builds a brand design system on the GIMC canvas (colour, type, logo, imagery, components, voice,
+  applied examples) from what the company already has, and saves the brand as data that every skill
+  and HTML card uses. Use when the user says "brandbook", "brand guide", "design system",
+  "designsysteem", "style guide", "huisstijl", "huisstijlgids", "merkboek", "maak een brandbook", "zet
+  onze huisstijl op een rij", or asks to update a brandbook.
 user-invokable: true
 argument-hint: "[company or folder, optional website]"
 license: MIT

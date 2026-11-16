@@ -1,10 +1,9 @@
 ---
 name: series-planner
 description: >
-  FutureFlowAI Series Planner skill.
   Designs a recurring, named reel series — a repeatable format viewers come back for and follow so
-  they do not miss.
-  Use when the user says "plan a series", "recurring format", "what series should I run", "make this a weekly thing".
+  they do not miss. Use when the user says "plan a series", "recurring format", "what series should I
+  run", "make this a weekly thing".
 user-invokable: true
 argument-hint: "[your niche and what you want to be known for]"
 license: MIT
@@ -15,8 +14,6 @@ metadata:
 ---
 
 # Series Planner — a format people come back for
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Series Planner skill", e.g. "I'll use the FutureFlowAI Series Planner skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Designs a recurring, named reel series — a repeatable format viewers come back for and follow so
 they do not miss.

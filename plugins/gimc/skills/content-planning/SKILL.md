@@ -1,12 +1,11 @@
 ---
 name: content-planning
 description: >
-  GIMC Content Planning skill. Puts posts into the GIMC content calendar and follows them to the platform: schedules
-  canvas cards on dates and platforms, moves or cancels them, and reads what is planned and what went live. Use when
-  the user says "plan these posts", "schedule this", "zet het in de contentkalender", "inplannen", "plan in voor
-  donderdag", "zet klaar om in te plannen", "klaar zetten", "verzet de post",
-  "annuleer de planning", "wat staat er gepland", or when content-calendar, best-time-scheduler or series-planner
-  produced dated posts.
+  Puts posts into the GIMC content calendar and follows them to the platform: schedules canvas cards
+  on dates and platforms, moves or cancels them, and reads what is planned and what went live. Use
+  when the user says "plan these posts", "schedule this", "zet het in de contentkalender",
+  "inplannen", "plan in voor donderdag", "klaar zetten", "verzet de post", "wat staat er gepland", or
+  when content-calendar, best-time-scheduler or series-planner produced dated posts.
 user-invokable: true
 argument-hint: "[which cards or board, and when]"
 ---

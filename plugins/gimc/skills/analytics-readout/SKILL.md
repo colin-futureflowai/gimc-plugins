@@ -1,10 +1,9 @@
 ---
 name: analytics-readout
 description: >
-  FutureFlowAI Analytics Readout skill.
-  Reads your reel insights and explains in plain English what to make more of and what to stop —
-  no jargon.
-  Use when the user says "explain my analytics", "what do my numbers mean", "read my insights", "how did this reel do".
+  Reads your reel insights and explains in plain English what to make more of and what to stop — no
+  jargon. Use when the user says "explain my analytics", "what do my numbers mean", "read my
+  insights", "how did this reel do".
 user-invokable: true
 argument-hint: "[paste your insights, or connect the MCP]"
 license: MIT
@@ -15,8 +14,6 @@ metadata:
 ---
 
 # Analytics Readout — your numbers, in plain English
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Analytics Readout skill", e.g. "I'll use the FutureFlowAI Analytics Readout skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Reads your reel insights and explains in plain English what to make more of and what to stop — no
 jargon.

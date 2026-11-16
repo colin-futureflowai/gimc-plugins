@@ -1,10 +1,10 @@
 ---
 name: social-engagement
 description: >
-  GIMC Social Engagement skill. Reads the comments on the company's own posts in GIMC, writes reply drafts that a
-  person posts, and sets up, changes, pauses or ends reply campaigns (a keyword in a comment gets a public reply
-  and/or a DM). Use when the user says "beantwoord de reacties", "welke reacties staan open", "schrijf antwoorden op
-  de comments", "zet een conceptantwoord klaar", "reactie-campagne", "comment to DM", "zet een trefwoord-campagne op", "pauzeer de campagne", or when
+  Reads the comments on the company's own posts in GIMC, writes reply drafts that a person posts, and
+  sets up, changes, pauses or ends reply campaigns (a keyword in a comment gets a public reply and/or
+  a DM). Use when the user says "beantwoord de reacties", "welke reacties staan open", "zet een
+  conceptantwoord klaar", "reactie-campagne", "comment to DM", "pauzeer de campagne", or when
   comment-responder or comment-mining worked on real comments.
 user-invokable: true
 argument-hint: "[post, account or campaign, what to do]"

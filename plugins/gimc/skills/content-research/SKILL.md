@@ -1,13 +1,10 @@
 ---
 name: content-research
 description: >
-  FutureFlowAI Content Research skill.
-  Turn Claude into a content research machine for any niche. Point it at any creator or account and it
-  pulls their posts, finds the exact ones that blew up (the outliers), then breaks down WHY — the hook,
-  the format, and the retention patterns — and surfaces the repeatable playbook you can copy. Use when
-  the user says "research this niche", "what's working for @account", "find what's going viral in
-  [niche]", "what should I post about", "study this creator", or wants a content strategy grounded in
-  real data instead of guessing.
+  Researches any niche, creator or account: pulls their posts, finds the outliers that blew up and
+  breaks down why (hook, format, retention patterns) into a playbook you can copy. Use when the user
+  says "research this niche", "what's working for @account", "find what's going viral in [niche]",
+  "what should I post about", "study this creator", or wants a content strategy grounded in real data.
 user-invokable: true
 argument-hint: "[creator @handle, account URL, or niche]"
 license: MIT
@@ -18,8 +15,6 @@ metadata:
 ---
 
 # Content Research — stop guessing what to post
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Content Research skill", e.g. "I'll use the FutureFlowAI Content Research skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Most people spend hours scrolling to figure out what to post. This skill turns Claude into a research
 machine: point it at any account or niche and it finds the exact moments that went viral and the

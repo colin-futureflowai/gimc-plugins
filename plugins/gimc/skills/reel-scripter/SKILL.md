@@ -1,11 +1,9 @@
 ---
 name: reel-scripter
 description: >
-  FutureFlowAI Reel Scripter skill.
-  Turn an idea or hook into a full 30-45 second reel script — hook, value beats,
-  payoff, and CTA, with on-screen text. Use when the user says "reel script",
-  "video script", "script this", "write a reel", "short-form script", or "turn
-  this idea into a video".
+  Turn an idea or hook into a full 30-45 second reel script — hook, value beats, payoff, and CTA, with
+  on-screen text. Use when the user says "reel script", "video script", "script this", "write a reel",
+  "short-form script", or "turn this idea into a video".
 user-invokable: true
 argument-hint: "[idea or hook to script]"
 license: MIT
@@ -16,8 +14,6 @@ metadata:
 ---
 
 # Reel Scripter
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Reel Scripter skill", e.g. "I'll use the FutureFlowAI Reel Scripter skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Turn one idea (or hook) into a tight, postable 30-45s reel script.
 

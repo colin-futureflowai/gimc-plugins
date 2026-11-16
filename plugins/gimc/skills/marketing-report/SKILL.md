@@ -1,10 +1,11 @@
 ---
 name: marketing-report
 description: >
-  GIMC Marketing Report skill. Makes a report on the canvas as one HTML card with canvas code: you write the
-  findings, GIMC fills in every number, chart and post (video included) from its own data. Setups live in the folder
-  note; without one it asks first. Use when the user says "maak een rapport", "weekrapport", "maandrapport",
-  "rapportage", "beste tijden", "wij tegenover concurrent", "marketing report", "report on my socials".
+  Makes a report on the canvas as one HTML card with canvas code: you write the findings, GIMC fills
+  in every number, chart and post (video included) from its own data. Setups live in the folder note;
+  without one it asks first. Use when the user says "maak een rapport", "weekrapport", "maandrapport",
+  "rapportage", "beste tijden", "wij tegenover concurrent", "marketing report", "report on my
+  socials".
 user-invokable: true
 argument-hint: "[setup name, period, account or competitor]"
 license: MIT

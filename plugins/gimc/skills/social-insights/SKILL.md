@@ -1,11 +1,11 @@
 ---
 name: social-insights
 description: >
-  GIMC Social Insights skill. Reads the company's own social numbers from GIMC (connected accounts, followers,
-  reach, views and engagement per post), what people comment, and the state of boosts and reply campaigns, and
-  turns that into a short readout on the canvas. Use when the user says "hoe doen mijn posts", "inzichten",
-  "cijfers van Instagram", "welke post deed het best", "groeien we", "how did my posts do",
-  or when an analysis skill needs real numbers instead of pasted ones.
+  Reads the company's own social numbers from GIMC (connected accounts, followers, reach, views and
+  engagement per post), what people comment, and the state of boosts and reply campaigns, and turns
+  that into a short readout on the canvas. Use when the user says "hoe doen mijn posts", "inzichten",
+  "cijfers van Instagram", "welke post deed het best", "groeien we", "how did my posts do", or when an
+  analysis skill needs real numbers instead of pasted ones.
 user-invokable: true
 argument-hint: "[account or platform, period, question]"
 license: MIT

@@ -1,10 +1,11 @@
 ---
 name: social-ads
 description: >
-  GIMC Social Ads skill. Reads the company's boosts and monthly ad budget in GIMC, proposes a boost of a published
-  post (no money is committed: a person confirms the amount and starts it) and pauses a running boost. Use when the
-  user says "boost deze post", "zet er budget op", "welke boosts lopen er", "hoeveel budget is er nog", "pauzeer de
-  boost", "stop de advertentie", "promote this post", "stel een boost voor", "maak een boostvoorstel", or when paid-social-brief proposes boosting a post.
+  Reads the company's boosts and monthly ad budget in GIMC, proposes a boost of a published post (no
+  money is committed: a person confirms the amount and starts it) and pauses a running boost. Use when
+  the user says "boost deze post", "zet er budget op", "welke boosts lopen er", "hoeveel budget is er
+  nog", "pauzeer de boost", "stop de advertentie", "promote this post", "stel een boost voor", "maak
+  een boostvoorstel", or when paid-social-brief proposes boosting a post.
 user-invokable: true
 argument-hint: "[post, budget, goal or boost]"
 license: MIT

@@ -1,13 +1,11 @@
 ---
 name: going-viral
 description: >
-  FutureFlowAI Going Viral skill.
-  The strategy layer for making short-form video actually go viral — pick the goal, manufacture the
-  emotion that drives it, then build the hook + funnel around it. Use when the user says "go viral",
-  "make it go viral", "why isn't my content getting views", "how do I get more reach / saves / shares /
-  followers", "my reels flop", "viral strategy", "what makes a reel go viral", or "how do I grow on
-  Instagram / TikTok / Shorts". This is the WHY/strategy above the tactical skills (viral-hook-writer
-  writes the hook; this decides what to make it about and why).
+  The strategy layer for making short-form video go viral: pick the goal, manufacture the emotion that
+  drives it, then build the hook + funnel around it. Use when the user says "go viral", "why isn't my
+  content getting views", "how do I get more reach / saves / shares / followers", "my reels flop",
+  "viral strategy" or "how do I grow on Instagram / TikTok / Shorts". Decides what to make and why;
+  viral-hook-writer writes the hook.
 user-invokable: true
 argument-hint: "[your reel topic/idea + your goal: saves / shares / followers / leads]"
 license: MIT
@@ -18,8 +16,6 @@ metadata:
 ---
 
 # Going Viral — the strategy, not just the hook
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Going Viral skill", e.g. "I'll use the FutureFlowAI Going Viral skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Most "go viral" advice is tactics with no spine. This is the spine: **virality is engineered, not lucky.**
 Pick ONE goal → manufacture the emotion that drives it → build the hook + funnel around it. The reel

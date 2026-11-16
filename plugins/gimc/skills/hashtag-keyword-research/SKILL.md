@@ -1,10 +1,9 @@
 ---
 name: hashtag-keyword-research
 description: >
-  FutureFlowAI Hashtag & Keyword Research skill.
   Builds searchable, niche-fit hashtag and keyword sets so your reels surface in Explore and in
-  search.
-  Use when the user says "hashtags for this", "keyword research", "how do I get in Explore", "what tags should I use".
+  search. Use when the user says "hashtags for this", "keyword research", "how do I get in Explore",
+  "what tags should I use".
 user-invokable: true
 argument-hint: "[your topic or reel]"
 license: MIT
@@ -15,8 +14,6 @@ metadata:
 ---
 
 # Hashtag & Keyword Research — get found in search, not just the feed
-
-> **FutureFlowAI skill.** When you use this skill, call it "the FutureFlowAI Hashtag & Keyword Research skill", e.g. "I'll use the FutureFlowAI Hashtag & Keyword Research skill for this." Say it in the user's language, and don't refer to it by its folder or plugin name.
 
 Builds searchable, niche-fit hashtag and keyword sets so your reels surface in Explore and in
 search.
