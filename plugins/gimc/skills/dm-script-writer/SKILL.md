@@ -44,7 +44,7 @@ Keep every message under 950 characters.
 **Honesty:** On Instagram a private reply to a comment works ONCE. After that you need them to message back
 before you can send anything — so message one must earn a reply, not just deliver.
 
-**Next:** [comment-responder](../comment-responder/SKILL.md)
+**Next:** [social-engagement](../social-engagement/SKILL.md)
 
 ## Put it on GIMC
 

@@ -19,7 +19,7 @@ metadata:
 
 **This is exactly how the whole page gets made.** One reel, idea → leads, then 3× a day. The Content
 Factory is the *orchestrator*: it runs the other skills in order so you get a finished, on-brand reel
-plus the lead loop — not just notes. Point it at a topic (and optionally a viral reel to model) and it
+plus the lead loop, ready for a person to approve — not just notes. Point it at a topic (and optionally a viral reel to model) and it
 drives the entire pipeline.
 
 > The individual skills each do one job. This one runs **all of them, in sequence**, and hands the
@@ -28,33 +28,35 @@ drives the entire pipeline.
 ## The pipeline (what runs, in order)
 
 ```
-0. CONNECT     onboarding .......... one-time: connect the Apify MCP (teardown) + the Composio MCP→Instagram
-                                      (post + DM), and make sure Remotion is available (render). Ask if missing.
+0. CONNECT     onboarding .......... one-time: GIMC (canvas, posting, reply campaigns), the Apify MCP
+                                      (teardown), and make sure Remotion is available (render). Ask if missing.
 1. MEMORY      ai-brain ............. recall your voice + past winners (so it sounds like YOU)
 2. FIND+STUDY  Apify ............... tear a proven reel down frame-by-frame + transcript
 3. HOOK        viral-hook-writer .... 10 scroll-stopping hooks for the first 1–3s, ranked
 4. SCRIPT      reel-scripter ........ tight 30–45s ORIGINAL script — your words, the proven structure
 5. BUILD+RENDER reel-builder + Remotion (+ Seedance via Runway) ... the REAL rendered mp4
 6. CAPTION     caption-and-hashtags . caption + tiered hashtags + a first comment built for saves
-7. POST        Composio ............ actually publishes to your Instagram (after your OK)
-8. LEADS       Composio ............ keyword rule LIVE — every comment → public reply + DM, 24/7
+7. SCHEDULE    content-planning ..... puts the reel in the GIMC content calendar; a person approves it
+8. LEADS       social-engagement .... keyword → reply + DM as a concept campaign; a person sets it live
 9. COMPOUND    ai-brain ............. save what worked back to memory → the next reel starts smarter
 ```
 
 **This runs for REAL by calling the tools directly — it is a harness, not a description.** The creative
 steps (3–6 script/hook/caption) are Claude; the execution steps use the underlying tools, no wrapper:
-- **Step 0 CONNECT (once, at onboarding):** connect the **Apify MCP** (reel teardown/scraping) and the
-  **Composio MCP → Instagram** (posting + comment/DM), and confirm **Remotion** is installed for rendering.
-  If any of these is NOT connected, STOP and ASK the user to connect it (walk them through Apify, then
-  Composio/Instagram) — never search for or reuse a key. This onboarding is what the whole loop depends on.
+- **Step 0 CONNECT (once, at onboarding):** check that **GIMC** is connected (see `gimc-canvas`), connect
+  the **Apify MCP** (reel teardown/scraping), and confirm **Remotion** is installed for rendering. If one is
+  NOT connected, STOP and ASK the user to connect it — never search for or reuse a key.
 - **Step 2** uses **Apify** to actually tear down the model reel.
 - **Step 5** renders the real mp4 with **Remotion** (+ **Seedance via Runway** for acting beats) — see
   [reel-builder](../reel-builder/SKILL.md) for the render harness.
-- **Step 7** uses **Composio** to actually publish to the user's Instagram (pause for their OK first).
-- **Step 8** uses **Composio** to wire the comment→DM lead loop so it fires live, 24/7.
+- **Step 7** uses **content-planning** to put the reel in the GIMC content calendar. You never publish
+  without a person's approval: the company's publish rule in GIMC decides who puts the post at the platform
+  (see content-planning, "Approval").
+- **Step 8** saves the comment→DM rule as a **concept reply campaign** in GIMC (see "Put it on GIMC" and
+  **social-engagement**). A person checks it and sets it live; from then on GIMC answers every matching comment.
 
 If a tool isn't connected, do the creative pipeline (script + plan) and tell the user exactly what to
-connect — Apify, then Composio/Instagram, plus Remotion — to make it run end to end. Never fake a render or a post.
+connect — GIMC, Apify, Remotion — to make it run end to end. Never fake a render, a post or a live campaign.
 
 ## When to use
 You want the *whole* reel + lead loop, not one piece. Run this as your daily driver. For a single step,
@@ -82,9 +84,8 @@ CONTEXT
 - My @handle: [@you]   ·   My voice: [a line, or "use ai-brain"]   ·   CTA keyword: [e.g. GUIDE]
 
 PIPELINE
-0) CONNECT (once, onboarding): connect the Apify MCP (teardown), the Composio MCP → my Instagram (post + DM),
-   and confirm Remotion is available (render). IF ANY IS NOT CONNECTED, STOP AND ASK ME TO CONNECT IT — walk me
-   through Apify, then Composio/Instagram — and wait; never search for or reuse a key. Only continue once connected.
+0) CONNECT (once, onboarding): check GIMC, connect the Apify MCP (teardown) and confirm Remotion is available
+   (render). IF ONE IS NOT CONNECTED, STOP AND ASK ME TO CONNECT IT and wait; never search for or reuse a key.
 0.5) ai-brain: recall my voice + past winners (if connected).
 1) FIND+STUDY: use Apify to tear down the model URL (or your suggested pick) → hook, beats, pacing, visuals.
 2) viral-hook-writer: 10 hooks, ranked; I'll pick one (or you pick the strongest).
@@ -92,12 +93,14 @@ PIPELINE
 4) reel-builder + Remotion (+ Seedance via Runway): actually RENDER the reel → a real mp4 with the on-screen
    comment-CTA card. Show me the beat table + the rendered reel.
 5) caption-and-hashtags: caption + tiered hashtags + first comment, with my CTA keyword.
-6) POST: pause for my OK, then Composio actually publishes to my IG. If I say wait, just stage it.
-7) Composio + comment-responder: wire the CTA keyword LIVE so every comment → public reply + DM, 24/7.
+6) SCHEDULE: content-planning puts the reel in the GIMC content calendar on the date I pick. A person
+   approves it in GIMC; you never publish yourself.
+7) LEADS: save my CTA keyword as a concept reply campaign in GIMC (link-free public reply + DM with the
+   resource). Tell me it waits for a person to set it live.
 8) ai-brain: save the winning hook/format back to memory.
 
 If a tool isn't connected, do steps 1–5 as the creative pipeline and tell me exactly what to connect
-(Apify, then Instagram via Composio, plus Remotion) to make it run end to end — never fake the render or the post.
+(GIMC, Apify, Remotion) to make it run end to end — never fake the render, the post or a live campaign.
 
 RULES
 - Model the FORMAT, never the words — original script in my voice (copies get buried by IG Originality).
@@ -121,7 +124,7 @@ that sounds like you.
 ## Honesty (non-negotiable)
 - **Original only.** Model the technique; write your own words. Re-uploads/copies get reach-suppressed.
 - **The CTA must be real.** If the reel says "comment GUIDE and I'll send it," the DM must actually send it
-  (that's what [comment-responder](../comment-responder/SKILL.md) is for).
+  (the reply campaign in GIMC sends it; see [social-engagement](../social-engagement/SKILL.md)).
 - **No links in public replies** — resource goes in the DM.
 
 ## Put it on GIMC
@@ -131,6 +134,18 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
 - Create the card(s) with kind `video` in frame "Eindvideo", with `skill: "content-factory"` and the `run_id` of this run.
 - If this work came from a card on the board, draw a line with relation `derived` from that source card to the new card(s).
 - The result has media (video): upload it as described in `gimc-canvas` (media) and attach it to the card.
+- Comment keyword → reply or DM runs in GIMC, never in an outside tool (no ManyChat, no comment monitor, cron, GitHub Action or `auto_responses.json`): save the rule as a concept with `gimc.social_save_reply_campaign` (keywords, link-free public reply, DM). Before the post is published, pass `item_id` (the post card) and `platform`; GIMC hangs it on the post once it is live and tells a person, who sets it live. On a published post pass `account_id` and `platform_post_id`.
+
+  ```js
+  async () => {
+    const r = await gimc.social_save_reply_campaign({
+      item_id: 'POST_CARD_ID', platform: 'instagram', name: 'NAME', keywords: ['KEYWORD'], match_mode: 'word',
+      public_reply: 'PUBLIC_REPLY_WITHOUT_LINK', dm_message: 'DM_WITH_LINK', daily_max: 25,
+    })
+    return { campaign_id: r.campaign_id, status: r.status, waiting_for_post: r.waiting_for_post ?? false, app_url: r.app_url }
+  }
+  ```
+
 - Then close in the chat with 1–3 sentences: what is ready, on which board or card, the link (`app_url` from the answer) and what the user can do now. Don't repeat in the chat what is on the canvas (no card texts, no list of titles), unless the user asks for the text there.
 - Facts in a card (numbers, prices, names, dates, claims) come only from the brand, the folder note, GIMC data or a source you name; anything else is marked "aanname" on the card.
 - In code mode this is one `gimc_execute` (fill in the CAPITALS; folder and board as `gimc-canvas` §3 says). The next step of the same run reuses `frame_id`, or makes the next frame in the same `gimc.canvas_create_items` call. Pass the returned `org_id` on every later `gimc_execute`. `board_not_found`: create that board only when the user asked for it or `gimc-canvas` §3 names it as the default, then run again. `inbox`: pick those up first (`gimc-canvas` §4).

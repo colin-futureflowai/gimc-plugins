@@ -1,11 +1,11 @@
 ---
 name: reel-builder
 description: >
-  Turn a teardown (or a rough idea) into a finished, ready-to-shoot reel. Claude writes the
-  beat-by-beat script in your voice and lays out the on-screen text, the scene for each beat, the
-  pacing cues, and the caption — your words on a proven structure. Use when the user says "build the
-  reel", "make the reel", "write the full reel", "turn this into a reel", "script and storyboard
-  this", or hands over a breakdown/idea and wants the whole thing assembled.
+  Builds a finished reel from a teardown or a beat structure: the beat-by-beat script in your voice,
+  on-screen text, the scene and pacing per beat, the caption, and the render (Remotion, Seedance).
+  The build step of content-factory. Use when the user hands over a reel-analyzer teardown or a beat
+  outline and says "build the reel", "turn this teardown into a reel", "write the full reel" or
+  "script and storyboard this". For a whole reel from only a topic, use content-factory.
 user-invokable: true
 argument-hint: "[a reel-analyzer teardown, or a topic + the structure to follow]"
 license: MIT
@@ -74,9 +74,10 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
    with a dark outline stroke reads on both dark and light beats).
 5. **Close on an on-screen CTA card, tied to the comment system.** End with a themed "Comment [KEYWORD] and
    I'll DM you [the thing]" card (an IG-composer graphic that types the keyword) — use the SAME keyword the
-   caption uses and that the auto-responder is wired to, so comment → auto-DM → lead actually fires. Wire the
-   keyword in [comment-responder](../comment-responder/SKILL.md) BEFORE you post, so the moment a viewer
-   comments the keyword they get the auto-DM. Honest only: the keyword must be really wired.
+   caption uses and that the reply campaign in GIMC listens for, so comment → DM → lead actually fires. Save
+   the campaign as a concept BEFORE the post goes out (see "Put it on GIMC" and
+   [social-engagement](../social-engagement/SKILL.md)); a person sets it live. Honest only: never promise a DM
+   that no live campaign will send.
 6. **No fabricated numbers.** If a metric can't be verified, don't put it on screen.
 
 **Verify before you ship — WATCH and MEASURE the playback, never trust a still.** Extract frames at ~12fps

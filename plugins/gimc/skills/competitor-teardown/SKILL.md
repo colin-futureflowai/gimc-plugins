@@ -23,8 +23,8 @@ actually driving their growth.
 A rival is growing and you want the mechanism, not a vibe.
 
 ## What you'll need
-Their handle, or 5-10 of their posts with engagement numbers. [agent-reach](../agent-
-reach/SKILL.md) can pull them.
+Their handle, or 5-10 of their posts with engagement numbers. [agent-reach](../agent-reach/SKILL.md)
+can pull them.
 
 ## Instructions
 Give Claude the input and run this.

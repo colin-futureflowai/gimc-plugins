@@ -46,7 +46,7 @@ Set a small cadence to review unanswered questions, recurring themes, and useful
 
 ## Where it sits
 
-Use social-listening to identify recurring questions and comment-responder for a particular reply. Use campaign-brief only when a campaign has a legitimate community role. Feed patterns into audience-personas and positioning-audit; never treat a community plan as a mass-outreach mechanism.
+Use social-listening to identify recurring questions and social-engagement for a particular reply. Use campaign-brief only when a campaign has a legitimate community role. Feed patterns into audience-personas and positioning-audit; never treat a community plan as a mass-outreach mechanism.
 
 ## Put it on GIMC
 

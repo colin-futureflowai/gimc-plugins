@@ -1,36 +1,42 @@
 ---
 name: going-viral
 description: >
-  The strategy layer for making short-form video go viral: pick the goal, manufacture the emotion that
-  drives it, then build the hook + funnel around it. Use when the user says "go viral", "why isn't my
-  content getting views", "how do I get more reach / saves / shares / followers", "my reels flop",
-  "viral strategy" or "how do I grow on Instagram / TikTok / Shorts". Decides what to make and why;
-  viral-hook-writer writes the hook.
+  Makes short-form video go viral in two modes: strategy (pick one goal, the emotion that drives it,
+  then the hook and funnel around it) and review (why a reel flopped, checked against real winners
+  and flops). Use when the user says "go viral", "why isn't my content getting views", "my reels
+  flop", "why did this post flop", "viral strategy", "how do I get more reach / saves / shares /
+  followers" or "how do I grow on Instagram / TikTok / Shorts". Hooks: viral-hook-writer.
 user-invokable: true
-argument-hint: "[your reel topic/idea + your goal: saves / shares / followers / leads]"
+argument-hint: "[your reel topic/idea + your goal: saves / shares / followers / leads, or a reel that flopped]"
 license: MIT
 metadata:
   author: Ootto
-  version: "1.0.0"
+  version: "2.0.0"
   category: content
 ---
 
-# Going Viral — the strategy, not just the hook
+# Going Viral — the strategy and the review
 
 Most "go viral" advice is tactics with no spine. This is the spine: **virality is engineered, not lucky.**
 Pick ONE goal → manufacture the emotion that drives it → build the hook + funnel around it. The reel
 manufactures the *feeling*; the caption/DM delivers the *value*.
 
-> Distilled from 160+ analysed viral reels + the research consensus (Berger & Milkman: sharing is driven
+> Distilled from 160+ analysed viral reels, the research consensus (Berger & Milkman: sharing is driven
 > by high **arousal**, not positivity; ~68% of people share to signal *who they are*; saves = a promise to
-> future-self; open loops must stay open past the 7–15s checkpoint).
+> future-self; open loops must stay open past the 7–15s checkpoint) and the winners and flops of 262 posts
+> and 3.5M views on @jayantcreates.ai ([references/winners-and-flops.md](references/winners-and-flops.md)).
 
-## When to use
-The user has an idea (or a flopping account) and wants reach/saves/shares/followers/leads — not just a
-better opening line. (For *only* the first 1–3 seconds, use **viral-hook-writer**. To run the whole
-pipeline, use **content-factory**.)
+| The user brings | Mode | Result |
+|---|---|---|
+| An idea, a topic or a growth question (default) | **1 · Strategy** | the goal, the emotion, the mechanic, the hook brief and the funnel |
+| A reel or post that flopped | **2 · Review** | the one change that mattered most + a rewritten opening |
 
-## Step 1 — Pick ONE goal (it dictates everything)
+This skill decides **what** to make and **why**. The words come from the step skills:
+**viral-hook-writer** writes the hooks, **reel-scripter** the script, **content-factory** runs the whole reel.
+
+## Mode 1 — Strategy
+
+### Step 1 — Pick ONE goal (it dictates everything)
 
 | GOAL | Emotion to trigger | The mechanic | How to build it |
 |---|---|---|---|
@@ -42,29 +48,43 @@ pipeline, use **content-factory**.)
 Pick the goal **before** scripting. Optimize for **identity signal**, not raw value — a share has to make
 the *sender* look smart/early/right. High-arousal beats positive: awe, anger, FOMO over calm tips.
 
-## Step 2 — The hook (the first ~1.5s decide everything)
+**Talk about their thing, not your tool.** Posts that named the viewer ("you", "your") in the first line
+had a median of 5,186 views, against 3,930 without. The viewer is the main character; the tool is the vehicle.
+"7 Claude tricks that feel illegal to know" got 335 views; "Editing a video? Just tell Claude" got 306,575.
+
+### Step 2 — The hook brief (the first ~1.5s decide everything)
+
+Decide the angle and what happens on screen; then let **viral-hook-writer** write the hooks (its
+[frame-zero checklist](../viral-hook-writer/references/frame-zero.md) checks the opening).
 
 - **Frame 0 IS the hook.** The biggest element is already on screen AND moving — a count-up number, a
   finished artifact, a UI caught mid-action. It owns ≥40% of the frame and is **legible on mute**
   (70–85% watch sound-off). No fade-from-black, no slow logo build, no title card.
 - **Order: motion → lock → claim.** Let the moving element run ~1s, lock it, *then* spring the one-line
   claim. The claim lands **~1.2–1.6s** — never at 0s (no payoff yet), never at 3s+ (too late).
+- **Show what the viewer knows.** Five of the seven biggest winners opened on two logos the viewer knows,
+  joined by a line or a cable. Abstract tunnels, gradients and static cards all stayed under 1,000 views.
 - **Open a gap, not a fact.** "The one setting that doubled my reach" — never "here are some reach tips."
-- **Rotate the angle every post** (contrarian / result-first / meta-self-proving / POV / numbered). The
-  meta *"this was made by AI"* self-proving angle is the strongest **when it's true** — the post proves
-  its own claim. The "N things nobody uses" listicle fatigues fastest; don't default to it.
+  Curiosity or contrarian words had a median of 6,950 views, against 4,352 without.
+- **Rotate the angle every post:** result first · self-proving ("Nobody filmed this video") · contrarian
+  ("Stop paying an agency for Instagram") · pain first ("you're losing leads in your DMs every night") ·
+  something breaks (the thing on screen literally breaks). The self-proving angle is the strongest **when
+  it's true**. The "N things nobody uses" listicle fatigues fastest; don't default to it.
 
-## Step 3 — Hold them (after the hook)
+### Step 3 — Hold them (after the hook)
 
-- **Show, don't tell — every line gets a visual.** Never a plain text card for a how/demo line.
-- **Nothing static.** Every element keeps a low-amplitude idle motion the whole time. A frozen frame is
-  where people scroll.
+- **Show, don't tell — every line gets a visual.** Each sentence gets its own mechanism on screen: a screen
+  that types, a counter that climbs, a phone that receives a message. Never a plain text card for a demo line.
+- **Nothing static.** If two frames a second apart look the same, add motion. A frozen frame is where people scroll.
+- **Real proof only:** real screens, real numbers, real results. A fake number gets caught and kills trust.
+- **Stock footage:** pick the clip where something visibly happens (a person reacting, celebrating, shocked).
+  Search for the action or emotion ("woman jumping with joy"), not the noun ("woman").
 - **Re-hook at the dips** (~4s / 9s / 15s) with a micro-loop: "but here's the part nobody tells you…",
   "and it gets better…", "wait for the last one."
 - **Keep it short + re-watchable.** The reel teases; the caption delivers. A tight loop drives replays,
   and replays drive reach.
 
-## Step 3.5 — Curiosity & the incentivized wait (make them watch to the END)
+### Step 3.5 — Curiosity & the incentivized wait (make them watch to the END)
 
 The single biggest watch-time lever: **give them a reason to wait — promise the payoff up front, then
 withhold it until the end.** This is exactly what made *"I let Claude post for 6 days — Day 6 broke
@@ -72,16 +92,12 @@ everything"* work: the climax is teased in second 0, but you have to watch the w
 
 **The mechanic — promise → withhold → escalate → pay off:**
 1. **Tease the payoff in the hook, but don't show it.** Name that something big is coming *and where*
-   ("Day 6 broke everything", "the 5th one is the one that 10×'d it", "wait for the last step"). The
-   viewer now has a concrete reason to stay — an open loop that only closes at the end.
+   ("Day 6 broke everything", "the 5th one is the one that 10×'d it", "wait for the last step").
 2. **Make it an escalating series with a visible finish line.** Number or date the beats (Day 1 → Day 6,
-   prompt 1 → 5, step 1 → 4) so they always know how far the payoff is. A countdown is unscrollable —
-   quitting early *feels like losing* the thing you were promised.
-3. **Each beat out-does the last** (or raises the tension), so leaving always costs more than staying.
-   Save the single best / most surprising moment for the very last beat.
-4. **Pay it off — for real.** The end must deliver the promised thing (the Day-6 result, the #5 prompt,
-   the "secret"). **Tease, never lie:** an unpaid loop makes the viewer feel cheated — it kills saves +
-   shares and trains the algorithm that you waste watch-time.
+   prompt 1 → 5, step 1 → 4) so they always know how far the payoff is.
+3. **Each beat out-does the last** (or raises the tension). Save the single best moment for the very last beat.
+4. **Pay it off — for real.** The end must deliver the promised thing. **Tease, never lie:** an unpaid loop
+   makes the viewer feel cheated — it kills saves + shares and trains the algorithm that you waste watch-time.
 
 **Curiosity-gap hooks (open the loop the brain *must* close):**
 - "I did [X] for [N] days — [Day N / the last one] broke everything." ← the 6-day pattern
@@ -91,26 +107,51 @@ everything"* work: the climax is teased in second 0, but you have to watch the w
 - **Withhold the mechanism:** show the *result*, make them stay for the *how*.
 
 **The incentive to wait must be EXPLICIT and worth it.** Name a concrete reward for reaching the end —
-the exact result, the secret prompt, the number. Vague "stay tuned" doesn't hold; *"Day 6 hit 24k —
-here's the one thing that did it"* does. That payoff is also the natural bridge into the CTA (comment the
-keyword → I'll DM you the thing).
+the exact result, the secret prompt, the number. Vague "stay tuned" doesn't hold. **Never resolve the loop
+early:** hold the climax for the final beat, then convert immediately.
 
-**Never resolve the loop early.** If you reveal the payoff in the middle, the loop closes and they leave.
-Hold the climax for the final beat, then convert immediately.
+### Step 4 — Convert (the funnel)
 
-## Step 4 — Convert (the funnel)
-
-The reel hooks + teases → the **caption** delivers the full value → a **comment keyword → auto-DM** turns
+The reel hooks + teases → the **caption** delivers the full value → a **comment keyword → DM** turns
 a watcher into a lead.
 
 - **CTA = one action.** Save ("don't lose this") / Share ("send to someone still doing it by hand") /
   Follow ("don't fall behind") / Comment a keyword ("comment WORD → I'll DM it").
-- **Keyword in the first line of the caption** (most people never tap "more"). Keyword CTAs convert
-  ~5–15% vs ~1–3% for "link in bio."
+- **Keyword in the first line of the caption** (most people never tap "more"). Posts with a comment keyword
+  in the first line had a median of 5,684 views, against 4,311 without. Keyword CTAs convert ~5–15% vs
+  ~1–3% for "link in bio."
 - **The link goes in the DM, never the public comment** (links in comments get reach-suppressed; the DM
   keeps the lead in your inbox).
-- Wire the keyword→DM loop with the **comment-responder** skill + the open-source automation
-  (github.com/Ootto-AI/claude-figma-stack) so it replies + DMs every lead 24/7.
+- The keyword → DM loop is a **reply campaign in GIMC**: **social-engagement** sets it up as a concept and a
+  person sets it live. Never promise a DM that nothing will send.
+
+### Output
+
+```
+GOAL: save / share / follow / lead — and why
+EMOTION + MECHANIC: ...
+ANGLE: result first / self-proving / contrarian / pain first / something breaks
+HOOK BRIEF: what is on screen at 0s, the claim at ~1.2s → hand to viral-hook-writer
+THE WAIT: the promised payoff, the beats with a visible finish line
+PAYOFF LIVES: in the reel / in the caption + DM
+CTA: one action (+ keyword and what the DM delivers)
+```
+
+## Mode 2 — Review: why did this flop?
+
+1. Look at frame 0, 0.5s, 1s, 2s and 3s only.
+2. Compare against the flop patterns in [references/winners-and-flops.md](references/winners-and-flops.md):
+   abstract background, static card, empty or black frame 0, small low-contrast text, about AI or "me"
+   instead of the viewer's account.
+3. Check the opening against the eight points in the
+   [frame-zero checklist](../viral-hook-writer/references/frame-zero.md).
+4. Check the rest: is it about their thing (Step 1), is every line shown (Step 3), is there one CTA with a
+   real keyword (Step 4)?
+5. Give **the one change that would have mattered most**, then a rewritten opening as a 0–3s timeline that
+   passes all eight points. For more hook options, hand it to viral-hook-writer.
+
+Real numbers only: if you don't have the reel's views or retention, ask for them or say you're judging the
+frames alone.
 
 ## The non-negotiables (every post)
 1. **Honesty** — any stat you show must be real/defensible; any "comment WORD → I'll DM it" must actually
@@ -129,10 +170,10 @@ a watcher into a lead.
 5. Convert with one CTA — Save / Share / Follow / Comment-keyword — and close every loop you opened.
 
 ## Works with
-**agent-reach** (scrape Reddit demand + find/download the reel to model — the FIND step) ·
-**viral-hook-writer** (the hook itself) · **reel-analyzer** (study a proven viral reel first) ·
-**reel-scripter** + **reel-builder** (build it) · **caption-and-hashtags** (the caption funnel) ·
-**comment-responder** (the keyword → DM lead loop) · **content-factory** (runs the whole pipeline).
+**agent-reach** (scrape Reddit demand + find the reel to model) · **reel-analyzer** (study a proven viral
+reel first) · **viral-hook-writer** (the hooks) · **reel-scripter** + **reel-builder** (build it) ·
+**caption-and-hashtags** (the caption funnel) · **social-engagement** (the keyword → DM reply campaign) ·
+**content-factory** (runs the whole pipeline).
 
 ## Put it on GIMC
 

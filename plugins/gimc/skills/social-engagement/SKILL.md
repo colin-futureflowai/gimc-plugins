@@ -1,11 +1,12 @@
 ---
 name: social-engagement
 description: >
-  Reads the comments on the company's own posts in GIMC, writes reply drafts that a person posts, and
-  sets up, changes, pauses or ends reply campaigns (a keyword in a comment gets a public reply and/or
-  a DM). Use when the user says "beantwoord de reacties", "welke reacties staan open", "zet een
-  conceptantwoord klaar", "reactie-campagne", "comment to DM", "pauzeer de campagne", or when
-  comment-responder or comment-mining worked on real comments.
+  All about comments on the company's own posts in GIMC: reads them, writes reply drafts a
+  person posts, and sets up, changes, pauses or ends keyword campaigns (comment WORD → link-free reply
+  + DM with the lead magnet) that a person sets live. Use when the user says "beantwoord de
+  reacties", "zet een conceptantwoord klaar", "reactie-campagne", "comment to DM", "DM everyone who
+  comments", "auto reply to comments", "lead magnet automation", "turn comments into leads" or
+  "pauzeer de campagne".
 user-invokable: true
 argument-hint: "[post, account or campaign, what to do]"
 license: MIT
@@ -91,6 +92,34 @@ Facebook), once per person, up to a daily maximum.
 - `{{first_name}}` in a reply or DM is filled in with the commenter's first name; keep messages useful without it.
 - Pause or end: `gimc.social_set_reply_campaign_status` with `paused` or `ended`. Ending is final.
 - Going live: tell the user to switch it on in GIMC (`app_url`); a person confirms the daily maximum there.
+
+### Writing a keyword campaign
+
+A reel or post with a "comment WORD and I'll send it" CTA gets a campaign, before or after it is published.
+
+- `keywords`: the keyword plus common typos and the plural.
+- `public_reply`: warm, short and **never a link** (platforms suppress comments with links), e.g. "🙌 just sent it to
+  your DMs — check 📩".
+- `dm_message`: the deliverable **with** the link or resource. One link, in the DM only.
+- Only promise what gets delivered: if the CTA says "comment WORD → I'll DM it", the DM holds the resource.
+- A comment that does not match the keyword gets no automatic reply: write a draft (section 2) or leave it for a person.
+- Never use an outside tool for this (no ManyChat, comment monitor, cron job, GitHub Action or `auto_responses.json`).
+  The rule lives in GIMC.
+
+Before the post is published, pass `item_id` (the post card on the canvas) and `platform` instead of `account_id` and
+`platform_post_id`; GIMC hangs the campaign on the post once it is live and tells a person, who sets it live.
+
+```js
+async () => {
+  const r = await gimc.social_save_reply_campaign({
+    item_id: 'POST_CARD_ID', platform: 'instagram', name: 'NAME', keywords: ['KEYWORD'], match_mode: 'word',
+    public_reply: 'PUBLIC_REPLY_WITHOUT_LINK', dm_message: 'DM_WITH_LINK', daily_max: 25,
+  })
+  return { campaign_id: r.campaign_id, status: r.status, waiting_for_post: r.waiting_for_post ?? false, app_url: r.app_url }
+}
+```
+
+Tell the user the campaign waits for a person to check it and set it live in GIMC.
 
 ## 4. Put it on GIMC
 

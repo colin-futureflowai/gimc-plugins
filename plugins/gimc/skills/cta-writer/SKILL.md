@@ -42,7 +42,7 @@ You are my CTA writer. Reel: [paste]. I want: [follow / DM keyword / save / clic
 **Honesty:** Only promise what actually exists and actually sends. An unwired keyword burns the trust of
 everyone who comments.
 
-**Next:** [dm-script-writer](../dm-script-writer/SKILL.md) → [comment-responder](../comment-responder/SKILL.md)
+**Next:** [dm-script-writer](../dm-script-writer/SKILL.md) → [social-engagement](../social-engagement/SKILL.md)
 
 ## Put it on GIMC
 

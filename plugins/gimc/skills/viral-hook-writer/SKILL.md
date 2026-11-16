@@ -68,6 +68,10 @@ Rules: under 12 words each, spoken-language, no fluff, no hashtags. For each hoo
 category, and a 3-5 word on-screen text version. Mark the 3 you'd test first and say why in one line.
 ```
 
+**Frame zero.** For the 3 hooks you'd test first, also describe what is on screen from 0 to 3 seconds and check
+them against the eight points in [references/frame-zero.md](references/frame-zero.md). A hook that reads well on
+a blank card still flops.
+
 **Obsidian memory tip:** If you've connected your Obsidian vault (Filesystem MCP), point Claude at your notes of past reels — "use the hooks that performed best in my vault as the pattern." Hooks grounded in *your* winners beat generic ones.
 
 **Tip:** Always generate 10 and test 2-3. The hook you love is rarely the one that wins.
