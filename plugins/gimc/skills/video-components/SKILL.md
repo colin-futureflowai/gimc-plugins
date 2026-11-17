@@ -1,16 +1,17 @@
 ---
 name: video-components
 description: >
-  A ready Hyperframes starter (HTML, CSS, a GSAP timeline) for 9:16 reels: HookCard, TextBeat, MediaBeat,
-  LowerThird, Captions, CTACard, and inspect.mjs, which checks every frame and makes a contact sheet before
-  the render. Themed from the brand in GIMC; the render step reel-builder uses. Use when the user says "render the reel", "make the video", "use our brand in the video",
-  "add subtitles", "show the safe zones" or "check how the reel looks". Design rules: motion-design.
+  A ready Hyperframes starter (HTML, CSS, a GSAP timeline) for 9:16 reels: scene types with slots on a grid (hook,
+  text, media, diagram, compare, actor-object, stack, presenter, end-card), a storyboard the build checks, and
+  inspect.mjs, which checks every frame and makes a contact sheet before the render. Themed from the brand in GIMC.
+  Use when the user says "render the reel", "make the video", "add subtitles", "show the safe zones" or "check how
+  the reel looks". Design rules: motion-design.
 user-invokable: true
 argument-hint: "[the build table or props of the reel, the target platform]"
 license: MIT
 metadata:
   author: GIMC
-  version: "2.2.0"
+  version: "3.0.0"
   category: content
 ---
 
@@ -18,23 +19,38 @@ metadata:
 
 > **GIMC skill.** Call it "the GIMC Video Components skill" in the user's language.
 
-A small [Hyperframes](https://github.com/heygen-com/hyperframes) project with components that already
-follow [motion-design](../motion-design/SKILL.md): brand colours and fonts from GIMC, type sizes for
-1080×1920 with heroes fitted to the width, everything that must be read inside the platform's safe area, eases and
-durations per role, and entrances that change from beat to beat.
+A small [Hyperframes](https://github.com/heygen-com/hyperframes) project with scene types that already
+follow [motion-design](../motion-design/SKILL.md): brand colours and fonts from GIMC, a 6-column grid with spacing
+and figure tokens, type sizes for 1080×1920 with heroes fitted to the width, everything that must be read inside the
+platform's safe area, eases and durations per role, and entrances that change from beat to beat. Every element sits
+in a slot of its scene type or hangs on a part, so whatever moves the group moves it too.
 You fill in `props.json`; `build.mjs` turns it into `index.html` (the composition) and Hyperframes renders
 that to an mp4. You do not write the components again for every reel. [reel-builder](../reel-builder/SKILL.md)
 decides what the reel says; this skill turns that into an mp4.
 
 The project is in [assets/starter/](assets/starter/): `build.mjs` (props → `index.html`), `src/components/`,
-`src/theme.mjs`, `src/safe-zones.mjs`, `src/motion.mjs`, `inspect.mjs` (section 4), `props.json` (an example),
-`assets/fonts/`.
+`src/theme.mjs` (grid, tokens, type), `src/storyboard.mjs` (the storyboard check), `src/safe-zones.mjs`,
+`src/motion.mjs`, `inspect.mjs` (section 4), `props.json` (an example with a diagram), `assets/`.
+
+The references are HeyGen's Hyperframes CLI and media skills 0.9.61, adopted (Apache-2.0, see [NOTICE](NOTICE)) and
+changed only where GIMC's setup needs it; the rules of this file win where they differ:
+
+| Read | When |
+|---|---|
+| [cli.md](references/cli.md) | the CLI; detail in [lint-validate-inspect.md](references/lint-validate-inspect.md), [preview-render.md](references/preview-render.md), [doctor-browser.md](references/doctor-browser.md) and the other files next to it |
+| [format.md](references/format.md), [runtimes.md](references/runtimes.md) | what the runtime needs from a composition; other runtimes in a clip |
+| [media/media-use.md](references/media/media-use.md) | footage, audio, grading, treatments, transcripts, captions |
+| [media/ffmpeg-recipes.md](references/media/ffmpeg-recipes.md) | tested ffmpeg commands (GIMC's own) |
+| `scripts/media/` | adopted helpers (ducking, transcript cuts, dither, audio carve); `build.mjs` overwrites what they write into `index.html` |
 
 ## 0. Licences
 
 - **Hyperframes** (HeyGen) is Apache-2.0: no licence per render or per company.
 - **GSAP** (the animation library inside it) falls under GreenSock's *Standard "no charge" License*: free,
   also for commercial work, but not an open-source licence. Never call it open source.
+- **Media in a reel:** only footage, music, fonts and effects whose licence allows commercial use and
+  redistribution in the video (your own, CC0, or a stock licence you hold); keep the source and licence of each file
+  next to it in `assets/`. Fonts under the OFL are fine; a Pixabay sound may be used in a reel but not shipped on.
 
 ## 1. Set up the project
 
@@ -47,10 +63,8 @@ The project is in [assets/starter/](assets/starter/): `build.mjs` (props → `in
 3. Once per machine, `npx hyperframes@0.9.61 browser ensure` installs the headless Chrome it renders with.
    A sandbox that cannot download it (Cowork): see `gimc-canvas` → references/media.md, "Rendering video
    in a sandbox".
-4. Hyperframes has its own agent skills and docs (`npx hyperframes@0.9.61 docs`). The pinned CLI ships its skills
-   in `node_modules/hyperframes/dist/skills/`: use them for its API and its craft (see
-   [motion-design](../motion-design/SKILL.md) §0 for which to read).
-   **Three exceptions** in GIMC, because the same composition must also render in a VM without network:
+4. What the CLI does and which of its commands GIMC uses: [references/cli.md](references/cli.md).
+   **Three rules** in GIMC, because the same composition must also render in a VM without network:
    - GSAP is a local file (`vendor/gsap.min.js`, copied by `build.mjs` from the pinned CLI), never a CDN
      script. A CDN fails the render without network.
    - Fonts are always local files with `@font-face` (section 2), never Google Fonts at render time.
@@ -99,36 +113,49 @@ brand font (section 5).
 
 ## 3. Fill in the beats
 
-`props.json` is the whole reel. Never edit `index.html` by hand: the next build overwrites it.
+`props.json` is the whole reel. Never edit `index.html` by hand: the next build overwrites it. First the storyboard
+([motion-design references/storyboard.md](../motion-design/references/storyboard.md)): `build.mjs` stops, listing
+every gap, when a beat has no `message` (at most 8 words), a symbol is not in the legend, a legend entry has no
+meaning, or an attached element has no relation.
 
 | Field | What |
 |---|---|
 | `platform` | `instagram-reels`, `instagram-stories`, `facebook-reels`, `youtube-shorts`, `tiktok`, `linkedin` or `universal` (several platforms or unknown) |
 | `lang` | the reel's language code, e.g. `nl` |
-| `beats[]` | the build table of reel-builder, one beat per row, `seconds` from the voiceover's word timestamps |
+| `legend` | `{ name: { meaning, src, size } }`: every symbol of the reel, one meaning, a file in `assets/`, one size (`icon` 96 px, or `sm`/`md`/`lg`/`xl` = 2/3/4/6 columns) |
+| `diagrams` | `{ id: { kind: 'pyramid' \| 'flow', parts: [{ id, label }], size? } }`: the reel's diagrams (pyramid: first part is the base) |
+| `beats[]` | the build table of reel-builder, one beat per row: `type`, `seconds` (from the voiceover's word timestamps), `message`, and the fields of its scene type |
 | `voiceover` | file name in `assets/` |
 | `captions` | the voiceover transcript as words: `{ text, startMs, endMs }`, one word per entry (from GIMC, ElevenLabs or `npx hyperframes@0.9.61 transcribe`) |
 
-The components, one per beat type:
+The scene types, one per beat; every one but `hook`, `text` and `media` takes an optional `title` (a keyword, never
+the caption sentence) in a title slot that keeps its height, so a cut between two beats does not jump:
 
-| Beat `type` | Component | Fields | Use for |
-|---|---|---|---|
-| `hook` | `HookCard` | `text`, `emphasis`, `entrance` | beat 1: display type fitted to the width of the upper safe area, readable and moving on frame 0 |
-| `text` | `TextBeat` | `text`, `emphasis`, `kicker`, `entrance` | a value beat: one headline fitted to the width, optional small kicker ("Step 1") |
-| `media` | `MediaBeat` (+ `LowerThird`) | `src`, `text`, `lowerThird: { name, title }`, `entrance` | b-roll (muted) or a photo full-bleed, with text on a backing panel |
-| `cta` | `CTACard` | `label`, `keyword`, `promise` | the end card: "Comment KEYWORD" typed into a field; `label` in the reel's language ("Reageer"); the keyword of the reply campaign in GIMC |
+| Beat `type` | Fields | Use for |
+|---|---|---|
+| `hook` | `text`, `emphasis`, `entrance` | beat 1: display type fitted to the width of the upper safe area, readable and moving on frame 0 |
+| `text` | `text`, `emphasis`, `kicker`, `entrance` | a value beat: one headline fitted to the width, optional small kicker ("Step 1") |
+| `media` | `src`, `text`, `lowerThird: { name, title }`, `entrance` | b-roll (muted) or a photo full-bleed, with text on a backing panel |
+| `diagram` | `diagram`, `show`, `focus`, `attach: [{ symbol, to, relation, at }]`, `revealAt` | one diagram that grows: parts are outlines until `show` fills them and shows their label; `focus` (default: last shown) gets the accent; `attach` hangs a legend `icon` in a part at `at` s; what is shown stays |
+| `compare` | `left`, `right` (`{ label, symbol }`), `winner`, `rightAt`, `winnerAt` | two sides stacked on one left edge; the winner gets the accent |
+| `actor-object` | `actor`, `object` (`{ symbol, label, says }`), `objectAt` | figure and object on one ground line at their legend sizes; `says` is a bubble on the figure |
+| `stack` | `items: [{ text, symbol, at }]` | 2–4 items on one left edge, each entering on its cue |
+| `presenter` | `presenter: { frames, fps, from, headTop, backdrop, size } \| { image }`, `card: { text, emphasis } \| { diagram, show, focus }` | talking head in a rounded card below (PNG frames in `assets/frames/<frames>/`, one per 1/fps s), face above the caption band; above it a line or the same diagram, scaled as one picture |
+| `end-card` (`cta`) | `label`, `keyword`, `promise` | "Comment KEYWORD" typed into a field; the keyword of the reply campaign in GIMC; the logo in the brand slot (3 columns, column 1, bottom of the content) |
+
+An element no scene type covers is a new scene type in `build.mjs` (section 6), never a component of its own with
+pixel coordinates; one outside a scene type only with a reason in the storyboard, placed on an anchor cell
+(`cell('C3')` in `src/theme.mjs`).
 
 Always on top: `Captions` (when `captions` is filled; the spoken word in the accent colour, a lower third moves up
 to make room) and `SafeZoneOverlay` (only with `node build.mjs --safe-zones`). `captionEnergy` (`high`, `normal`,
 `calm`) sets the caption pages to at most 3, 4 or 6 words. `emphasis` is the one word or phrase from `text` that
 carries the meaning and gets the accent colour: one per beat.
 
-**Entrances** (`entrance`, optional): `ink` (the words turn from muted to full colour; the hook's default, readable
-on frame 0), `blur` (each word un-blurs), `line` (the whole line un-blurs; the media text's default), `rise` (each
-word fades in and rises). Without one, text beats take turns (`blur`, `rise`, `line`), so neighbouring beats never
-enter the same way. Every entrance starts on the cut frame at `CUT_OPACITY` (0.4, blurred or a little lower), so a
-cut never shows an empty frame. The hero line is fitted to the width with `fitText`: a line that only fits at the minimum size
-wraps by itself, and is too long for a hero (cut words, motion-design §5).
+**Entrances** (`entrance`): `ink` (muted to full colour; the hook's default), `blur` (each word un-blurs), `line`
+(the line un-blurs; media's default), `rise` (each word rises). Without one, text beats take turns. Every entrance
+starts on the cut frame at `CUT_OPACITY` (0.4), so a cut never shows an empty frame. A hero line that only fits at
+the minimum size (`fitText`) is too long for a hero: cut words (motion-design §5).
 
 ## 4. See what you made
 
@@ -187,6 +214,11 @@ tools read them:
 | `data-layout-ignore` | texture, not something to read: no layout checks |
 | `data-role="caption"` | captions: 52 px minimum |
 
+The scene types also write the storyboard onto the elements (`data-scene`, `data-message`, `data-slot`,
+`data-hero`, `data-part`, `data-label-of`, `data-anchor`, `data-relation`, `data-symbol`, `data-brand`; list in
+`src/storyboard.mjs`) and into `index.html` as `<script type="application/json" id="storyboard">`. `node build.mjs --grid` draws the columns and the anchor cells
+A1–F8 over the frame (check only, never export), so a review can say "the target from C4 to C3".
+
 A transparent PNG (a cut-out, a logo) only counts where it has ink. Give your own elements an `id`: the
 report names them by it.
 
@@ -209,8 +241,11 @@ report names them by it.
 
 Keep the library consistent; a new component follows the same rules:
 
-- A component is a function `(context, beat) → { html, tl }`: the markup, plus GSAP timeline lines with
-  absolute times (`c.start` is the beat's start). Use the helpers: `src/motion.mjs` (`EASE` by role, `enter`,
+- A scene type is a function `(context, beat) → { html, tl }`: the markup, plus GSAP timeline lines with
+  absolute times (`c.start` is the beat's start), registered in `COMPONENTS` in `build.mjs` and in `SCENES` in
+  `src/storyboard.mjs`. Lay it out with `Scene` (title slot + hero slot) and flex/grid slots, sizes from `grid()`,
+  `SPACE`, `FIGURE` and `ICON` in `src/theme.mjs`: no absolute pixel positions for content. Labels and attached
+  symbols are children of what they name, and carry the storyboard attributes (section 4). Use the helpers: `src/motion.mjs` (`EASE` by role, `enter`,
   `exit`, `tween`, `set`, `frames`), `enterSeconds(theme, role)` and `fitText` in `src/theme.mjs`, the entrances of
   `Words`; register nothing yourself, `build.mjs` builds the one paused timeline
   `window.__timelines.main`.

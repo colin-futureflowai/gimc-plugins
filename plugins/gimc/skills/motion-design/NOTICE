@@ -1,0 +1,12 @@
+This skill contains material from the HeyGen Hyperframes agent skills, version 0.9.61
+(https://github.com/heygen-com/hyperframes, folders skills/hyperframes, skills/hyperframes-cli and skills/media-use),
+licensed under the Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
+
+Adopted files are near-verbatim copies. Each starts with a line naming its original file. GIMC changed them only where
+technically needed: the CLI is pinned to hyperframes@0.9.61, GSAP and fonts are local files (no CDN), preview and
+render go through video-components, and HeyGen account, launcher and telemetry steps are removed. The files in
+assets/frame-presets/ and scripts/ are adopted the same way; the code-editorial fonts carry their own OFL licences.
+GIMC's own files (SKILL.md, references/storyboard.md, references/safe-zones.md, references/grid-and-scenes.md) are
+not from Hyperframes. This version is not the original and is not endorsed by HeyGen.
+
+The list of what was adopted, learned from or left out is in motion-design/references/hyperframes-inventory.md.

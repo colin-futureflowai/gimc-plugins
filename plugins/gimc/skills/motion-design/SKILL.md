@@ -1,17 +1,17 @@
 ---
 name: motion-design
 description: >
-  Design rules for short vertical video, on top of the Hyperframes skills: hero size, banned defaults, type and
-  reading time, contrast, captions, easing and duration per role, rhythm, diagrams, the CTA card and the safe and
-  danger zones per platform. The brand comes from GIMC. Use when designing or reviewing how a reel looks, before
-  rendering, or when the user says "make it look better", "text is unreadable", "safe zones", "covered by the
-  buttons", "looks generated" or "animation feels off".
+  Design rules for short vertical video, GIMC's own motion library: storyboard before code, grid and scene types,
+  hero size, banned defaults, type and reading time, contrast, captions, easing per role, rhythm, diagrams, the CTA
+  card and the safe zones per platform. The brand comes from GIMC. Use when designing or reviewing a reel, before
+  rendering, or when the user says "make it look better", "text is unreadable", "safe zones", "looks random",
+  "looks generated" or "animation feels off".
 user-invokable: true
 argument-hint: "[the reel or frames to design or review, and the target platform]"
 license: MIT
 metadata:
   author: GIMC
-  version: "2.0.0"
+  version: "3.0.0"
   category: content
 ---
 
@@ -24,24 +24,33 @@ The rules a good motion designer applies to every reel. They decide *how* a reel
 holds the ready components that already follow these rules. Design for a phone held at arm's length, watched for
 one second, often without sound.
 
-## 0. The Hyperframes skills are the base
+## 0. The library
 
-HeyGen's Hyperframes skills hold the measured craft: composition numbers, the defaults that look generated, eases,
-entrance recipes, holds, rhythm, transitions, captions, overlays and the review loop. Read them; this skill does not
-copy them. It keeps the part that is universal and testable, and what is GIMC's own.
+This skill and its references are GIMC's own motion library: HeyGen's Hyperframes skills 0.9.61 adopted
+(Apache-2.0, see [NOTICE](NOTICE)), plus GIMC's own rules; GIMC maintains it from here. The rules below are the
+short form; the depth is in the references.
 
-- **In a video-components project** they come with the pinned CLI, at the same version as the renderer:
-  `node_modules/hyperframes/dist/skills/hyperframes/`. Elsewhere: `npx skills add heygen-com/hyperframes` (the
-  newest version; read it as a reference, it does not change the pinned CLI).
-- **Read before you design:** `references/spec.md` (composition numbers, "BANNED by default"),
-  `references/motion.md` (eases by role, entrances, holds, rhythm, transitions with a cause),
-  `references/types/vertical.md`, and for an explainer `references/types/explainer.md`. When the reel needs them:
-  `references/captions.md`, `overlays.md` (talking head plus card), `look.md`, `story.md`, `review.md`.
-- **What GIMC decides,** and wins over a Hyperframes rule where they differ: the brand comes from GIMC (§1), the
-  safe area per platform (§2, stricter than the band in `vertical.md`), captions synced to the voiceover (§6), the
-  CTA card on the keyword of the reply campaign (§9), reading time in the reel's language (§4). Run the CLI and
-  render only as video-components says (pinned version, GSAP and fonts as local files), not as the Hyperframes
-  skills' own launcher does.
+| Read | When |
+|---|---|
+| [storyboard.md](references/storyboard.md) | always, before any code: message, scene type, hero, relations, legend (GIMC's own) |
+| [grid-and-scenes.md](references/grid-and-scenes.md) | the grid, the tokens, the scene types and their slots (GIMC's own) |
+| [skill-workflow.md](references/skill-workflow.md) | the whole workflow of a Hyperframes video, from brief to render |
+| [spec.md](references/spec.md) | composition numbers, every adjective as a number, "BANNED by default" |
+| [motion.md](references/motion.md) | eases by role, entrance recipes, holds, rhythm, transitions with a cause |
+| [story.md](references/story.md), [storyboard-stills.md](references/storyboard-stills.md), [storyboard-format.md](references/storyboard-format.md) | the arc, posed stills before animating, the storyboard file |
+| [captions.md](references/captions.md), [overlays.md](references/overlays.md) | captions; a talking head plus a card |
+| [look.md](references/look.md), [film.md](references/film.md), [sound.md](references/sound.md) | backgrounds, texture and grade; filmic techniques; voiceover, music and effects |
+| [review.md](references/review.md) | the review loop |
+| `references/types/` | per kind of video: [vertical](references/types/vertical.md), [explainer](references/types/explainer.md), [data](references/types/data.md), [character](references/types/character.md), [music](references/types/music.md), [launch](references/types/launch.md), [3d](references/types/3d.md) |
+| `assets/frame-presets/` | 13 deck looks (FRAME.md + caption skin), as [look.md](references/look.md) describes them; never instead of the brand from GIMC (§1) |
+| [safe-zones.md](references/safe-zones.md) | the pixels per platform (GIMC's own) |
+| [hyperframes-inventory.md](references/hyperframes-inventory.md) | every Hyperframes 0.9.61 file: adopted, learned from, not or later, and why |
+
+The adopted files are the Hyperframes text, changed only where it must (pinned 0.9.61, GSAP and fonts local, render
+through video-components, no HeyGen account steps). What GIMC decides wins over any source: the brand from GIMC (§1), the safe area per platform (§2), captions synced to
+the voiceover (§6), the CTA card on the keyword of the reply campaign (§9), reading time in the reel's language (§5).
+Rendering only as [video-components](../video-components/SKILL.md) says (pinned version, GSAP and fonts as local
+files, no CDN).
 
 ## 1. The brand comes from GIMC, never from taste
 
@@ -83,13 +92,25 @@ Instagram grid: [references/safe-zones.md](references/safe-zones.md).
   never squeezed.
 - **Upper-middle is prime space.** The upper half of the safe area is the only zone free on every
   platform; put the hook there. The bottom of the safe area is the caption band (§6).
-- **Align to a grid.** One left edge or one centre axis per reel; do not mix them between beats. Group by
-  nearness before boxes: what belongs together sits close, separate groups clearly apart.
-- **Faces:** eyes in the upper third of the safe area, never under the top bar or behind the buttons.
+- **Storyboard before code** ([storyboard.md](references/storyboard.md)): per beat a message of at most 8 words,
+  one scene type, one hero, and a relation (`inside`, `on`, `label-of`, `aligned-with`, `next-to`, `below`,
+  `replaces`) for every other element. An element without a relation is dropped. One symbol, one meaning and one
+  size for the whole reel (the legend).
+- **Scene types, not coordinates.** Every beat is one scene type with slots on the grid: `hook`, `text`, `media`,
+  `diagram`, `compare`, `actor-object`, `stack`, `presenter`, `end-card`. Labels and attached symbols are children
+  of the part they belong to, so they move with it. An own element outside a scene type only with a reason in the
+  storyboard, and then still on the grid.
+- **The grid:** 6 columns inside the safe area, 24 px gutters, an 8 px base, gaps only from the spacing scale, and
+  anchor cells A1–F8 to speak in ([grid-and-scenes.md](references/grid-and-scenes.md)). One left edge or one centre axis
+  per reel; at most 2 vertical axes per frame besides the caption. Group by nearness: what belongs together sits
+  close, separate groups clearly apart.
+- **Faces:** eyes in the upper third of the safe area, never under the top bar or behind the buttons; with a card
+  above the presenter, the face sits just under the card and above the caption band
+  ([overlays.md](references/overlays.md)).
 
 ## 4. Banned defaults
 
-Where generated video lands when nothing is decided (Hyperframes `spec.md`, "BANNED by default"). Each is banned
+Where generated video lands when nothing is decided ([spec.md](references/spec.md), "BANNED by default"). Each is banned
 unless the brand's own material uses it, and then only as the brand does:
 
 - a dark void with small elements floating in it; elements floating in empty space with no relation to an edge,
@@ -144,8 +165,8 @@ On 1080×1920 (scale everything by width for other sizes):
 
 ## 7. Animation
 
-Motion directs attention; it is not decoration. Recipes and the measured numbers behind them: Hyperframes
-`references/motion.md`.
+Motion directs attention; it is not decoration. Recipes and the measured numbers behind them:
+[motion.md](references/motion.md).
 
 - **Duration by role.** A hero or a card moves in 0.3–0.6 s (at most about 0.8 s); a small element in 4–12
   frames; a word of a word-by-word entrance about 0.13 s. Too snappy reads as a glitch; a longer build comes from a
@@ -171,23 +192,25 @@ Motion directs attention; it is not decoration. Recipes and the measured numbers
   recognisable: its entrance starts from a faint, blurred or slightly offset state (not from nothing), or the old
   beat stays until the cut. A blank frame between beats reads as a flash.
 - **Transitions:** a talking-head reel cuts hard on the voice. A motion-graphics reel gives every transition a
-  cause on screen and never crossfades between scenes (Hyperframes `motion.md`, "Transitions with a cause"). No
+  cause on screen and never crossfades between scenes ([motion.md](references/motion.md), "Transitions with a cause"). No
   spinning, 3D flips or glitch effects unless they are the brand.
 - **Frame 0 is the thumbnail and the hook:** a face, the result or one bold line already on screen and moving.
   Never black, never a logo. A loop back to the first frame is a choice, not a default.
 
 ## 8. Diagrams
 
-- **One diagram that grows:** start from the simplest true picture and add one part at the moment the voice
-  names it. Never the finished diagram at once.
-- **Labels sit on the part they name** (a leader line when needed) and appear with it; no legend.
+- **One diagram that grows:** start from the simplest true picture (the outline) and add one part at the moment the
+  voice names it. Never the finished diagram at once. It keeps its place and size across its beats.
+- **Labels sit on the part they name** and appear with it; no legend box on screen. A diagram without labels is a
+  shape, not an explanation.
 - The diagram stays above the caption band, and no caption or text crosses it unless that is marked as meant
   (video-components §4).
 
 ## 9. The CTA end card
 
 - One action, in the words of the caption ("Comment GIDS"). Large, inside the safe area, on screen for at
-  least 2 s; the brand lands once here, with weight.
+  least 2 s; the brand lands once here, with weight: the logo in the brand slot (3 columns, on column 1, at the
+  bottom of the content), never docked small anywhere else.
 - The keyword is exactly the one the reply campaign in GIMC listens for (see
   [social-engagement](../social-engagement/SKILL.md)).
 
@@ -205,5 +228,7 @@ and middle of every beat with the danger-zone overlay and check:
 4. Every beat has one hero of at least 40 %, and no banned default (§4) is left.
 5. Entrances vary, landed text is still, something changes every 2–4 s, and the hook is on frame 0.
 6. Only brand colours and brand fonts appear.
+7. Every element has its relation from the storyboard: labels sit on their parts, nothing floats loose, each
+   symbol means one thing at one size, and the logo is only in the end card's brand slot.
 
 Say what you checked, which defaults you found, and what you changed, in one or two sentences.

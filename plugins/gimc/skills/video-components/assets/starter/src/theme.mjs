@@ -17,6 +17,49 @@ import { esc } from './html.mjs'
 /** Type sizes for 1080 px width (motion-design §5). `heroMax` caps a hero that is fitted to the width (`fitText`). */
 export const TYPE = { hook: 120, headline: 96, heroMax: 320, body: 56, caption: 64, small: 36 }
 
+/**
+ * The grid every scene lays out on (motion-design references/grid-and-scenes.md): 6 columns inside the platform's safe
+ * area with 24 px gutters, an 8 px vertical base, and a named anchor grid of 6 columns (A–F) × 8 rows (1–8) over the
+ * safe area, so a maker and a reviewer speak in cells ("the target from C4 to C3"), never in pixels.
+ */
+export const COLUMNS = 6
+export const ROWS = 8
+export const GUTTER = 24
+/** Spacing scale in px: every gap and padding is one of these. */
+export const SPACE = [8, 16, 24, 40, 64, 104]
+/** Figure widths in columns. One symbol keeps one size for the whole reel (its `size` in the legend). */
+export const FIGURE = { sm: 2, md: 3, lg: 4, xl: 6 }
+/** Icon sizes in px: an icon inside a hero (a symbol inside a diagram part) is at least `ICON.md`. */
+export const ICON = { md: 96, lg: 160 }
+
+/** Column geometry of a safe area: `span(n)` is the width of n columns with their gutters, `x(c)` the left of column c (1–6). */
+export const grid = (area) => {
+  const col = (area.width - GUTTER * (COLUMNS - 1)) / COLUMNS
+  return { col, span: (n) => Math.round(n * col + (n - 1) * GUTTER), x: (c) => Math.round(area.left + (c - 1) * (col + GUTTER)) }
+}
+
+/** The box of an anchor cell such as `B3` (column A–F, row 1–8) on the safe area. */
+export const cell = (area, name) => {
+  const m = /^([A-F])([1-8])$/.exec(name)
+  if (!m) throw new Error(`Anchor cell "${name}": use A1 to F8 (6 columns × 8 rows of the safe area)`)
+  const w = area.width / COLUMNS
+  const h = area.height / ROWS
+  const c = m[1].charCodeAt(0) - 65
+  const r = Number(m[2]) - 1
+  return { left: Math.round(area.left + c * w), top: Math.round(area.top + r * h), width: Math.round(w), height: Math.round(h) }
+}
+
+/** The brand slot of the end card: the logo is always 3 columns wide, on column 1, at the bottom of the content. */
+export const BRAND_COLUMNS = 3
+
+/** A brand colour with an alpha, for the tint of a filled diagram part (`#31a029` → `rgba(49,160,41,0.28)`). */
+export const tint = (hex, alpha = 0.28) => {
+  const h = hex.replace('#', '')
+  const v = h.length === 3 ? h.split('').map((x) => x + x).join('') : h.slice(0, 6)
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(v.slice(i, i + 2), 16))
+  return `rgba(${r},${g},${b},${alpha})`
+}
+
 export const fontStack = (theme, role) => {
   const font = theme.fonts.find((f) => f.role === role) ?? theme.fonts[0]
   return font ? `'${font.family}', ${font.fallback}` : 'sans-serif'

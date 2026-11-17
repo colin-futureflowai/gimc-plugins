@@ -1,0 +1,10 @@
+This skill contains material adapted from the HeyGen Hyperframes agent skills, version 0.9.61
+(https://github.com/heygen-com/hyperframes, folders skills/hyperframes, skills/hyperframes-cli and skills/media-use),
+licensed under the Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
+
+Each adopted file starts with a line naming its original file. GIMC changed them only where its setup needs it
+(pinned version 0.9.61, GSAP and fonts as local files, rendering through video-components, no HeyGen account,
+launcher or telemetry steps); some were shortened where they only described HeyGen services. GIMC maintains this
+version; it is not the original and is not endorsed by HeyGen.
+
+The list of what was adopted, learned from or left out is in motion-design/references/hyperframes-inventory.md.

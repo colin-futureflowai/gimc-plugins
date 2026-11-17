@@ -35,11 +35,16 @@ You are my reel builder. Build a complete, ready-to-make reel.
 STRUCTURE TO FOLLOW: [paste the reel-analyzer teardown, or describe the beat structure].
 TOPIC: [what it's about] · VOICE: [yours] · GOAL/CTA: [save / follow / comment / DM].
 
-Output a beat-by-beat build table — one row per beat:
-| # | Spoken line (VO, my voice) | On-screen text | Visual / scene | ~secs |
+Output a beat-by-beat build table (the storyboard) — one row per beat:
+| # | Spoken line (VO, my voice) | Message (≤ 8 words, without sound) | Scene type | Hero | Other elements → relation | Stays from before | On-screen text | ~secs |
+Then the legend: every symbol, its one meaning and its one size.
 Rules:
 - Front-load the hook: beat 1's biggest element is moving on frame 0; the payoff lands in the first ~1.5s.
-- The visual CHANGES every beat (show what's said — never plain text for a demo line).
+- Something changes every beat and shows what's said (never plain text for a demo line) — one world that grows
+  (a diagram gains a part, a side wins), not new loose props each beat.
+- Scene types: hook, text, media, diagram, compare, actor-object, stack, presenter, end-card. Every other element
+  names its relation (inside, on, label-of, aligned-with, next-to, below, replaces) to the hero, a part or a slot;
+  an element without one is dropped. One symbol keeps one meaning and one size.
 - Original words on the modeled structure; total length matches the reference (±2s).
 - End on ONE clear CTA that matches the deliverable.
 Then give me: the final hook (3 options), the full VO script as one paragraph, and a caption + hashtags.
@@ -63,8 +68,10 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
   platform's safe area. Fast, on-theme and without a licence fee per render; render with the pinned CLI
   (`npx hyperframes@0.9.61 render`, see that skill). This can carry a whole reel on its own, and is the
   text scaffolding of a reel with Seedance beats.
-- **How it looks and moves** (type sizes, reading time, contrast, captions, easing, safe zones per platform)
-  follows [motion-design](../motion-design/SKILL.md).
+- **How it looks and moves** (storyboard, scene types, type sizes, reading time, contrast, captions, easing, safe
+  zones per platform) follows [motion-design](../motion-design/SKILL.md); the storyboard columns above are its
+  [storyboard.md](../motion-design/references/storyboard.md), and the build table becomes `props.json` of
+  video-components one to one.
 
 **Non-negotiables (each of these was a real failure once — do not repeat them):**
 1. **The hook needs a gripping VISUAL, not just text.** Open on something that grabs (e.g. a creator

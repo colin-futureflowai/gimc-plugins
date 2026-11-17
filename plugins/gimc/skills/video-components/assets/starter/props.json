@@ -1,14 +1,25 @@
 {
   "platform": "universal",
+  "lang": "en",
   "theme": {
     "colors": { "bg": "#111111", "surface": "#1f1f1f", "text": "#ffffff", "muted": "#b3b3b3", "accent": "#ffcc33", "accentText": "#111111" },
     "fonts": [],
     "pace": "standard"
   },
+  "legend": {
+    "target": { "meaning": "the goal of the day", "src": "symbols/target.svg", "size": "icon" },
+    "check": { "meaning": "the way that works", "src": "symbols/check.svg", "size": "sm" },
+    "cross": { "meaning": "the way that fails", "src": "symbols/cross.svg", "size": "sm" }
+  },
+  "diagrams": {
+    "routine": { "kind": "flow", "parts": [{ "id": "light", "label": "Light" }, { "id": "water", "label": "Water" }, { "id": "plan", "label": "Plan" }] }
+  },
   "beats": [
-    { "type": "hook", "seconds": 2, "text": "Nobody tells you this about mornings", "emphasis": "mornings" },
-    { "type": "text", "seconds": 2.5, "kicker": "Step 1", "text": "Start before you check your phone", "emphasis": "phone" },
-    { "type": "cta", "seconds": 3, "label": "Comment", "keyword": "ROUTINE", "promise": "and I'll DM you my 5-minute plan" }
+    { "type": "hook", "seconds": 2, "message": "Mornings decide your day", "text": "Nobody tells you this about mornings", "emphasis": "mornings" },
+    { "type": "diagram", "seconds": 2.5, "message": "Light first, then water", "title": "3-step morning", "diagram": "routine", "show": ["light", "water"] },
+    { "type": "diagram", "seconds": 2.5, "message": "Then plan one goal", "title": "3-step morning", "diagram": "routine", "show": ["plan"], "attach": [{ "symbol": "target", "to": "plan", "relation": "inside" }] },
+    { "type": "compare", "seconds": 3, "message": "Plan before you check your phone", "left": { "label": "Phone first", "symbol": "cross" }, "right": { "label": "Plan first", "symbol": "check" }, "winner": "right" },
+    { "type": "end-card", "seconds": 3, "message": "Comment ROUTINE for the plan", "label": "Comment", "keyword": "ROUTINE", "promise": "and I'll DM you my 5-minute plan" }
   ],
   "captions": [
     { "text": "Nobody", "startMs": 100, "endMs": 400 },

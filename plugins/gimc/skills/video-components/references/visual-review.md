@@ -1,7 +1,7 @@
 # Visual review — for a fresh reviewer
 
 You review a reel **by looking**, not by reading code. You start without the maker's conversation and get only:
-the brief or beat table, `out/contact-sheet.png` (start and middle of every beat, every moment with an error),
+the storyboard (the beat table with message, scene type, hero, relations and the legend), `out/contact-sheet.png` (start and middle of every beat, every moment with an error),
 `out/cut-strip.png` (−0.2 to +0.2 s around every cut), `out/phone-sheet.png` (360 px wide) and
 `out/inspect.json`. Red boxes are errors, amber warnings, blue the platform's danger zones.
 
@@ -28,39 +28,51 @@ One line per problem, most serious first, **no score**:
 3. Does the hero fill ≥ 40 % of the frame's height or width, a hero word 60–90 % of the width as far as the safe
    area allows? A small element in an empty half → P1 (in the hook P0).
 4. Does text overlap a drawing, icon, diagram or face without that being on purpose (and marked)? → P0.
-5. Elements floating loose, with no relation to grid, edge or neighbour? Do items that belong together sit
-   together, and separate groups apart? → P1.
-6. One left edge or one centre axis per reel, no mix between beats?
-7. Main text and diagram above the caption band? The caption does not repeat the on-screen title?
-8. Accent rationed: at most one meaningful accent word per screen?
-9. No grey text on a coloured area; contrast holds where the picture behind changes?
+5. Say the beat's `message`: does the frame alone deliver it, without sound? If not → P0 in the hook, P1 elsewhere.
+6. Name each object's relation from the storyboard (inside, on, label-of, next to the hero or a part). An object
+   without one, floating loose with no relation to grid, edge or neighbour → P1. A label left behind when its part
+   moves → P0. Do items that belong together sit together, and separate groups apart?
+7. One left edge or one centre axis per reel, no mix between beats; at most 2 vertical axes per frame besides the
+   caption? Write positions in anchor cells ("C4 → C3", `node build.mjs --grid`), never in pixels.
+8. Main text and diagram above the caption band? The caption does not repeat the on-screen title?
+9. Accent rationed: at most one meaningful accent word per screen?
+10. No grey text on a coloured area; contrast holds where the picture behind changes?
 
 **Tells** (each one P0 in the hook, P1 elsewhere; the banned defaults of motion-design §4. Name every one you see,
 from this list or not)
-10. A dark void with small floating things; glow, particles or neon; purple-blue or mesh gradient; glass cards.
-11. Three cards in a row, a KPI grid, icons in circles, bullets, the whole diagram at once.
-12. Everything centred; every beat the same entrance (fade + slide up), or two neighbouring beats entering alike; a small logo in a corner; an ALL-CAPS
+11. A dark void with small floating things; glow, particles or neon; purple-blue or mesh gradient; glass cards.
+12. Three cards in a row, a KPI grid, icons in circles, bullets, the whole diagram at once.
+13. Everything centred; every beat the same entrance (fade + slide up), or two neighbouring beats entering alike; a small logo in a corner; an ALL-CAPS
     eyebrow; 01/02 numbering without a real order; corner labels or HUD as decoration.
-13. A default font (Inter, Space Grotesk, Geist, Instrument Serif, JetBrains Mono) where the brand says otherwise.
+14. A default font (Inter, Space Grotesk, Geist, Instrument Serif, JetBrains Mono) where the brand says otherwise.
+
+**Symbols and states**
+15. Does each symbol keep one meaning and one size for the whole reel, as in the legend? Is a meaning carrier inside
+  the hero at least an icon (32 px on the phone sheet)? → P1.
+16. Does every state work (with and without the presenter)? An empty half of the frame in one state → P1.
+17. Is the logo only in the end card's brand slot? → P1 otherwise.
 
 **Story**
-14. Cover the words: do the beat frames, in order, still tell the story, each frame causing the next?
-15. Is frame 0 a real hook (a face, a result or a bold line), not black, a logo or an empty prompt box?
-16. Does an explainer diagram grow one named part at a time, with labels on the part itself, no legend?
+18. Cover the words: do the beat frames, in order, still tell the story, each frame causing the next?
+19. Is frame 0 a real hook (a face, a result or a bold line), not black, a logo or an empty prompt box?
+20. Does an explainer diagram grow one named part at a time, with labels on the part itself, no legend?
+
+21. Read each caption page on its own: does one end on a function word ("de", "te", "and") or leave one word alone
+  at the end of a sentence? → P1.
 
 **Phone sheet (360 px)**
-17. Is every line that must be read readable? Nothing under the platform UI or the right rail?
+22. Is every line that must be read readable? Nothing under the platform UI or the right rail?
 
 **Cut strip**
-18. Does anything jump at a cut (a position or colour that does not connect)? Same direction and speed on both
+23. Does anything jump at a cut (a position or colour that does not connect)? Same direction and speed on both
     sides, no ping-pong?
-19. Does an element enter from rest right after a cut, or appear out of nowhere? Is the cut frame or the frame
+24. Does an element enter from rest right after a cut, or appear out of nowhere? Is the cut frame or the frame
     0.1 s after it empty, a flash between beats (`empty-cut` in `inspect.json`)? → P1.
 
 **Timing** (from `inspect.json` and the check's `line_unread`, not by eye)
-20. Every line on screen at least 0.5 s + 0.3 s a word (labels of 1–2 words 0.4 s; the last line ≥ 2 s)?
-21. Something new every 2–4 s, no stretch of more than 3 s without change (except the end card)? Landed titles do not drift, no
+25. Every line on screen at least 0.5 s + 0.3 s a word (labels of 1–2 words 0.4 s; the last line ≥ 2 s)?
+26. Something new every 2–4 s, no stretch of more than 3 s without change (except the end card)? Landed titles do not drift, no
     breathing loops?
-22. 0.3–0.75 s of silence before the payoff? Eases chosen per role, not one curve for everything? A hero or card
+27. 0.3–0.75 s of silence before the payoff? Eases chosen per role, not one curve for everything? A hero or card
     moving in within 0.3–0.8 s, overshoot only on position and scale (the `entrance-duration`, `spring-on-opacity`
     and `same-entrance` warnings in `inspect.json`)?

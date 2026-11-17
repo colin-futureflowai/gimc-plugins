@@ -4,16 +4,39 @@ import { fontStack, TYPE } from '../theme.mjs'
 import { SafeArea } from './SafeArea.mjs'
 
 /**
- * Splits word timestamps into pages of at most `maxWords` words (build.mjs: 3, 4 or 6 by `captionEnergy`); a new page on a pause of 150 ms or more or after a sentence end.
+ * Words a caption page never ends on (articles, prepositions, conjunctions, pronouns that open a clause), in the
+ * languages GIMC reels are made in. A page that would end on one takes the next word too.
+ */
+const WEAK = new Set(
+  (
+    'de het een te die dat en of om van in op aan met voor naar bij als dan maar want je jij ik we wij ze zij er ' +
+    'the a an to of in on at for with and or but that which who as by from it is ' +
+    'der die das ein eine und oder zu mit von im am auf für dass'
+  ).split(' '),
+)
+const bare = (w) => w.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '')
+const ends = (w) => /[.!?:;,]$/.test(w.text.trim())
+
+/**
+ * Splits word timestamps into pages by meaning (motion-design references/captions.md): at most `maxWords` words
+ * (build.mjs: 3, 4 or 6 by `captionEnergy`), a new page on a pause of 150 ms or more or after a sentence end, never
+ * a page that ends on a weak word ("de", "te", "and"), and never one word left alone before a sentence end: the page
+ * takes one word more instead (at most `maxWords + 1`).
  * captions = [{ text, startMs, endMs }] from the voiceover transcript.
  */
 export const captionPages = (captions, maxWords = 4) => {
   const pages = []
-  for (const word of captions) {
+  for (const [i, word] of captions.entries()) {
     const page = pages.at(-1)
     const prev = page?.words.at(-1)
-    const breakHere = !page || page.words.length >= maxWords || word.startMs - prev.endMs >= 150 || /[.!?]$/.test(prev.text.trim())
-    if (breakHere) pages.push({ words: [word] })
+    const hardBreak = !page || word.startMs - prev.endMs >= 150 || /[.!?]$/.test(prev.text.trim())
+    let full = page && page.words.length >= maxWords
+    if (full && page.words.length < maxWords + 1) {
+      // One word more instead of a weak ending or a lone last word of the sentence (or of the reel).
+      const lone = ends(word) || i === captions.length - 1
+      if (WEAK.has(bare(prev.text)) || (lone && !ends(prev))) full = false
+    }
+    if (hardBreak || full) pages.push({ words: [word] })
     else page.words.push(word)
   }
   return pages.map((p, i) => {
