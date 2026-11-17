@@ -230,7 +230,7 @@ run_id; never a new frame or board, never the folder note, never another frame.
 Draw a derived line from <source card id: the week plan card, or the media card you use> to your result card.
 Input: <the week-plan line: day, time, platform, theme, hook idea, format, tone, CTA keyword, media card ids or
 "faceless", music mood>.
-Reel only: render 9:16 with Remotion (paid services only if the user asked), upload to a video card in your frame,
+Reel only: render 9:16 with remotion-components, following motion-design (paid services only if the user asked), upload to a video card in your frame,
 write the caption (caption-and-hashtags) as data.caption of that card, find music with gimc.social_search_audio
 and choose one track yourself.
 Do not ask the user anything, do not schedule, do not request review, do not post.

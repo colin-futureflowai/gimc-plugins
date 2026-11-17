@@ -1,0 +1,23 @@
+{
+  "name": "gimc-reel",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "still": "remotion still Reel out/still.png --frame=45 --props=./props.json",
+    "render": "remotion render Reel out/reel.mp4 --props=./props.json --codec=h264 --crf=18",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/captions": "4.0.544",
+    "@remotion/cli": "4.0.544",
+    "@remotion/fonts": "4.0.544",
+    "@remotion/media": "4.0.544",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.544"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "5.8.3"
+  }
+}

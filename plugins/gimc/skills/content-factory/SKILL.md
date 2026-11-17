@@ -47,8 +47,10 @@ steps (3–6 script/hook/caption) are Claude; the execution steps use the underl
   the **Apify MCP** (reel teardown/scraping), and confirm **Remotion** is installed for rendering. If one is
   NOT connected, STOP and ASK the user to connect it — never search for or reuse a key.
 - **Step 2** uses **Apify** to actually tear down the model reel.
-- **Step 5** renders the real mp4 with **Remotion** (+ **Seedance via Runway** for acting beats) — see
-  [reel-builder](../reel-builder/SKILL.md) for the render harness.
+- **Step 5** renders the real mp4 with **Remotion** through [remotion-components](../remotion-components/SKILL.md)
+  (+ **Seedance via Runway** for acting beats), designed by [motion-design](../motion-design/SKILL.md) — see
+  [reel-builder](../reel-builder/SKILL.md) for the render harness. Remotion is free only for companies of up to
+  3 people; a bigger company needs a licence.
 - **Step 7** uses **content-planning** to put the reel in the GIMC content calendar. You never publish
   without a person's approval: the company's publish rule in GIMC decides who puts the post at the platform
   (see content-planning, "Approval").

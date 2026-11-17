@@ -58,8 +58,13 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
   the RunwayML SDK with `model: "seedance2"` (portrait `720:1280` for a 9:16 reel, ~5s per clip).
   Generate a conditioning still of the character/scene, then i2v it so the subject genuinely MOVES and
   performs. Cost ≈ $6–12 per reel in Runway credits — use it only where real acting matters, and confirm with the user first.
-- **Hook, chapter, text, payoff, CTA beats → Remotion code-render ($0).** Fast, free, on-theme. This can carry a
-  whole reel on its own, and is the text scaffolding of a reel with Seedance beats.
+- **Hook, chapter, text, payoff, CTA beats → Remotion code-render** with
+  [remotion-components](../remotion-components/SKILL.md): ready components in the brand from GIMC, inside the
+  platform's safe area. Fast and on-theme; free for companies of up to 3 people, a bigger company needs a
+  Remotion licence (see that skill). This can carry a whole reel on its own, and is the text scaffolding of
+  a reel with Seedance beats.
+- **How it looks and moves** (type sizes, reading time, contrast, captions, easing, safe zones per platform)
+  follows [motion-design](../motion-design/SKILL.md).
 
 **Non-negotiables (each of these was a real failure once — do not repeat them):**
 1. **The hook needs a gripping VISUAL, not just text.** Open on something that grabs (e.g. a creator
@@ -70,8 +75,9 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
    loops and reads choppy — avoid it for real acting).
 3. **Sync the visual to the VOICEOVER, not a wall-clock.** Transcribe the VO (word timestamps) and cut/act
    ON the word — the action must match what's being said. Lead the cut ~10 frames.
-4. **Emphasis text must be high-contrast and readable** on every background (e.g. bright amber `#FFCC33`
-   with a dark outline stroke reads on both dark and light beats).
+4. **Emphasis text must be high-contrast and readable** on every background: the brand's `accent`, on a
+   backing panel or with a dark stroke over footage (motion-design §5). Text that must be read stays out of
+   the platform's danger zones.
 5. **Close on an on-screen CTA card, tied to the comment system.** End with a themed "Comment [KEYWORD] and
    I'll DM you [the thing]" card (an IG-composer graphic that types the keyword) — use the SAME keyword the
    caption uses and that the reply campaign in GIMC listens for, so comment → DM → lead actually fires. Save
@@ -80,7 +86,8 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
    that no live campaign will send.
 6. **No fabricated numbers.** If a metric can't be verified, don't put it on screen.
 
-**Verify before you ship — WATCH and MEASURE the playback, never trust a still.** Extract frames at ~12fps
+**Verify before you ship — WATCH and MEASURE the playback, never trust a still.** First check stills of every
+beat with the safe-zone overlay of the target platform (remotion-components §4). Then extract frames at ~12fps
 and confirm: motion is progressive (no repeating/ping-pong autocorrelation period), no frozen beats while
 the VO talks, and each action's cut aligns to its narration cue. Then eyeball the whole thing end to end.
 A reel that was never watched ships broken.
@@ -118,7 +125,7 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
   }
   ```
 
-- Render the video with Remotion by default (free). Use paid video services (for example Seedance or Runway) only when the user explicitly asks for it.
+- Render the video with Remotion by default, through remotion-components; Remotion is free only for companies of up to 3 people, so check the licence as that skill says. Use paid video services (for example Seedance or Runway) only when the user explicitly asks for it.
 - Then close in the chat with 1–3 sentences: what is ready, on which board or card, the link (`app_url` from the answer) and what the user can do now. Don't repeat in the chat what is on the canvas (no card texts, no list of titles), unless the user asks for the text there.
 - Facts in a card (numbers, prices, names, dates, claims) come only from the brand, the folder note, GIMC data or a source you name; anything else is marked "aanname" on the card.
 - In code mode this is one `gimc_execute` (fill in the CAPITALS; folder and board as `gimc-canvas` §3 says). The next step of the same run reuses `frame_id`, or makes the next frame in the same `gimc.canvas_create_items` call. Pass the returned `org_id` on every later `gimc_execute`. `board_not_found`: create that board only when the user asked for it or `gimc-canvas` §3 names it as the default, then run again. `inbox`: pick those up first (`gimc-canvas` §4).

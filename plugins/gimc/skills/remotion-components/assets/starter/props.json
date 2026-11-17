@@ -1,0 +1,20 @@
+{
+  "platform": "universal",
+  "showSafeZones": false,
+  "theme": {
+    "colors": { "bg": "#111111", "surface": "#1f1f1f", "text": "#ffffff", "muted": "#b3b3b3", "accent": "#ffcc33", "accentText": "#111111" },
+    "fonts": [],
+    "pace": "standard"
+  },
+  "beats": [
+    { "type": "hook", "seconds": 2, "text": "Nobody tells you this about mornings", "emphasis": "mornings" },
+    { "type": "text", "seconds": 2.5, "kicker": "Step 1", "text": "Start before you check your phone", "emphasis": "phone" },
+    { "type": "cta", "seconds": 2.5, "keyword": "ROUTINE", "promise": "and I'll DM you my 5-minute plan" }
+  ],
+  "captions": [
+    { "text": "Nobody", "startMs": 0, "endMs": 400, "timestampMs": 200, "confidence": 1 },
+    { "text": " tells", "startMs": 400, "endMs": 700, "timestampMs": 550, "confidence": 1 },
+    { "text": " you", "startMs": 700, "endMs": 900, "timestampMs": 800, "confidence": 1 },
+    { "text": " this", "startMs": 900, "endMs": 1200, "timestampMs": 1050, "confidence": 1 }
+  ]
+}
