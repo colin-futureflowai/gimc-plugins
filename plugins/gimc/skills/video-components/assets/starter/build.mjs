@@ -34,8 +34,9 @@ if (!existsSync(gsap)) {
 const COMPONENTS = { hook: HookCard, text: TextBeat, media: MediaBeat, cta: CTACard }
 const area = safeArea(props.platform ?? 'universal')
 const theme = props.theme
-// Room kept free at the bottom of the safe area for the caption line, so a lower third never sits under it.
-const captionSpace = props.captions?.length ? 150 : 0
+// Room kept free at the bottom of the safe area for the captions (a page can wrap to two lines), so a lower third
+// never sits under them.
+const captionSpace = props.captions?.length ? 220 : 0
 let start = 0
 const parts = props.beats.map((beat, i) => {
   const component = COMPONENTS[beat.type]

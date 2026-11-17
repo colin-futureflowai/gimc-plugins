@@ -86,8 +86,9 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
    that no live campaign will send.
 6. **No fabricated numbers.** If a metric can't be verified, don't put it on screen.
 
-**Verify before you ship — WATCH and MEASURE the playback, never trust a still.** First check stills of every
-beat with the safe-zone overlay of the target platform (video-components §4). Then extract frames at ~12fps
+**Verify before you ship — WATCH and MEASURE the playback, never trust a still.** First run the edit loop
+of video-components §4 ("See what you made": `inspect.mjs` to 0 errors, look at the contact sheet yourself,
+a second agent reviews it, `--video` sheet after the render). Then extract frames at ~12fps
 and confirm: motion is progressive (no repeating/ping-pong autocorrelation period), no frozen beats while
 the VO talks, and each action's cut aligns to its narration cue. Then eyeball the whole thing end to end.
 A reel that was never watched ships broken.

@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node build.mjs",
     "check": "node build.mjs && hyperframes check",
+    "inspect": "node build.mjs && node inspect.mjs",
     "stills": "node build.mjs --safe-zones && hyperframes snapshot --frames 12 --output out/check",
     "render": "node build.mjs && hyperframes render --no-low-memory-mode --fps 30 --crf 18 --format mp4 --output out/reel.mp4"
   },

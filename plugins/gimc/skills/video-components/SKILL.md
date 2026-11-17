@@ -1,17 +1,16 @@
 ---
 name: video-components
 description: >
-  A ready Hyperframes starter (HTML, CSS and a GSAP timeline) for 9:16 reels with standard components
-  (HookCard, TextBeat, MediaBeat, LowerThird, Captions synced to the voiceover, CTACard, SafeZoneOverlay),
-  themed from the folder's brand in GIMC with local font files. The render step reel-builder uses. Use
-  when the user says "render the reel", "make the video", "use our brand in the video", "add subtitles
-  to the reel" or "show the safe zones". Design rules: motion-design.
+  A ready Hyperframes starter (HTML, CSS, a GSAP timeline) for 9:16 reels: HookCard, TextBeat, MediaBeat,
+  LowerThird, Captions, CTACard, and inspect.mjs, which checks every frame and makes a contact sheet before
+  the render. Themed from the brand in GIMC; the render step reel-builder uses. Use when the user says "render the reel", "make the video", "use our brand in the video",
+  "add subtitles", "show the safe zones" or "check how the reel looks". Design rules: motion-design.
 user-invokable: true
 argument-hint: "[the build table or props of the reel, the target platform]"
 license: MIT
 metadata:
   author: GIMC
-  version: "2.0.0"
+  version: "2.1.0"
   category: content
 ---
 
@@ -27,7 +26,8 @@ that to an mp4. You do not write the components again for every reel. [reel-buil
 decides what the reel says; this skill turns that into an mp4.
 
 The project is in [assets/starter/](assets/starter/): `build.mjs` (props → `index.html`), `src/components/`,
-`src/theme.mjs`, `src/safe-zones.mjs`, `src/motion.mjs`, `props.json` (an example), `assets/fonts/`.
+`src/theme.mjs`, `src/safe-zones.mjs`, `src/motion.mjs`, `inspect.mjs` (section 4), `props.json` (an example),
+`assets/fonts/`.
 
 ## 0. Licences
 
@@ -92,7 +92,7 @@ theme marked as "aanname". Otherwise write `theme` in `props.json`:
 
 `build.mjs` writes one `@font-face` per file and stops when a file is missing. Hyperframes itself does not
 stop: a font without a local file is **silently replaced** by another one. So always check a still for the
-brand font (section 4).
+brand font (section 5).
 
 ## 3. Fill in the beats
 
@@ -119,25 +119,76 @@ Always on top: `Captions` (when `captions` is filled; pages of 1–4 words, the 
 colour, a lower third moves up to make room) and `SafeZoneOverlay` (only with `node build.mjs --safe-zones`).
 `emphasis` is a word or phrase from `text` that gets the accent colour: one per beat.
 
-## 4. Check, then render
+## 4. See what you made
 
-1. **Lint:** `npm run check` builds and runs `hyperframes check` (layout overlap, contrast, read time, CDN
-   and font errors). Fix every error. The `nested_structure_needs_subcomposition` and
-   `timeline_track_too_dense` warnings are expected: the composition is built from props, not edited in
-   the Hyperframes app.
-2. **Check stills with the overlay:** `npm run stills` builds with the overlay of the props' `platform`
-   and writes 12 frames to `out/check/` (or `npx hyperframes@0.9.61 snapshot --at 0.8,3.3 --no-end
-   --output out/check` for exact moments). Look at them against [motion-design](../motion-design/SKILL.md)
-   §9, and check that the **brand font** and the accent colour show. Fix the props, not the components,
-   unless a component is wrong for every reel.
+The code never shows you the frame. A caption can run straight through two figures and the props still look
+fine. So you look, with `inspect.mjs`, and you never call a reel done on the code alone.
+
+**The edit loop** (repeat until 0 errors):
+
+1. `npm run inspect` (`node build.mjs && node inspect.mjs`). It first runs `hyperframes check` (text over
+   text, the caption band build.mjs keeps free, WCAG contrast on the pixels, read time) and then adds what that
+   check does not see. It loads `index.html` headless at 1080×1920 with the Hyperframes runtime, seeks the
+   timeline the way the render does, every 0.25 s plus the start, middle and last frame of every beat. Errors
+   (exit code 1):
+   - text over a drawing, figure, panel, photo or video (also a caption box over other text);
+   - text (partly) outside the safe area of the props' `platform`;
+   - text or an element cut off by the frame or by a clipping box.
+
+   Warnings: type under the minimum of [motion-design](../motion-design/SKILL.md) §4, more than one accent
+   emphasis at once, a large empty zone, plus the check's warnings (marked `[check]`). It writes
+   `out/inspect.json` (every problem with selector, text and boxes) and one line per problem, e.g.
+   `0:27.27–0:28.27 ERROR text 'interviewen totdat die echt' overlaps #s-a (svg)`.
+2. Fix the props (or the component), build, inspect again. For one moment: `node inspect.mjs --at 28.0`
+   writes `out/still-28.0.png` with the problems boxed, in seconds. `--no-check` skips the Hyperframes check.
+3. At 0 errors, **look at the three sheets yourself** (read the images); problems are boxed red (warnings
+   amber), the danger zones tinted blue:
+   - `out/contact-sheet.png`: start and middle of every beat, and every moment with an error;
+   - `out/cut-strip.png`: −0.2 to +0.2 s around every cut, one row per cut: does anything jump?
+   - `out/phone-sheet.png`: the beat middles at 360 px wide, as on a phone: can every line be read?
+
+   Say per beat in one sentence what you see, as a stranger would, and what could be better.
+4. **A fresh reviewer:** when your host can start a subagent, start a new one without this conversation. Give
+   it only the brief or beat table, the three sheets, `out/inspect.json` and
+   [references/visual-review.md](references/visual-review.md), never the code. It answers in lines
+   `t · where · problem → exact change` with P0/P1/P2 and no score. You keep the editing: fix P0 and P1,
+   inspect, and review once more. At most 2 rounds; stop when a round fixes nothing.
+5. Only then render (section 5), and afterwards `node inspect.mjs --video out/reel.mp4`: a sheet from the real
+   mp4 (one frame per beat and one every 2 s) in `out/video-contact-sheet.png`. Look at it: fonts, timing and
+   what really ended up in the video.
+
+**Markings** for compositions with your own elements (the starter components already carry them). Put them
+on the element itself, not on a wrapper; the `data-layout-*` ones are those of `hyperframes check`, so both
+tools read them:
+
+| Attribute | Meaning |
+|---|---|
+| `data-backdrop` | a background text may lie on: a full-bleed photo or video, a decorative layer. A backing panel with its own text (the caption box, the lower-third panel) is marked too, but still counts against *other* text. Anything covering ≥ 90 % of the frame is a backdrop anyway. (Not `data-layer`: Hyperframes reserves that name.) |
+| `data-layout-allow-overlap`, `data-layout-allow-occlusion` | this overlap is on purpose (a label on a diagram) |
+| `data-layout-allow-overflow` | this element runs off the frame on purpose (a presenter cut off at the bottom) |
+| `data-layout-allow-safe-zone`, `data-layout-allow-caption-zone` | this text may sit in the danger zone or the caption band |
+| `data-layout-ignore` | texture, not something to read: no layout checks |
+| `data-role="caption"` | captions: 52 px minimum |
+
+A transparent PNG (a cut-out, a logo) only counts where it has ink. Give your own elements an `id`: the
+report names them by it.
+
+## 5. Render
+
+1. **Lint:** `npm run inspect` already ran `hyperframes check`; `npm run check` runs it alone. Fix every
+   error. The `nested_structure_needs_subcomposition` and `timeline_track_too_dense` warnings are expected:
+   the composition is built from props, not edited in the Hyperframes app.
+2. **Brand check:** in the contact sheet, the **brand font** and the accent colour show (a missing font
+   is replaced silently). `npm run stills` (12 frames with the drawn danger zones in `out/check/`) is still
+   there when you want the plain Hyperframes snapshots.
 3. **Render:** `npm run render`: it rebuilds without the overlay and runs
    `hyperframes render --no-low-memory-mode --fps 30 --crf 18 --format mp4 --output out/reel.mp4`
    (h264, 1080×1920, 30 fps). The length follows the beats. Confirm with
    `ffprobe -v error -show_entries stream=codec_name,width,height:format=duration out/reel.mp4`.
-4. **Watch the render** as reel-builder describes (a frame strip at about 12 fps, and the whole video),
-   then hand the mp4 back to reel-builder, which puts it on GIMC.
+4. **Watch the render:** the `--video` sheet (section 4, step 5), then as reel-builder describes (a frame
+   strip at about 12 fps, and the whole video). Hand the mp4 back to reel-builder, which puts it on GIMC.
 
-## 5. Changing or adding a component
+## 6. Changing or adding a component
 
 Keep the library consistent; a new component follows the same rules:
 
@@ -147,7 +198,8 @@ Keep the library consistent; a new component follows the same rules:
   `window.__timelines.main`.
 - Hyperframes seeks the timeline frame by frame: no CSS transitions or animations, no `Date.now()`, no
   unseeded `Math.random()`, no timers, no `repeat: -1`. Never tween `display` or `visibility` on a `.clip`.
-- Everything that must be read goes inside `SafeArea`; backgrounds may run full-bleed.
+- Everything that must be read goes inside `SafeArea`; backgrounds may run full-bleed. Give backgrounds and
+  backing panels `data-backdrop` (section 4), and run `inspect.mjs` on a reel that uses the component.
 - Colours only through `theme.colors` roles, sizes only from `TYPE` in `src/theme.mjs`, fonts through
   `fontStack()`. Escape every text with `esc()`.
 - Files in `assets/` with a relative path (`assets/x.jpg`); a `<video>` is timed itself and `muted`.

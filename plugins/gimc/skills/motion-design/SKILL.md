@@ -132,7 +132,8 @@ Motion directs attention; it is not decoration.
 ## 9. Check before you call it done
 
 Render stills or a frame strip (about 12 fps) of the whole reel, with the danger-zone overlay of the
-target platform, and check:
+target platform, and check (for a Hyperframes reel, [video-components](../video-components/SKILL.md) §4 checks
+points 1–3 for you with `inspect.mjs` and makes the contact sheet to look at):
 
 1. Nothing that must be read or recognised touches a danger zone.
 2. Every text meets the minimum size and is on screen long enough to read.
