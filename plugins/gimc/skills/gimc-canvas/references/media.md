@@ -105,18 +105,18 @@ means GIMC's storage host is not on the list yet. Then:
 
 Other PUT failures (4xx from storage): request a new link once (it may have expired) and try again; still failing → keep the card, report in one sentence.
 
-## Rendering video in a sandbox (Remotion)
+## Rendering video in a sandbox
 
-Remotion normally downloads its own headless Chrome from `remotion.media`, which Cowork blocks. Never ask the user to allow `remotion.media`. Use a browser that is already on the system:
+The reel renders with Hyperframes (`video-components`). It needs a headless Chrome and ffmpeg, and its composition has no network needs: GSAP, fonts and media are local files. `npx hyperframes@0.9.61 browser ensure` downloads Chrome, which Cowork may block; never ask the user to allow that download host. Use a browser that is already on the system:
 
 ```sh
 # find one
 for b in chrome-headless-shell chromium chromium-browser google-chrome google-chrome-stable; do command -v $b; done
 find / \( -name 'chrome-headless-shell' -o -name 'chrome' -o -name 'chromium' \) -type f -perm -u+x 2>/dev/null | head
 # render with it
-npx remotion render <entry> <composition> out.mp4 --browser-executable=/path/to/chrome-headless-shell
+HYPERFRAMES_BROWSER_PATH=/path/to/chrome-headless-shell npm run render
 ```
 
-`npx remotion browser ensure` may also fail for the same reason; skip it. If no browser is found at all, keep the build table and assets as cards, and tell the user the render needs a machine with Chrome.
+If no browser or no ffmpeg is found at all, keep the build table and assets as cards, and tell the user the render needs a machine with Chrome and ffmpeg.
 
 Video services that cost money (Seedance, Runway, …) only when the user explicitly asks.

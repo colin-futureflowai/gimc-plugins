@@ -29,12 +29,12 @@ drives the entire pipeline.
 
 ```
 0. CONNECT     onboarding .......... one-time: GIMC (canvas, posting, reply campaigns), the Apify MCP
-                                      (teardown), and make sure Remotion is available (render). Ask if missing.
+                                      (teardown), and make sure Hyperframes can render. Ask if missing.
 1. MEMORY      ai-brain ............. recall your voice + past winners (so it sounds like YOU)
 2. FIND+STUDY  Apify ............... tear a proven reel down frame-by-frame + transcript
 3. HOOK        viral-hook-writer .... 10 scroll-stopping hooks for the first 1–3s, ranked
 4. SCRIPT      reel-scripter ........ tight 30–45s ORIGINAL script — your words, the proven structure
-5. BUILD+RENDER reel-builder + Remotion (+ Seedance via Runway) ... the REAL rendered mp4
+5. BUILD+RENDER reel-builder + Hyperframes (+ Seedance via Runway) . the REAL rendered mp4
 6. CAPTION     caption-and-hashtags . caption + tiered hashtags + a first comment built for saves
 7. SCHEDULE    content-planning ..... puts the reel in the GIMC content calendar; a person approves it
 8. LEADS       social-engagement .... keyword → reply + DM as a concept campaign; a person sets it live
@@ -44,13 +44,12 @@ drives the entire pipeline.
 **This runs for REAL by calling the tools directly — it is a harness, not a description.** The creative
 steps (3–6 script/hook/caption) are Claude; the execution steps use the underlying tools, no wrapper:
 - **Step 0 CONNECT (once, at onboarding):** check that **GIMC** is connected (see `gimc-canvas`), connect
-  the **Apify MCP** (reel teardown/scraping), and confirm **Remotion** is installed for rendering. If one is
+  the **Apify MCP** (reel teardown/scraping), and confirm **Hyperframes** can render (Node 22+, ffmpeg, Chrome). If one is
   NOT connected, STOP and ASK the user to connect it — never search for or reuse a key.
 - **Step 2** uses **Apify** to actually tear down the model reel.
-- **Step 5** renders the real mp4 with **Remotion** through [remotion-components](../remotion-components/SKILL.md)
+- **Step 5** renders the real mp4 with **Hyperframes** through [video-components](../video-components/SKILL.md)
   (+ **Seedance via Runway** for acting beats), designed by [motion-design](../motion-design/SKILL.md) — see
-  [reel-builder](../reel-builder/SKILL.md) for the render harness. Remotion is free only for companies of up to
-  3 people; a bigger company needs a licence.
+  [reel-builder](../reel-builder/SKILL.md) for the render harness. Hyperframes needs no licence per render.
 - **Step 7** uses **content-planning** to put the reel in the GIMC content calendar. You never publish
   without a person's approval: the company's publish rule in GIMC decides who puts the post at the platform
   (see content-planning, "Approval").
@@ -58,7 +57,7 @@ steps (3–6 script/hook/caption) are Claude; the execution steps use the underl
   **social-engagement**). A person checks it and sets it live; from then on GIMC answers every matching comment.
 
 If a tool isn't connected, do the creative pipeline (script + plan) and tell the user exactly what to
-connect — GIMC, Apify, Remotion — to make it run end to end. Never fake a render, a post or a live campaign.
+connect — GIMC, Apify, Hyperframes — to make it run end to end. Never fake a render, a post or a live campaign.
 
 ## When to use
 You want the *whole* reel + lead loop, not one piece. Run this as your daily driver. For a single step,
@@ -86,13 +85,13 @@ CONTEXT
 - My @handle: [@you]   ·   My voice: [a line, or "use ai-brain"]   ·   CTA keyword: [e.g. GUIDE]
 
 PIPELINE
-0) CONNECT (once, onboarding): check GIMC, connect the Apify MCP (teardown) and confirm Remotion is available
+0) CONNECT (once, onboarding): check GIMC, connect the Apify MCP (teardown) and confirm Hyperframes can render
    (render). IF ONE IS NOT CONNECTED, STOP AND ASK ME TO CONNECT IT and wait; never search for or reuse a key.
 0.5) ai-brain: recall my voice + past winners (if connected).
 1) FIND+STUDY: use Apify to tear down the model URL (or your suggested pick) → hook, beats, pacing, visuals.
 2) viral-hook-writer: 10 hooks, ranked; I'll pick one (or you pick the strongest).
 3) reel-scripter: a 30–45s ORIGINAL script in MY voice on that structure (never a copy).
-4) reel-builder + Remotion (+ Seedance via Runway): actually RENDER the reel → a real mp4 with the on-screen
+4) reel-builder + Hyperframes (+ Seedance via Runway): actually RENDER the reel → a real mp4 with the on-screen
    comment-CTA card. Show me the beat table + the rendered reel.
 5) caption-and-hashtags: caption + tiered hashtags + first comment, with my CTA keyword.
 6) SCHEDULE: content-planning puts the reel in the GIMC content calendar on the date I pick. A person
@@ -102,7 +101,7 @@ PIPELINE
 8) ai-brain: save the winning hook/format back to memory.
 
 If a tool isn't connected, do steps 1–5 as the creative pipeline and tell me exactly what to connect
-(GIMC, Apify, Remotion) to make it run end to end — never fake the render, the post or a live campaign.
+(GIMC, Apify, Hyperframes) to make it run end to end — never fake the render, the post or a live campaign.
 
 RULES
 - Model the FORMAT, never the words — original script in my voice (copies get buried by IG Originality).

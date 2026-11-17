@@ -5,7 +5,7 @@ description: The GIMC hub. How to put work on the GIMC canvas (boards, frames, c
 
 # GIMC canvas
 
-This is plugin version 1.11.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
+This is plugin version 1.12.0. If `plugin_info` is available, compare its `version` with this one once per conversation and, if it is newer, tell the user in one sentence that an update is ready (`/plugin marketplace update gimc`, or the GIMC download).
 
 The GIMC canvas (`/marketing/canvas`) is the user's content board. People watch it while you work: make it read like the story of the run.
 
@@ -22,7 +22,7 @@ Hard rules — they apply to every section below:
 References — open the one you need:
 
 - [references/layout.md](references/layout.md) — tidy-board principles, sizes, frames, lines, plans.
-- [references/media.md](references/media.md) — uploads, posters, carousels, Cowork network and Remotion workarounds.
+- [references/media.md](references/media.md) — uploads, posters, carousels, Cowork network and render workarounds.
 - [references/folders.md](references/folders.md) — matching folder names, creating a folder, writing the folder note.
 - [references/notes-and-tasks.md](references/notes-and-tasks.md) — the inbox, notes, tasks, replies, changing a person's card.
 - [references/scheduling.md](references/scheduling.md) — the GIMC content calendar.

@@ -10,16 +10,13 @@ export const SAFE_ZONES = {
   tiktok: { top: 240, bottom: 660, left: 120, right: 300 },
   linkedin: { top: 260, bottom: 560, left: 112, right: 210 },
   universal: { top: 288, bottom: 672, left: 120, right: 300 },
-} as const
+}
 
-export type Platform = keyof typeof SAFE_ZONES
+export const WIDTH = 1080
+export const HEIGHT = 1920
 
-export const safeArea = (platform: Platform, width = 1080, height = 1920) => {
-  const scale = width / 1080
+export const safeArea = (platform) => {
   const z = SAFE_ZONES[platform]
-  const top = z.top * scale
-  const bottom = z.bottom * scale
-  const left = z.left * scale
-  const right = z.right * scale
-  return { top, bottom, left, right, width: width - left - right, height: height - top - bottom }
+  if (!z) throw new Error(`Unknown platform "${platform}". Use one of: ${Object.keys(SAFE_ZONES).join(', ')}`)
+  return { ...z, width: WIDTH - z.left - z.right, height: HEIGHT - z.top - z.bottom }
 }

@@ -97,7 +97,7 @@ remix. Rough need per reel:
 | Talking head, demo, testimonial | 1 own clip of 15–45 s, or 3–6 shots |
 | B-roll with voice-over or text | 4–6 clips or photos |
 | Remix of an earlier reel | that reel (`content-repurposer`, `cross-platform-reformatter`) |
-| Faceless / animation (Remotion text, motion, product stills) | nothing |
+| Faceless / animation (code-rendered text, motion, product stills) | nothing |
 
 **With a saved preference** (the block exists): one short message: the preference in one line, the media check in one
 line, and "Zelfde als vorige keer, of iets anders?" (in the user's language). Not enough media for the saved number:
@@ -230,7 +230,7 @@ run_id; never a new frame or board, never the folder note, never another frame.
 Draw a derived line from <source card id: the week plan card, or the media card you use> to your result card.
 Input: <the week-plan line: day, time, platform, theme, hook idea, format, tone, CTA keyword, media card ids or
 "faceless", music mood>.
-Reel only: render 9:16 with remotion-components, following motion-design (paid services only if the user asked), upload to a video card in your frame,
+Reel only: render 9:16 with video-components (Hyperframes), following motion-design (paid services only if the user asked), upload to a video card in your frame,
 write the caption (caption-and-hashtags) as data.caption of that card, find music with gimc.social_search_audio
 and choose one track yourself.
 Do not ask the user anything, do not schedule, do not request review, do not post.

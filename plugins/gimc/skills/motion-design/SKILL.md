@@ -21,7 +21,7 @@ metadata:
 
 The rules a good motion designer applies to every reel, whatever tool renders it. They decide *how* a
 reel looks and moves; [reel-builder](../reel-builder/SKILL.md) decides *what* it says, and
-[remotion-components](../remotion-components/SKILL.md) holds the ready components that already follow
+[video-components](../video-components/SKILL.md) holds the ready components that already follow
 these rules. Design for a phone held at arm's length, watched for one second, often without sound.
 
 ## 1. The brand comes from GIMC, never from taste
@@ -108,8 +108,10 @@ Motion directs attention; it is not decoration.
 
 - **Animate in, then hold.** Elements enter in 6–12 frames at 30 fps (0.2–0.4 s), then stay still long
   enough to be read. The read time in section 4 starts when the entrance ends.
-- **Easing:** enter with ease-out or a damped spring (no visible wobble for text), leave with ease-in,
-  faster than the entrance. Linear motion only for continuous movement (a slow zoom, a ticker).
+- **Easing:** enter with a strong ease-out (GSAP `power3.out`; no overshoot or wobble for text; a card may
+  pop a little with `back.out(1.4)`), leave with ease-in (`power2.in`), faster than the entrance. Linear
+  motion (`none`) only for continuous movement (a slow zoom, a ticker). In a timeline:
+  `tl.fromTo('#title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, 2.0)`.
 - **Small distances:** text slides 20–60 px, not across the screen; scale from 0.9–0.95 to 1, never from 0.
 - **Stagger:** words or lines 2–4 frames apart, at most 5 items; beyond that, animate the block.
 - **One motion idea per beat.** The beat's main element moves; everything else is still.
