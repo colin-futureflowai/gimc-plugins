@@ -50,6 +50,8 @@ steps (3–6 script/hook/caption) are Claude; the execution steps use the underl
 - **Step 5** renders the real mp4 with **Hyperframes** through [video-components](../video-components/SKILL.md)
   (+ **Seedance via Runway** for acting beats), designed by [motion-design](../motion-design/SKILL.md) — see
   [reel-builder](../reel-builder/SKILL.md) for the render harness. Hyperframes needs no licence per render.
+  Never call a reel done before the look loop of video-components §4: `inspect.mjs` at 0 errors, the three sheets
+  looked at and described per beat, a fresh reviewer, and the sheet from the rendered mp4.
 - **Step 7** uses **content-planning** to put the reel in the GIMC content calendar. You never publish
   without a person's approval: the company's publish rule in GIMC decides who puts the post at the platform
   (see content-planning, "Approval").
@@ -92,7 +94,8 @@ PIPELINE
 2) viral-hook-writer: 10 hooks, ranked; I'll pick one (or you pick the strongest).
 3) reel-scripter: a 30–45s ORIGINAL script in MY voice on that structure (never a copy).
 4) reel-builder + Hyperframes (+ Seedance via Runway): actually RENDER the reel → a real mp4 with the on-screen
-   comment-CTA card. Show me the beat table + the rendered reel.
+   comment-CTA card. Run the look loop of video-components §4 first (inspect to 0 errors, look at the sheets,
+   fresh reviewer). Show me the beat table + the rendered reel.
 5) caption-and-hashtags: caption + tiered hashtags + first comment, with my CTA keyword.
 6) SCHEDULE: content-planning puts the reel in the GIMC content calendar on the date I pick. A person
    approves it in GIMC; you never publish yourself.
