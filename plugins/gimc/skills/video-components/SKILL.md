@@ -10,7 +10,7 @@ argument-hint: "[the build table or props of the reel, the target platform]"
 license: MIT
 metadata:
   author: GIMC
-  version: "2.1.0"
+  version: "2.2.0"
   category: content
 ---
 
@@ -20,7 +20,8 @@ metadata:
 
 A small [Hyperframes](https://github.com/heygen-com/hyperframes) project with components that already
 follow [motion-design](../motion-design/SKILL.md): brand colours and fonts from GIMC, type sizes for
-1080×1920, everything that must be read inside the platform's safe area, entrances with a GSAP ease-out.
+1080×1920 with heroes fitted to the width, everything that must be read inside the platform's safe area, eases and
+durations per role, and entrances that change from beat to beat.
 You fill in `props.json`; `build.mjs` turns it into `index.html` (the composition) and Hyperframes renders
 that to an mp4. You do not write the components again for every reel. [reel-builder](../reel-builder/SKILL.md)
 decides what the reel says; this skill turns that into an mp4.
@@ -46,7 +47,9 @@ The project is in [assets/starter/](assets/starter/): `build.mjs` (props → `in
 3. Once per machine, `npx hyperframes@0.9.61 browser ensure` installs the headless Chrome it renders with.
    A sandbox that cannot download it (Cowork): see `gimc-canvas` → references/media.md, "Rendering video
    in a sandbox".
-4. Hyperframes has its own agent skills and docs (`npx hyperframes@0.9.61 docs`). Use them for its API.
+4. Hyperframes has its own agent skills and docs (`npx hyperframes@0.9.61 docs`). The pinned CLI ships its skills
+   in `node_modules/hyperframes/dist/skills/`: use them for its API and its craft (see
+   [motion-design](../motion-design/SKILL.md) §0 for which to read).
    **Three exceptions** in GIMC, because the same composition must also render in a VM without network:
    - GSAP is a local file (`vendor/gsap.min.js`, copied by `build.mjs` from the pinned CLI), never a CDN
      script. A CDN fails the render without network.
@@ -110,14 +113,22 @@ The components, one per beat type:
 
 | Beat `type` | Component | Fields | Use for |
 |---|---|---|---|
-| `hook` | `HookCard` | `text`, `emphasis` | beat 1: big display type in the upper safe area, moving on frame 0 |
-| `text` | `TextBeat` | `text`, `emphasis`, `kicker` | a value beat: one headline, optional small kicker ("Step 1") |
-| `media` | `MediaBeat` (+ `LowerThird`) | `src`, `text`, `lowerThird: { name, title }` | b-roll (muted) or a photo full-bleed, with text on a backing panel |
+| `hook` | `HookCard` | `text`, `emphasis`, `entrance` | beat 1: display type fitted to the width of the upper safe area, readable and moving on frame 0 |
+| `text` | `TextBeat` | `text`, `emphasis`, `kicker`, `entrance` | a value beat: one headline fitted to the width, optional small kicker ("Step 1") |
+| `media` | `MediaBeat` (+ `LowerThird`) | `src`, `text`, `lowerThird: { name, title }`, `entrance` | b-roll (muted) or a photo full-bleed, with text on a backing panel |
 | `cta` | `CTACard` | `label`, `keyword`, `promise` | the end card: "Comment KEYWORD" typed into a field; `label` in the reel's language ("Reageer"); the keyword of the reply campaign in GIMC |
 
-Always on top: `Captions` (when `captions` is filled; pages of 1–4 words, the spoken word in the accent
-colour, a lower third moves up to make room) and `SafeZoneOverlay` (only with `node build.mjs --safe-zones`).
-`emphasis` is a word or phrase from `text` that gets the accent colour: one per beat.
+Always on top: `Captions` (when `captions` is filled; the spoken word in the accent colour, a lower third moves up
+to make room) and `SafeZoneOverlay` (only with `node build.mjs --safe-zones`). `captionEnergy` (`high`, `normal`,
+`calm`) sets the caption pages to at most 3, 4 or 6 words. `emphasis` is the one word or phrase from `text` that
+carries the meaning and gets the accent colour: one per beat.
+
+**Entrances** (`entrance`, optional): `ink` (the words turn from muted to full colour; the hook's default, readable
+on frame 0), `blur` (each word un-blurs), `line` (the whole line un-blurs; the media text's default), `rise` (each
+word fades in and rises). Without one, text beats take turns (`blur`, `rise`, `line`), so neighbouring beats never
+enter the same way. Every entrance starts on the cut frame at `CUT_OPACITY` (0.4, blurred or a little lower), so a
+cut never shows an empty frame. The hero line is fitted to the width with `fitText`: a line that only fits at the minimum size
+wraps by itself, and is too long for a hero (cut words, motion-design §5).
 
 ## 4. See what you made
 
@@ -135,8 +146,13 @@ fine. So you look, with `inspect.mjs`, and you never call a reel done on the cod
    - text (partly) outside the safe area of the props' `platform`;
    - text or an element cut off by the frame or by a clipping box.
 
-   Warnings: type under the minimum of [motion-design](../motion-design/SKILL.md) §4, more than one accent
-   emphasis at once, a large empty zone, plus the check's warnings (marked `[check]`). It writes
+   Warnings: type under the minimum of [motion-design](../motion-design/SKILL.md) §5, more than one accent
+   emphasis at once, a large empty zone, a beat whose biggest element fills less than 40 % of the frame
+   (`hero-size`), plus what the GSAP timeline says: a hero or card (≥ 40 %) that moves in faster than 0.3 s or
+   slower than 0.8 s (`entrance-duration`), a springy ease on opacity, colour or blur (`spring-on-opacity`), a
+   repeating tween (`loop`), three or more beats that all enter the same way (`same-entrance`), and a cut with no
+   text or hero on screen from 0.1 s before to 0.1 s after it (`empty-cut`; captions do not count). Then the
+   check's warnings (marked `[check]`). It writes
    `out/inspect.json` (every problem with selector, text and boxes) and one line per problem, e.g.
    `0:27.27–0:28.27 ERROR text 'interviewen totdat die echt' overlaps #s-a (svg)`.
 2. Fix the props (or the component), build, inspect again. For one moment: `node inspect.mjs --at 28.0`
@@ -147,7 +163,8 @@ fine. So you look, with `inspect.mjs`, and you never call a reel done on the cod
    - `out/cut-strip.png`: −0.2 to +0.2 s around every cut, one row per cut: does anything jump?
    - `out/phone-sheet.png`: the beat middles at 360 px wide, as on a phone: can every line be read?
 
-   Say per beat in one sentence what you see, as a stranger would, and what could be better.
+   Say per beat in one sentence what you see, as a stranger would, and what could be better, and name every
+   banned default of motion-design §4 you still see (each one gets fixed).
 4. **A fresh reviewer:** when your host can start a subagent, start a new one without this conversation. Give
    it only the brief or beat table, the three sheets, `out/inspect.json` and
    [references/visual-review.md](references/visual-review.md), never the code. It answers in lines
@@ -193,8 +210,9 @@ report names them by it.
 Keep the library consistent; a new component follows the same rules:
 
 - A component is a function `(context, beat) → { html, tl }`: the markup, plus GSAP timeline lines with
-  absolute times (`c.start` is the beat's start). Use the helpers in `src/motion.mjs` (`enter`, `set`,
-  `EASE`, `frames`); register nothing yourself, `build.mjs` builds the one paused timeline
+  absolute times (`c.start` is the beat's start). Use the helpers: `src/motion.mjs` (`EASE` by role, `enter`,
+  `exit`, `tween`, `set`, `frames`), `enterSeconds(theme, role)` and `fitText` in `src/theme.mjs`, the entrances of
+  `Words`; register nothing yourself, `build.mjs` builds the one paused timeline
   `window.__timelines.main`.
 - Hyperframes seeks the timeline frame by frame: no CSS transitions or animations, no `Date.now()`, no
   unseeded `Math.random()`, no timers, no `repeat: -1`. Never tween `display` or `visibility` on a `.clip`.

@@ -4,7 +4,7 @@ import { fontStack, TYPE } from '../theme.mjs'
 import { SafeArea } from './SafeArea.mjs'
 
 /**
- * Splits word timestamps into pages of 1–4 words; a new page on a pause of 150 ms or more or after a sentence end.
+ * Splits word timestamps into pages of at most `maxWords` words (build.mjs: 3, 4 or 6 by `captionEnergy`); a new page on a pause of 150 ms or more or after a sentence end.
  * captions = [{ text, startMs, endMs }] from the voiceover transcript.
  */
 export const captionPages = (captions, maxWords = 4) => {
@@ -31,8 +31,8 @@ export const captionPages = (captions, maxWords = 4) => {
  * The box is the text's backing (`data-backdrop`); `data-role="caption"` gives it the caption checks of inspect.mjs;
  * each word may sit in the caption band of `hyperframes check` (`data-layout-allow-caption-zone`, on the text itself).
  */
-export const Captions = (c, captions) => {
-  const pages = captionPages(captions)
+export const Captions = (c, captions, maxWords = 4) => {
+  const pages = captionPages(captions, maxWords)
   const tl = []
   const html = pages
     .map((p, i) => {

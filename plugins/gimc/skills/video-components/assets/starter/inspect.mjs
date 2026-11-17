@@ -421,7 +421,16 @@ function analyze(cfg) {
       add({ severity: 'warning', type: 'empty-zone', selector: 'safe area', rect: round({ x0: safe.x0, y0, x1: safe.x1, y1: y0 + best.len * ROW }), message: `${Math.round((best.len / rows) * 100)} % of the safe area is empty (y ${Math.round(y0)}–${Math.round(y0 + best.len * ROW)}) while the rest is full` })
     }
   }
-  return { issues, texts: texts.length, visuals: visuals.length }
+  // How much of the frame the biggest thing fills (its share of the width or the height, whichever is larger): the
+  // hero of a beat fills at least 40 % (motion-design §3). Captions do not count; a full-bleed photo or video does.
+  const fill = (r) => Math.max((Math.min(r.x1, W) - Math.max(r.x0, 0)) / W, (Math.min(r.y1, H) - Math.max(r.y0, 0)) / H)
+  let heroFill = 0
+  for (const b of texts) if (!b.caption && solid(b.opacity)) heroFill = Math.max(heroFill, fill(b.rect))
+  for (const v of [...visuals, ...media]) if (solid(v.opacity) && !marked(v.el, 'data-role', 'caption')) heroFill = Math.max(heroFill, fill(v.rect))
+  // Something to look at besides the captions: text that is visible (also faint, at least 30 % opacity) or a solid
+  // element of hero size. Used around every cut (empty-cut).
+  const content = texts.some((b) => !b.caption && b.opacity >= 0.3) || [...visuals, ...media].some((v) => solid(v.opacity) && !marked(v.el, 'data-role', 'caption') && fill(v.rect) >= 0.4)
+  return { issues, texts: texts.length, visuals: visuals.length, heroFill, content }
 }
 
 // Boxes over the frame for a screenshot: errors red, warnings amber, the danger zones lightly tinted.
@@ -530,6 +539,58 @@ const runCheck = () => {
   return out
 }
 
+// What the timeline itself says about the motion (motion-design §7), read from the GSAP tweens, not from pixels:
+// - a move (position, scale, rotation) of a hero or card (≥ 40 % of the frame's width or height) that enters faster
+//   than 0.3 s or slower than 0.8 s; words, small elements and opacity, blur or colour reveals are not held to it;
+// - a springy ease (back, elastic, bounce) on opacity, colour or blur;
+// - a repeating tween (a breathing, floating or pulsing loop);
+// - three or more beats that all enter the same way (same properties and ease for most of their tweens).
+const MOVE = new Set(['x', 'y', 'xPercent', 'yPercent', 'scale', 'scaleX', 'scaleY', 'rotation', 'left', 'top'])
+const LOOKS = new Set(['opacity', 'autoAlpha', 'color', 'backgroundColor', 'filter'])
+const motionReview = async (page) => {
+  const tweens = await page.evaluate(() => {
+    const tl = window.__timelines?.main
+    if (!tl?.getChildren) return []
+    const skip = new Set(['duration', 'ease', 'delay', 'startAt', 'runBackwards', 'immediateRender', 'overwrite', 'stagger', 'id', 'data', 'lazy', 'paused', 'inherit', 'yoyo', 'repeat', 'repeatDelay', 'callbackScope', 'parent', 'onStart', 'onUpdate', 'onComplete'])
+    return tl
+      .getChildren(true, true, false)
+      .filter((t) => t.duration() > 0)
+      .map((t) => {
+        const v = t.vars ?? {}
+        return { start: t.startTime(), duration: t.duration(), ease: typeof v.ease === 'string' ? v.ease : '', keys: Object.keys(v).filter((k) => !skip.has(k)), out: v.opacity === 0 || v.autoAlpha === 0, repeat: Number(v.repeat ?? 0), yoyo: !!v.yoyo, ids: t.targets().filter((e) => e instanceof Element && e.id).map((e) => `#${e.id}`) }
+      })
+  })
+  const out = []
+  const sizeCache = new Map()
+  const sizeAt = async (t, ids) => {
+    const key = `${t}|${ids}`
+    if (!sizeCache.has(key)) {
+      await seek(page, t)
+      sizeCache.set(key, await page.evaluate((sel, W, H) => Math.max(0, ...sel.flatMap((s) => [...document.querySelectorAll(s)]).map((e) => { const r = e.getBoundingClientRect(); return Math.max(r.width / W, r.height / H) })), ids, WIDTH, HEIGHT))
+    }
+    return sizeCache.get(key)
+  }
+  for (const t of tweens) {
+    const who = t.ids.join(', ') || 'a tween'
+    const looks = t.keys.filter((k) => LOOKS.has(k))
+    if (/^(back|elastic|bounce)/.test(t.ease) && looks.length) out.push({ severity: 'warning', type: 'spring-on-opacity', selector: who, t: t.start, to: t.start + t.duration, message: `${who}: ${t.ease} on ${looks.join(', ')}; overshoot belongs on position and scale, opacity and colour never bounce` })
+    if (t.repeat === -1 || (t.repeat > 0 && t.yoyo)) out.push({ severity: 'warning', type: 'loop', selector: who, t: t.start, to: t.start + t.duration, message: `${who} repeats (a breathing, floating or pulsing loop); a landed element stays still` })
+    if (!t.out && t.ids.length && t.keys.some((k) => MOVE.has(k)) && (t.duration < 0.3 - 1e-3 || t.duration > 0.8 + 1e-3)) {
+      const size = await sizeAt(frame(Math.min(t.start + t.duration, beats.at(-1)?.end ?? t.start + t.duration) - 1 / FPS), t.ids)
+      if (size >= 0.4) out.push({ severity: 'warning', type: 'entrance-duration', selector: who, t: t.start, to: t.start + t.duration, message: `${who} (${Math.round(size * 100)} % of the frame) enters in ${t.duration.toFixed(2)} s; a hero or card moves in 0.3–0.8 s (too snappy reads as a glitch, too slow drags)` })
+    }
+  }
+  const sig = (t) => `${[...t.keys].sort().join('+')}|${t.ease}`
+  const modes = beats.map((b) => {
+    const count = new Map()
+    for (const t of tweens) if (!t.out && t.start >= b.start - 1e-3 && t.start < b.end - 1e-3) count.set(sig(t), (count.get(sig(t)) ?? 0) + 1)
+    return [...count].sort((a, z) => z[1] - a[1])[0]?.[0]
+  })
+  const used = modes.filter(Boolean)
+  if (used.length >= 3 && used.every((m) => m === used[0])) out.push({ severity: 'warning', type: 'same-entrance', selector: 'timeline', t: 0, to: beats.at(-1).end, message: `every beat enters the same way (${used[0].replace('|', ', ')}); vary the entrance between beats` })
+  return out
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // Modes
 // ---------------------------------------------------------------------------------------------------------------
@@ -608,6 +669,23 @@ try {
       // An empty zone only counts when it stays (not the frames where a new beat is still fading in).
       for (let i = runs.length - 1; i >= 0; i--) if (runs[i].issue.type === 'empty-zone' && runs[i].last - runs[i].first < 0.45) runs.splice(i, 1)
       for (const c of checked) runs.push({ key: `check|${c.type}|${c.selector}|${c.t}`, first: c.t, last: c.to, count: 1, issue: c })
+      // The hero at the middle of every beat, and what the timeline says about the motion.
+      for (const b of beats) {
+        const mid = results.find((r) => r.t === frame((b.start + b.end) / 2))
+        if (mid && mid.heroFill < 0.4) runs.push({ key: `hero|${b.n}`, first: mid.t, last: mid.t, count: 1, issue: { severity: 'warning', type: 'hero-size', selector: `beat ${b.n}`, message: `beat ${b.n} (${b.type}): the biggest element fills ${Math.round(mid.heroFill * 100)} % of the frame; the hero fills at least 40 % of its height or width` } })
+      }
+      // A cut that lands on an empty frame reads as a flash: at −0.1 s, on the cut and at +0.1 s something of a beat
+      // (not only a caption) must be on screen.
+      for (const b of beats.slice(1)) {
+        const empty = []
+        for (const d of [-0.1, 0, 0.1]) {
+          const t = frame(b.start + d)
+          await seek(page, t)
+          if (!(await page.evaluate(analyze, cfg)).content) empty.push(t)
+        }
+        if (empty.length) runs.push({ key: `empty-cut|${b.n}`, first: empty[0], last: empty.at(-1), count: 1, issue: { severity: 'warning', type: 'empty-cut', selector: `cut to beat ${b.n}`, message: `the cut to beat ${b.n} (${b.type}) shows no text or hero at ${empty.map(clock).join(', ')}; start the new beat's entrance visible on the cut frame (CUT_OPACITY) or let the old beat stay until the cut` } })
+      }
+      for (const m of await motionReview(page)) runs.push({ key: `motion|${m.type}|${m.selector}|${m.t}`, first: m.t, last: m.to, count: 1, issue: m })
       runs.sort((a, b) => a.first - b.first)
       const errorRuns = runs.filter((r) => r.issue.severity === 'error')
       const warnRuns = runs.filter((r) => r.issue.severity === 'warning')

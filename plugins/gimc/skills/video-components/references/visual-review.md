@@ -25,8 +25,8 @@ One line per problem, most serious first, **no score**:
 1. Describe the frame in one sentence as a stranger would and name every object. An object that needs
    explaining → P0.
 2. Squint: one primary element within 0.3 s, then a secondary one? Two focal points → P1.
-3. Does the hero fill ≥ 40 % of the frame's height or width? A small element in an empty half → P1 (in the
-   hook P0).
+3. Does the hero fill ≥ 40 % of the frame's height or width, a hero word 60–90 % of the width as far as the safe
+   area allows? A small element in an empty half → P1 (in the hook P0).
 4. Does text overlap a drawing, icon, diagram or face without that being on purpose (and marked)? → P0.
 5. Elements floating loose, with no relation to grid, edge or neighbour? Do items that belong together sit
    together, and separate groups apart? → P1.
@@ -35,10 +35,11 @@ One line per problem, most serious first, **no score**:
 8. Accent rationed: at most one meaningful accent word per screen?
 9. No grey text on a coloured area; contrast holds where the picture behind changes?
 
-**Tells** (each one P0 in the hook, P1 elsewhere)
+**Tells** (each one P0 in the hook, P1 elsewhere; the banned defaults of motion-design §4. Name every one you see,
+from this list or not)
 10. A dark void with small floating things; glow, particles or neon; purple-blue or mesh gradient; glass cards.
 11. Three cards in a row, a KPI grid, icons in circles, bullets, the whole diagram at once.
-12. Everything centred; every beat the same entrance (fade + slide up); a small logo in a corner; an ALL-CAPS
+12. Everything centred; every beat the same entrance (fade + slide up), or two neighbouring beats entering alike; a small logo in a corner; an ALL-CAPS
     eyebrow; 01/02 numbering without a real order; corner labels or HUD as decoration.
 13. A default font (Inter, Space Grotesk, Geist, Instrument Serif, JetBrains Mono) where the brand says otherwise.
 
@@ -53,10 +54,13 @@ One line per problem, most serious first, **no score**:
 **Cut strip**
 18. Does anything jump at a cut (a position or colour that does not connect)? Same direction and speed on both
     sides, no ping-pong?
-19. Does an element enter from rest right after a cut, or appear out of nowhere?
+19. Does an element enter from rest right after a cut, or appear out of nowhere? Is the cut frame or the frame
+    0.1 s after it empty, a flash between beats (`empty-cut` in `inspect.json`)? → P1.
 
 **Timing** (from `inspect.json` and the check's `line_unread`, not by eye)
 20. Every line on screen at least 0.5 s + 0.3 s a word (labels of 1–2 words 0.4 s; the last line ≥ 2 s)?
-21. No stretch of more than 2–3 s without change (except the end card)? Landed titles do not drift, no
+21. Something new every 2–4 s, no stretch of more than 3 s without change (except the end card)? Landed titles do not drift, no
     breathing loops?
-22. 0.3–0.75 s of silence before the payoff? Eases chosen per role, not one curve for everything?
+22. 0.3–0.75 s of silence before the payoff? Eases chosen per role, not one curve for everything? A hero or card
+    moving in within 0.3–0.8 s, overshoot only on position and scale (the `entrance-duration`, `spring-on-opacity`
+    and `same-entrance` warnings in `inspect.json`)?

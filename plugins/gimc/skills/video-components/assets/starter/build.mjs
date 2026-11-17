@@ -38,16 +38,21 @@ const theme = props.theme
 // never sits under them.
 const captionSpace = props.captions?.length ? 220 : 0
 let start = 0
+let textIndex = 0
 const parts = props.beats.map((beat, i) => {
   const component = COMPONENTS[beat.type]
   if (!component) throw new Error(`Beat ${i + 1}: unknown type "${beat.type}" (hook, text, media, cta)`)
   const duration = sec(beat.seconds)
-  const part = component({ theme, area, captionSpace, id: `b${i + 1}`, start, duration }, beat)
+  // textIndex: text beats take turns in their entrance (TextBeat), so two value beats never enter the same way.
+  const part = component({ theme, area, captionSpace, id: `b${i + 1}`, start, duration, textIndex: beat.type === 'text' ? textIndex++ : 0 }, beat)
   start = sec(start + duration)
   return part
 })
 const total = start
-const captions = props.captions?.length ? Captions({ theme, area }, props.captions) : { html: '', tl: [] }
+// Caption pages follow the energy of the reel (motion-design §6): high 2–3 words, normal 3–4, calm 4–6.
+const CAPTION_WORDS = { high: 3, normal: 4, calm: 6 }
+if (props.captionEnergy && !CAPTION_WORDS[props.captionEnergy]) throw new Error(`captionEnergy "${props.captionEnergy}": use high, normal or calm`)
+const captions = props.captions?.length ? Captions({ theme, area }, props.captions, CAPTION_WORDS[props.captionEnergy ?? 'normal']) : { html: '', tl: [] }
 const voiceover = props.voiceover
   ? `<audio id="voiceover" src="assets/${esc(props.voiceover)}" data-start="0" data-duration="${num(total)}" data-track-index="3"></audio>`
   : ''

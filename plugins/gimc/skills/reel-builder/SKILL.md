@@ -76,7 +76,7 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
 3. **Sync the visual to the VOICEOVER, not a wall-clock.** Transcribe the VO (word timestamps) and cut/act
    ON the word — the action must match what's being said. Lead the cut ~10 frames.
 4. **Emphasis text must be high-contrast and readable** on every background: the brand's `accent`, on a
-   backing panel or with a dark stroke over footage (motion-design §5). Text that must be read stays out of
+   backing panel or with a dark stroke over footage (motion-design §6). Text that must be read stays out of
    the platform's danger zones.
 5. **Close on an on-screen CTA card, tied to the comment system.** End with a themed "Comment [KEYWORD] and
    I'll DM you [the thing]" card (an IG-composer graphic that types the keyword) — use the SAME keyword the
