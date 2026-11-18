@@ -90,8 +90,10 @@ a poster in a VM and puts them on a **new video card** on the board. Nothing to 
      GSAP is at `vendor/gsap.min.js` (and `gimc/gsap.min.js`); `brand/`, `vendor/` and `gimc/` are GIMC's.
    - **Media:** images and video are not sent as bytes: upload them as `gimc-canvas` (media) says and list them in
      `assets` as `{ "path": "assets/clip.mp4", "ref": { "item_id": "<card id>" } }`. **No URLs** anywhere.
-   - **Size:** one `gimc_execute` takes at most 20,000 characters of code, so keep the composition compact (the
-     starter's HTML for 4–5 beats fits; a long reel goes as several shorter reels until GIMC takes bigger ones).
+   - **Size:** one `gimc_execute` takes at most 20,000 characters of code. A bigger composition goes in parts on one
+     concept: `gimc.canvas_draft_reel` with the first part (`index.html` must be there), then
+     `gimc.canvas_reel_edit` with `{ path, append }` per next part, each time with the `sha256` of the previous answer
+     as `expected_sha256` (see "Edit an existing reel").
 2. **GIMC checks before it renders.** An external URL, a missing `index.html` or a bad path comes back at once as a
    refusal with the file and line: nothing is rendered or charged. Then GIMC runs the starter's `inspect.mjs` on the
    result: text outside the safe area or the frame, text over other elements, a font that is not the brand's, a
@@ -119,12 +121,53 @@ async () => {
    plain words, fix the composition and render again, or stop. Still not done after 5 minutes: say so with the link.
 6. **Refusals are messages for the user.** "Credits op: …" (402), a limit (429) or "not set up" (503): pass the
    message on word for word and stop. Never fall back to a local render without saying so.
-7. **Changes = a new render.** `gimc.canvas_render_reel({ rerender_of: RENDER_ID })` renders the same composition
-   again; with changes, send the new `composition` with `source_item_id` = the previous video card. Both make a new
-   video card with a `remake` line; the old video stays.
+7. **Same reel again:** `gimc.canvas_render_reel({ rerender_of: RENDER_ID })` renders the same composition on a new
+   video card with a `remake` line; the old video stays. For changes: "Edit an existing reel".
 
-**Local render** (video-components §5, then upload as `gimc-canvas` media says) only when the user asks for it,
-or when `gimc.canvas_render_reel` is not there. Say which route you took.
+### Edit an existing reel (render or concept)
+
+Every version stays. A rendered reel never changes: editing it gives a **new concept on a new card** (line `remake`
+to the source). A concept is work in progress and is edited **in place**. The loop: read → change → look at the live
+preview on the concept → render.
+
+1. **Read** (`gimc.canvas_reel_read({ org_id, render_id | draft_id | item_id })`): status, `sha256`, `seconds`,
+   `versions` (previous/next card), `files` with their length in characters, `assets`. One file with `path`
+   (`'index.html'`), in parts of at most 15,000 characters: read on with `offset: next_offset` until it is null. A
+   reel from before compositions (old `props`) is read as a converted composition; your first edit saves it.
+2. **Change** (`gimc.canvas_reel_edit({ org_id, render_id | draft_id, expected_sha256, changes })`), one call per
+   part. `changes`, in order: `{ path, content }` (set a file), `{ path, append }` (add to the end of a file),
+   `{ path, delete: true }`, `{ path, asset: { item_id } }`. `expected_sha256` is the `sha256` you read or got back
+   last; a 409 means someone changed it meanwhile: read again and redo the change. The same checks as a new
+   composition run on the result; no credits.
+3. **Look** at the concept on the canvas (`app_url`): the live preview plays the new version, with safe zones.
+4. **Render** with `render: true` on the last edit, or `gimc.canvas_render_reel({ org_id, board_id, draft_id })`.
+   If the render is refused (credits, limit), the edit is saved: the answer has the concept and `render_error`.
+
+```js
+async () => {
+  const meta = await gimc.canvas_reel_read({ org_id: 'ORG_ID', render_id: 'RENDER_ID' })
+  const page = await gimc.canvas_reel_read({ org_id: 'ORG_ID', render_id: 'RENDER_ID', path: 'index.html' })
+  if (page.next_offset !== null) return { more: page.next_offset } // read on before replacing the whole file
+  const html = page.content.replace('Old headline', 'New headline')
+  const r = await gimc.canvas_reel_edit({ org_id: 'ORG_ID', render_id: 'RENDER_ID', expected_sha256: meta.sha256,
+    changes: [{ path: 'index.html', content: html }] })
+  return { draft_id: r.render_id, item_id: r.item_id, sha256: r.sha256, new_version: r.new_version, app_url: r.app_url }
+}
+```
+
+**A video without a composition** (an uploaded mp4, or a card `gimc.canvas_reel_read` answers with 404) cannot be edited
+back. Make a new composition that uses that video as an asset (`{ path: 'assets/video.mp4', ref: { item_id:
+'<video card>' } }`) with text, captions or a CTA over it, and put it on the canvas as a concept with
+`source_item_id` = the video card.
+
+### Local render (only when the user asks, or GIMC cannot render)
+
+Render with video-components §5 on the user's machine, and still put it in GIMC so the reel stays editable in the
+cloud: (1) `gimc.canvas_draft_reel` with the exact composition you rendered (or the concept you edited), (2)
+`gimc.canvas_media_upload_url` with `item_id` = the concept's card for the mp4 and again with `role: 'poster'` for
+the poster PNG, PUT both, (3) `gimc.canvas_reel_attach_local({ org_id, draft_id, expected_sha256, video_path,
+poster_path })` with the two `path`s. The card gets the mp4 and poster, the render is `done` with engine `local`,
+and no credits are used. Say which route you took.
 
 **Non-negotiables (each of these was a real failure once — do not repeat them):**
 1. **The hook needs a gripping VISUAL, not just text.** Open on something that grabs (e.g. a creator

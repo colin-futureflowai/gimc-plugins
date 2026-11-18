@@ -56,6 +56,10 @@ steps (3–6 script/hook/caption) are Claude; the execution steps use the underl
   it or the tool is not there, and you say so. Hyperframes needs no licence per render.
   Never call a reel done before the look loop of video-components §4: `inspect.mjs` at 0 errors, the three sheets
   looked at and described per beat, a fresh reviewer, and the sheet from the rendered mp4.
+  **Changes to a reel that is already in GIMC** (a render or a concept) go through the edit loop of reel-builder
+  ("Edit an existing reel"): `gimc.canvas_reel_read` → `gimc.canvas_reel_edit` with `expected_sha256` → look at the
+  live preview on the concept → render. Every version stays; a big composition is built in parts on one concept.
+  A local render is attached to its concept with `gimc.canvas_reel_attach_local`, so it stays editable.
 - **Step 7** uses **content-planning** to put the reel in the GIMC content calendar. You never publish
   without a person's approval: the company's publish rule in GIMC decides who puts the post at the platform
   (see content-planning, "Approval").

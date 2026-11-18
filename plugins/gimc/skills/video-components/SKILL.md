@@ -238,7 +238,7 @@ report names them by it.
    (h264, 1080×1920, 30 fps). The length follows the beats. Confirm with
    `ffprobe -v error -show_entries stream=codec_name,width,height:format=duration out/reel.mp4`.
 4. **Watch the render:** the `--video` sheet (section 4, step 5), then as reel-builder describes (a frame
-   strip at about 12 fps, and the whole video). Hand the mp4 back to reel-builder, which puts it on GIMC.
+   strip at about 12 fps, and the whole video). reel-builder attaches the mp4 to its concept in GIMC.
 
 ## 6. Changing or adding a component
 
