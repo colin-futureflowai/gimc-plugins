@@ -2,7 +2,7 @@
 name: reel-builder
 description: >
   Builds a finished reel from a teardown or a beat structure: the beat-by-beat script in your voice,
-  on-screen text, the scene and pacing per beat, the caption, and the render (Hyperframes, Seedance).
+  on-screen text, the scene and pacing per beat, the caption, and the render (in GIMC with Hyperframes, or Seedance).
   The build step of content-factory. Use when the user hands over a reel-analyzer teardown or a beat
   outline and says "build the reel", "turn this teardown into a reel", "write the full reel" or
   "script and storyboard this". For a whole reel from only a topic, use content-factory.
@@ -65,13 +65,53 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
   performs. Cost ≈ $6–12 per reel in Runway credits — use it only where real acting matters, and confirm with the user first.
 - **Hook, chapter, text, payoff, CTA beats → Hyperframes code-render** (HTML + a GSAP timeline) with
   [video-components](../video-components/SKILL.md): ready components in the brand from GIMC, inside the
-  platform's safe area. Fast, on-theme and without a licence fee per render; render with the pinned CLI
-  (`npx hyperframes@0.9.61 render`, see that skill). This can carry a whole reel on its own, and is the
-  text scaffolding of a reel with Seedance beats.
+  platform's safe area. Fast, on-theme and without a licence fee per render. In GIMC the render runs in GIMC
+  itself (next section); the pinned CLI (`npx hyperframes@0.9.61 render`, see that skill) is the local route.
+  This can carry a whole reel on its own, and is the text scaffolding of a reel with Seedance beats.
 - **How it looks and moves** (storyboard, scene types, type sizes, reading time, contrast, captions, easing, safe
   zones per platform) follows [motion-design](../motion-design/SKILL.md); the storyboard columns above are its
   [storyboard.md](../motion-design/references/storyboard.md), and the build table becomes `props.json` of
   video-components one to one.
+
+### Render in GIMC (the default when GIMC is connected)
+
+When the build table is done, GIMC renders the reel: `gimc.canvas_render_reel` turns the props into an mp4 and a poster in
+a VM and puts them on a **new video card** on the board. Nothing to install, nothing to upload.
+
+1. **Props for GIMC.** The same `props.json` as video-components, in the shape GIMC accepts: `platform`, `lang`,
+   `theme` (`colors` with `bg`, `surface`, `text`, `muted`, `accent`, `accentText`, and `pace`), `beats` and
+   `captions`, at most 60 s. Beat types: `hook`, `text`, `media`, `cta` only, each with its `message` (the
+   Message column, at most 8 words). **No `fonts`**: GIMC takes the letters
+   from the folder's brand (`gimc.canvas_get_brand`); a brand without letters fails the render, so set them first with the
+   `brandbook` skill. **No URLs**: a `media` beat or `voiceover` points at a card on the canvas (`{ item_id }`), so
+   upload footage first as `gimc-canvas` (media) says.
+2. **Scenes GIMC cannot render yet** (`diagram`, `compare`, `actor-object`, `stack`, `presenter`, `end-card`, a
+   `legend`): say so in one sentence and ask whether to rebuild those beats as `hook`/`text`/`media`/`cta` or to
+   render locally. Never switch on your own.
+3. **Start the render** (one `gimc_execute`; `source_item_id` = the script or build-table card it comes from, so
+   the video gets its line; `idempotency_key` = run id + reel number, so a retry never renders twice):
+
+```js
+async () => {
+  const r = await gimc.canvas_render_reel({ org_id: 'ORG_ID', board_id: 'BOARD_ID', source_item_id: 'SOURCE_CARD_ID',
+    props: PROPS, idempotency_key: 'RUN_ID-reel-1' })
+  return { render_id: r.render_id, item_id: r.item_id, status: r.status, app_url: r.app_url }
+}
+```
+
+4. **Follow it to done.** Check about every 15 s with one `gimc_execute` per check:
+   `gimc.canvas_render_status({ org_id: 'ORG_ID', render_id: 'RENDER_ID' })`. A reel of 7–30 s is usually done in
+   20–60 s. `done`: the video card has the mp4 and poster; close with its `app_url`. `failed`: give the `error` in
+   plain words and stop. Still not done after 5 minutes: say so with the link; the card shows the state.
+5. **Refusals are messages for the user.** "Credits op: …" (402), a limit (429) or "not set up" (503): pass the
+   message on word for word and stop. Never fall back to a local render without saying so.
+6. **Changes = a new render.** `gimc.canvas_render_reel({ rerender_of: RENDER_ID })` renders the same props again;
+   with changed props, send the new `props` with `source_item_id` = the previous video card. Both make a new video
+   card with a `remake` line; the old video stays.
+
+**Local render** (video-components §5, then upload as `gimc-canvas` media says) only when the user asks for it,
+when `gimc.canvas_render_reel` is not there, or for scenes GIMC cannot render yet (step 2, after the user chose it). Say
+which route you took.
 
 **Non-negotiables (each of these was a real failure once — do not repeat them):**
 1. **The hook needs a gripping VISUAL, not just text.** Open on something that grabs (e.g. a creator
@@ -133,7 +173,7 @@ When the work above is done, put the result on the GIMC canvas. Follow the `gimc
   }
   ```
 
-- Render the video with Hyperframes by default, through video-components (pinned at hyperframes@0.9.61, GSAP and fonts as local files). Use paid video services (for example Seedance or Runway) only when the user explicitly asks for it.
+- Render the video in GIMC with `gimc.canvas_render_reel` and follow `gimc.canvas_render_status` to done (reel-builder, "Render in GIMC"): that makes the video card with mp4 and poster itself, so there is nothing to upload. Render locally with Hyperframes (video-components, pinned at hyperframes@0.9.61) only when the user asks for it or the tool is not there, and say so. Use paid video services (for example Seedance or Runway) only when the user explicitly asks for it.
 - Then close in the chat with 1–3 sentences: what is ready, on which board or card, the link (`app_url` from the answer) and what the user can do now. Don't repeat in the chat what is on the canvas (no card texts, no list of titles), unless the user asks for the text there.
 - Facts in a card (numbers, prices, names, dates, claims) come only from the brand, the folder note, GIMC data or a source you name; anything else is marked "aanname" on the card.
 - In code mode this is one `gimc_execute` (fill in the CAPITALS; folder and board as `gimc-canvas` §3 says). The next step of the same run reuses `frame_id`, or makes the next frame in the same `gimc.canvas_create_items` call. Pass the returned `org_id` on every later `gimc_execute`. `board_not_found`: create that board only when the user asked for it or `gimc-canvas` §3 names it as the default, then run again. `inbox`: pick those up first (`gimc-canvas` §4).

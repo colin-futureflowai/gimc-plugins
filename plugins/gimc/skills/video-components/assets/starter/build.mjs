@@ -15,6 +15,7 @@ import { PresenterBeat } from './src/components/PresenterBeat.mjs'
 import { SafeZoneOverlay } from './src/components/SafeZoneOverlay.mjs'
 import { StackBeat } from './src/components/StackBeat.mjs'
 import { TextBeat } from './src/components/TextBeat.mjs'
+import { fitAll, fitSize } from './src/fit.mjs'
 import { esc, num, sec } from './src/html.mjs'
 import { HEIGHT, safeArea, WIDTH } from './src/safe-zones.mjs'
 import { storyboardOf, validateStoryboard } from './src/storyboard.mjs'
@@ -125,10 +126,23 @@ ${showGrid ? GridOverlay({ area }) : ''}
     <script type="application/json" id="storyboard">${storyboard}</script>
     <script>
       window.__timelines = window.__timelines || {};
-      const tl = gsap.timeline({ paused: true });
-${[...parts.flatMap((p) => p.tl), ...captions.tl].map((line) => `      ${line}`).join('\n')}
-      tl.set({}, {}, ${num(total)});
-      window.__timelines.main = tl;
+      // Fit every [data-fit] text block to the safe area with the real brand font (src/fit.mjs), then build the
+      // timeline and register it last. The fonts are local files; until the timeline is built the Hyperframes runtime
+      // waits (__hfTimelinesBuilding, then the event hf-timelines-built), so no frame is taken before the fit.
+      window.__hfTimelinesBuilding = true;
+${fitSize.toString().replace(/^/gm, '      ')}
+${fitAll.toString().replace(/^/gm, '      ')}
+      Promise.all([...document.fonts].map((f) => f.load().catch(() => {})))
+        .then(() => document.fonts.ready)
+        .then(() => {
+          fitAll(document);
+          const tl = gsap.timeline({ paused: true });
+${[...parts.flatMap((p) => p.tl), ...captions.tl].map((line) => `          ${line}`).join('\n')}
+          tl.set({}, {}, ${num(total)});
+          window.__timelines.main = tl;
+          window.__hfTimelinesBuilding = false;
+          window.dispatchEvent(new Event('hf-timelines-built'));
+        });
     </script>
   </body>
 </html>

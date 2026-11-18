@@ -1,5 +1,6 @@
 import { clipAttrs, esc, style } from '../html.mjs'
 import { CUT_OPACITY, EASE, enter, frames, set } from '../motion.mjs'
+import { FIT_MIN, fitAttrs } from '../fit.mjs'
 import { BRAND_COLUMNS, enterSeconds, fontStack, grid, SPACE, TYPE } from '../theme.mjs'
 import { SafeArea } from './SafeArea.mjs'
 
@@ -24,9 +25,9 @@ export const CTACard = (c, { label = 'Comment', keyword, promise }) => {
   const logo = c.theme.logo
     ? `<img id="${c.id}-logo" src="assets/${esc(c.theme.logo)}" alt="" data-brand data-slot="brand" style="${style({ width: `${grid(c.area).span(BRAND_COLUMNS)}px`, height: 'auto', flex: 'none', alignSelf: 'flex-start' })}">`
     : ''
-  const body = `<div style="${style({ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: `${SPACE[3]}px` })}"><div id="${c.id}-label" style="${style({ fontFamily: display, fontSize: `${TYPE.headline}px`, fontWeight: 700, lineHeight: 1.05, color: c.theme.colors.text })}">${esc(label)}</div>
-<div id="${c.id}-field" data-hero style="${style({ alignSelf: 'flex-start', minWidth: '360px', background: c.theme.colors.accent, color: c.theme.colors.accentText, fontFamily: display, fontSize: `${size}px`, lineHeight: 1.1, fontWeight: 800, padding: `12px ${padX}px`, borderRadius: '24px', whiteSpace: 'nowrap', transformOrigin: 'left center' })}">${chars}</div>
-<div id="${c.id}-promise" style="${style({ fontFamily: fontStack(c.theme, 'body'), fontSize: `${TYPE.body}px`, lineHeight: 1.2, color: c.theme.colors.text, textWrap: 'balance' })}">${esc(promise)}</div></div>
+  const body = `<div style="${style({ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: `${SPACE[3]}px` })}"><div id="${c.id}-label" ${fitAttrs(c.area.width, FIT_MIN.hero)} style="${style({ fontFamily: display, fontSize: `${TYPE.headline}px`, fontWeight: 700, lineHeight: 1.05, color: c.theme.colors.text })}">${esc(label)}</div>
+<div id="${c.id}-field" data-hero ${fitAttrs(c.area.width - 2 * padX, FIT_MIN.hero)} style="${style({ alignSelf: 'flex-start', minWidth: '360px', background: c.theme.colors.accent, color: c.theme.colors.accentText, fontFamily: display, fontSize: `${size}px`, lineHeight: 1.1, fontWeight: 800, padding: `12px ${padX}px`, borderRadius: '24px', whiteSpace: 'nowrap', transformOrigin: 'left center' })}">${chars}</div>
+<div id="${c.id}-promise" ${fitAttrs(c.area.width, FIT_MIN.body)} style="${style({ fontFamily: fontStack(c.theme, 'body'), fontSize: `${TYPE.body}px`, lineHeight: 1.2, color: c.theme.colors.text, textWrap: 'balance' })}">${esc(promise)}</div></div>
 ${logo}`
   const fieldAt = c.start + frames(6)
   const typeAt = fieldAt + hero + 0.3

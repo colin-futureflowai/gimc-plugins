@@ -1,5 +1,6 @@
 import { clipAttrs, esc, sec, style } from '../html.mjs'
 import { set } from '../motion.mjs'
+import { FIT_MIN, fitAttrs } from '../fit.mjs'
 import { fontStack, TYPE } from '../theme.mjs'
 import { SafeArea } from './SafeArea.mjs'
 
@@ -66,7 +67,7 @@ export const Captions = (c, captions, maxWords = 4) => {
           return `<span id="${id}" data-layout-allow-caption-zone>${esc(w.text.trim())}</span>`
         })
         .join(' ')
-      const box = `<div data-backdrop data-role="caption" style="${style({ alignSelf: 'center', background: c.theme.colors.bg, padding: '12px 24px', borderRadius: '16px', fontFamily: fontStack(c.theme, 'body'), fontSize: `${TYPE.caption}px`, fontWeight: 700, lineHeight: 1.15, textAlign: 'center', color: c.theme.colors.text })}">${words}</div>`
+      const box = `<div data-backdrop data-role="caption" ${fitAttrs(c.area.width - 2 * 24, FIT_MIN.caption)} style="${style({ alignSelf: 'center', background: c.theme.colors.bg, padding: '12px 24px', borderRadius: '16px', fontFamily: fontStack(c.theme, 'body'), fontSize: `${TYPE.caption}px`, fontWeight: 700, lineHeight: 1.15, textAlign: 'center', color: c.theme.colors.text })}">${words}</div>`
       return `<div id="cap${i}" ${clipAttrs(sec(p.start), sec(p.end) - sec(p.start), 2)} style="position:absolute;inset:0;z-index:5">${SafeArea(c, box, { justifyContent: 'flex-end', paddingBottom: '24px' })}</div>`
     })
     .join('\n')

@@ -1,5 +1,6 @@
 import { esc, num, style } from '../html.mjs'
 import { EASE, enter, frames, tween } from '../motion.mjs'
+import { FIT_MIN, fitAttrs } from '../fit.mjs'
 import { enterSeconds, fitText, fontStack, ICON, SPACE, TYPE, tint } from '../theme.mjs'
 import { Symbol } from './Symbol.mjs'
 
@@ -61,7 +62,7 @@ export const Diagram = (c, { id, name, def, width, height, state, before = null,
     })
     const before_ = attached.filter((a) => a.relation !== 'next-to').map((a) => a.html).join('')
     const after = attached.filter((a) => a.relation === 'next-to').map((a) => a.html).join('')
-    const label = `<span id="${pid}-label" data-label-of="${name}.${p.id}" style="${style({ fontFamily: fontStack(c.theme, 'display'), fontSize: `${size}px`, fontWeight: 700, lineHeight: 1.05, whiteSpace: 'nowrap', color: ink[was], opacity: was === 'outline' ? 0 : 1 })}">${esc(p.label)}</span>`
+    const label = `<span id="${pid}-label" data-label-of="${name}.${p.id}" ${fitAttrs(roomFor(i) - icons(p.id).length * (ICON.md + SPACE[2]), FIT_MIN.small)} style="${style({ fontFamily: fontStack(c.theme, 'display'), fontSize: `${size}px`, fontWeight: 700, lineHeight: 1.05, whiteSpace: 'nowrap', color: ink[was], opacity: was === 'outline' ? 0 : 1 })}">${esc(p.label)}</span>`
     if (was !== now) {
       const t = at // every change starts on the beat's reveal moment
       tl.push(tween(`#${pid}-shape`, t, enterSeconds(c.theme, 'hero'), { fill: fill[was] }, { fill: fill[now] }, EASE.camera))

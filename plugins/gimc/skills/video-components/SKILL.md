@@ -26,7 +26,7 @@ platform's safe area, eases and durations per role, and entrances that change fr
 in a slot of its scene type or hangs on a part, so whatever moves the group moves it too.
 You fill in `props.json`; `build.mjs` turns it into `index.html` (the composition) and Hyperframes renders
 that to an mp4. You do not write the components again for every reel. [reel-builder](../reel-builder/SKILL.md)
-decides what the reel says; this skill turns that into an mp4.
+decides what the reel says; GIMC renders these props (`gimc.canvas_render_reel`), section 5 locally.
 
 The project is in [assets/starter/](assets/starter/): `build.mjs` (props → `index.html`), `src/components/`,
 `src/theme.mjs` (grid, tokens, type), `src/storyboard.mjs` (the storyboard check), `src/safe-zones.mjs`,
@@ -156,11 +156,14 @@ carries the meaning and gets the accent colour: one per beat.
 (the line un-blurs; media's default), `rise` (each word rises). Without one, text beats take turns. Every entrance
 starts on the cut frame at `CUT_OPACITY` (0.4), so a cut never shows an empty frame. A hero line that only fits at
 the minimum size (`fitText`) is too long for a hero: cut words (motion-design §5).
+**Long words** stay inside the safe area: `src/fit.mjs` measures each text block in the brand font before the
+timeline and shrinks only one that does not fit (to `FIT_MIN`; then words break); inspect.mjs warns. New text
+needs `fitAttrs(width, min)`.
 
 ## 4. See what you made
 
-The code never shows you the frame. A caption can run straight through two figures and the props still look
-fine. So you look, with `inspect.mjs`, and you never call a reel done on the code alone.
+The code never shows you the frame: a caption can run through two figures while the props look fine. So look
+with `inspect.mjs`; never call a reel done on the code alone.
 
 **The edit loop** (repeat until 0 errors):
 
@@ -182,7 +185,7 @@ fine. So you look, with `inspect.mjs`, and you never call a reel done on the cod
    check's warnings (marked `[check]`). It writes
    `out/inspect.json` (every problem with selector, text and boxes) and one line per problem, e.g.
    `0:27.27–0:28.27 ERROR text 'interviewen totdat die echt' overlaps #s-a (svg)`.
-2. Fix the props (or the component), build, inspect again. For one moment: `node inspect.mjs --at 28.0`
+2. Fix the props or component, build, inspect again. For one moment: `node inspect.mjs --at 28.0`
    writes `out/still-28.0.png` with the problems boxed, in seconds. `--no-check` skips the Hyperframes check.
 3. At 0 errors, **look at the three sheets yourself** (read the images); problems are boxed red (warnings
    amber), the danger zones tinted blue:
@@ -197,9 +200,8 @@ fine. So you look, with `inspect.mjs`, and you never call a reel done on the cod
    [references/visual-review.md](references/visual-review.md), never the code. It answers in lines
    `t · where · problem → exact change` with P0/P1/P2 and no score. You keep the editing: fix P0 and P1,
    inspect, and review once more. At most 2 rounds; stop when a round fixes nothing.
-5. Only then render (section 5), and afterwards `node inspect.mjs --video out/reel.mp4`: a sheet from the real
-   mp4 (one frame per beat and one every 2 s) in `out/video-contact-sheet.png`. Look at it: fonts, timing and
-   what really ended up in the video.
+5. Only then render (section 5), and afterwards `node inspect.mjs --video out/reel.mp4`: a sheet from the
+   mp4 (a frame per beat, one per 2 s) in `out/video-contact-sheet.png`. Check fonts, timing.
 
 **Markings** for compositions with your own elements (the starter components already carry them). Put them
 on the element itself, not on a wrapper; the `data-layout-*` ones are those of `hyperframes check`, so both
@@ -225,11 +227,11 @@ report names them by it.
 ## 5. Render
 
 1. **Lint:** `npm run inspect` already ran `hyperframes check`; `npm run check` runs it alone. Fix every
-   error. The `nested_structure_needs_subcomposition` and `timeline_track_too_dense` warnings are expected:
-   the composition is built from props, not edited in the Hyperframes app.
+   error. The `nested_structure_needs_subcomposition` and `timeline_track_too_dense` warnings are expected
+   (the composition is built from props).
 2. **Brand check:** in the contact sheet, the **brand font** and the accent colour show (a missing font
-   is replaced silently). `npm run stills` (12 frames with the drawn danger zones in `out/check/`) is still
-   there when you want the plain Hyperframes snapshots.
+   is replaced silently). `npm run stills` gives plain Hyperframes snapshots
+   in `out/check/`.
 3. **Render:** `npm run render`: it rebuilds without the overlay and runs
    `hyperframes render --no-low-memory-mode --fps 30 --crf 18 --format mp4 --output out/reel.mp4`
    (h264, 1080×1920, 30 fps). The length follows the beats. Confirm with
@@ -239,7 +241,7 @@ report names them by it.
 
 ## 6. Changing or adding a component
 
-Keep the library consistent; a new component follows the same rules:
+A new component follows the same rules:
 
 - A scene type is a function `(context, beat) → { html, tl }`: the markup, plus GSAP timeline lines with
   absolute times (`c.start` is the beat's start), registered in `COMPONENTS` in `build.mjs` and in `SCENES` in

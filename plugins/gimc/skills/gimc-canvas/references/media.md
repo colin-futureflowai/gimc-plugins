@@ -107,7 +107,7 @@ Other PUT failures (4xx from storage): request a new link once (it may have expi
 
 ## Rendering video in a sandbox
 
-The reel renders with Hyperframes (`video-components`). It needs a headless Chrome and ffmpeg, and its composition has no network needs: GSAP, fonts and media are local files. `npx hyperframes@0.9.61 browser ensure` downloads Chrome, which Cowork may block; never ask the user to allow that download host. Use a browser that is already on the system:
+First choice: let GIMC render it. `gimc.canvas_render_reel` renders in a VM in GIMC and puts the video card on the board (reel-builder, "Render in GIMC"); no Chrome, no ffmpeg, no upload. The rest of this section is for a local render. The reel renders with Hyperframes (`video-components`). It needs a headless Chrome and ffmpeg, and its composition has no network needs: GSAP, fonts and media are local files. `npx hyperframes@0.9.61 browser ensure` downloads Chrome, which Cowork may block; never ask the user to allow that download host. Use a browser that is already on the system:
 
 ```sh
 # find one

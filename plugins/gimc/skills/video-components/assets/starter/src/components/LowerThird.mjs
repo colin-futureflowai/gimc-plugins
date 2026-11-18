@@ -1,5 +1,6 @@
 import { esc, style } from '../html.mjs'
 import { EASE, enter, frames } from '../motion.mjs'
+import { FIT_MIN, fitAttrs } from '../fit.mjs'
 import { enterSeconds, fontStack, TYPE } from '../theme.mjs'
 import { SafeArea } from './SafeArea.mjs'
 
@@ -9,9 +10,11 @@ import { SafeArea } from './SafeArea.mjs'
  */
 export const LowerThird = (c, { name, title }) => {
   const id = `${c.id}-lower`
+  // Inside the panel: 28 px padding on both sides and an 8 px accent border.
+  const inner = c.area.width - 2 * 28 - 8
   const panel = `<div id="${id}" data-backdrop style="${style({ alignSelf: 'flex-start', background: c.theme.colors.surface, padding: '20px 28px', borderLeft: `8px solid ${c.theme.colors.accent}` })}">
-  <div style="${style({ fontFamily: fontStack(c.theme, 'display'), fontSize: `${TYPE.body}px`, fontWeight: 700, color: c.theme.colors.text })}">${esc(name)}</div>
-  <div style="${style({ fontFamily: fontStack(c.theme, 'body'), fontSize: `${TYPE.small + 8}px`, color: c.theme.colors.muted })}">${esc(title)}</div>
+  <div ${fitAttrs(inner, FIT_MIN.body)} style="${style({ fontFamily: fontStack(c.theme, 'display'), fontSize: `${TYPE.body}px`, fontWeight: 700, color: c.theme.colors.text })}">${esc(name)}</div>
+  <div ${fitAttrs(inner, FIT_MIN.small)} style="${style({ fontFamily: fontStack(c.theme, 'body'), fontSize: `${TYPE.small + 8}px`, color: c.theme.colors.muted })}">${esc(title)}</div>
 </div>`
   return { html: SafeArea(c, panel, { justifyContent: 'flex-end', paddingBottom: `${c.captionSpace}px` }), tl: [enter(`#${id}`, c.start + frames(6), enterSeconds(c.theme, 'small'), { x: -24 }, EASE.arriveSoft)] }
 }

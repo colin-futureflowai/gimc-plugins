@@ -29,12 +29,12 @@ drives the entire pipeline.
 
 ```
 0. CONNECT     onboarding .......... one-time: GIMC (canvas, posting, reply campaigns), the Apify MCP
-                                      (teardown), and make sure Hyperframes can render. Ask if missing.
+                                      (teardown); the render runs in GIMC. Ask if missing.
 1. MEMORY      ai-brain ............. recall your voice + past winners (so it sounds like YOU)
 2. FIND+STUDY  Apify ............... tear a proven reel down frame-by-frame + transcript
 3. HOOK        viral-hook-writer .... 10 scroll-stopping hooks for the first 1–3s, ranked
 4. SCRIPT      reel-scripter ........ tight 30–45s ORIGINAL script — your words, the proven structure
-5. BUILD+RENDER reel-builder + Hyperframes (+ Seedance via Runway) . the REAL rendered mp4
+5. BUILD+RENDER reel-builder → gimc.canvas_render_reel (+ Seedance via Runway) . the REAL rendered mp4
 6. CAPTION     caption-and-hashtags . caption + tiered hashtags + a first comment built for saves
 7. SCHEDULE    content-planning ..... puts the reel in the GIMC content calendar; a person approves it
 8. LEADS       social-engagement .... keyword → reply + DM as a concept campaign; a person sets it live
@@ -44,12 +44,16 @@ drives the entire pipeline.
 **This runs for REAL by calling the tools directly — it is a harness, not a description.** The creative
 steps (3–6 script/hook/caption) are Claude; the execution steps use the underlying tools, no wrapper:
 - **Step 0 CONNECT (once, at onboarding):** check that **GIMC** is connected (see `gimc-canvas`), connect
-  the **Apify MCP** (reel teardown/scraping), and confirm **Hyperframes** can render (Node 22+, ffmpeg, Chrome). If one is
+  the **Apify MCP** (reel teardown/scraping). The render runs in GIMC (`gimc.canvas_render_reel`); a local Hyperframes
+  render (Node 22+, ffmpeg, Chrome) is only needed when the user wants it. If one is
   NOT connected, STOP and ASK the user to connect it — never search for or reuse a key.
 - **Step 2** uses **Apify** to actually tear down the model reel.
-- **Step 5** renders the real mp4 with **Hyperframes** through [video-components](../video-components/SKILL.md)
-  (+ **Seedance via Runway** for acting beats), designed by [motion-design](../motion-design/SKILL.md) — see
-  [reel-builder](../reel-builder/SKILL.md) for the render harness. Hyperframes needs no licence per render.
+- **Step 5** renders the real mp4 **in GIMC**: reel-builder sends the props of
+  [video-components](../video-components/SKILL.md) to `gimc.canvas_render_reel` and follows `gimc.canvas_render_status` to
+  done, which puts a new video card on the board (+ **Seedance via Runway** for acting beats), designed by
+  [motion-design](../motion-design/SKILL.md) — see [reel-builder](../reel-builder/SKILL.md) ("Render in GIMC").
+  A credits or limit message from GIMC goes to the user word for word; a local render only when the user asks for
+  it or the tool is not there, and you say so. Hyperframes needs no licence per render.
   Never call a reel done before the look loop of video-components §4: `inspect.mjs` at 0 errors, the three sheets
   looked at and described per beat, a fresh reviewer, and the sheet from the rendered mp4.
 - **Step 7** uses **content-planning** to put the reel in the GIMC content calendar. You never publish
@@ -87,14 +91,15 @@ CONTEXT
 - My @handle: [@you]   ·   My voice: [a line, or "use ai-brain"]   ·   CTA keyword: [e.g. GUIDE]
 
 PIPELINE
-0) CONNECT (once, onboarding): check GIMC, connect the Apify MCP (teardown) and confirm Hyperframes can render
-   (render). IF ONE IS NOT CONNECTED, STOP AND ASK ME TO CONNECT IT and wait; never search for or reuse a key.
+0) CONNECT (once, onboarding): check GIMC (it also renders the reel) and connect the Apify MCP (teardown).
+   IF ONE IS NOT CONNECTED, STOP AND ASK ME TO CONNECT IT and wait; never search for or reuse a key.
 0.5) ai-brain: recall my voice + past winners (if connected).
 1) FIND+STUDY: use Apify to tear down the model URL (or your suggested pick) → hook, beats, pacing, visuals.
 2) viral-hook-writer: 10 hooks, ranked; I'll pick one (or you pick the strongest).
 3) reel-scripter: a 30–45s ORIGINAL script in MY voice on that structure (never a copy).
-4) reel-builder + Hyperframes (+ Seedance via Runway): actually RENDER the reel → a real mp4 with the on-screen
-   comment-CTA card. Run the look loop of video-components §4 first (inspect to 0 errors, look at the sheets,
+4) reel-builder (+ Seedance via Runway): actually RENDER the reel in GIMC (gimc.canvas_render_reel, follow
+   gimc.canvas_render_status to done) → a video card with a real mp4 and the on-screen comment-CTA card.
+   Run the look loop of video-components §4 first (inspect to 0 errors, look at the sheets,
    fresh reviewer). Show me the beat table + the rendered reel.
 5) caption-and-hashtags: caption + tiered hashtags + first comment, with my CTA keyword.
 6) SCHEDULE: content-planning puts the reel in the GIMC content calendar on the date I pick. A person

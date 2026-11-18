@@ -1,8 +1,9 @@
 import { esc, style } from '../html.mjs'
 import { CUT_OPACITY, EASE, enter, frames, tween } from '../motion.mjs'
+import { FIT_MIN, fitAttrs } from '../fit.mjs'
 import { enterSeconds, fontStack, SPACE, TYPE } from '../theme.mjs'
 import { Scene } from './Scene.mjs'
-import { Symbol } from './Symbol.mjs'
+import { Symbol, symbolWidth } from './Symbol.mjs'
 
 /**
  * compare: two sides (before/after, long/short) stacked on one left edge, as wide as the safe area and equally
@@ -14,7 +15,10 @@ export const CompareBeat = (c, { title, left, right, winner, rightAt = frames(4)
   const side = (key, s) => {
     const id = `${c.id}-${key}`
     const symbol = s.symbol ? Symbol(c, s.symbol, { id: `${id}-sym`, extra: { maxWidth: '45%' } }) : ''
-    const label = `<div id="${id}-label" data-label-of="${key}" style="${style({ flex: '1 1 0', fontFamily: fontStack(c.theme, 'display'), fontSize: `${TYPE.body + 8}px`, fontWeight: 700, lineHeight: 1.1, color: c.theme.colors.text, textWrap: 'balance' })}">${esc(s.label)}</div>`
+    // Room for the label: the side minus its padding and border, minus the symbol (its legend size, at most 45 %) and the gap.
+    const inner = c.area.width - 2 * SPACE[3] - 10
+    const room = s.symbol ? inner - Math.min(symbolWidth(c, c.legend?.[s.symbol]?.size), inner * 0.45) - SPACE[3] : inner
+    const label = `<div id="${id}-label" data-label-of="${key}" ${fitAttrs(room, FIT_MIN.body)} style="${style({ flex: '1 1 0', fontFamily: fontStack(c.theme, 'display'), fontSize: `${TYPE.body + 8}px`, fontWeight: 700, lineHeight: 1.1, color: c.theme.colors.text, textWrap: 'balance' })}">${esc(s.label)}</div>`
     return `<div id="${id}" data-slot="${key}" data-backdrop style="${style({ flex: '1 1 0', minHeight: 0, display: 'flex', alignItems: 'center', gap: `${SPACE[3]}px`, padding: `${SPACE[3]}px`, background: c.theme.colors.surface, border: `5px solid ${c.theme.colors.muted}`, borderRadius: '28px' })}">${symbol}${label}</div>`
   }
   const hero = `<div data-hero style="${style({ display: 'flex', flexDirection: 'column', gap: `${SPACE[2]}px`, width: `${c.area.width}px`, flex: '1 1 auto', alignSelf: 'stretch' })}">${side('left', left)}${side('right', right)}</div>`

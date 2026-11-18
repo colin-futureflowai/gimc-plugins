@@ -1,5 +1,6 @@
 import { esc, style } from '../html.mjs'
 import { CUT_OPACITY, EASE, enter, frames, tween } from '../motion.mjs'
+import { fitAttrs } from '../fit.mjs'
 import { enterSeconds } from '../theme.mjs'
 
 const bare = (word) => word.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '')
@@ -21,8 +22,9 @@ export const ENTRANCES = ['ink', 'blur', 'line', 'rise']
  * `lines` (from `fitText`) forces the line breaks of a fitted hero; without it the text wraps by itself.
  * `fromOpacity` (`CUT_OPACITY` by default) keeps a `blur`, `line` or `rise` entrance visible on the cut frame;
  * 0 only for text that enters later inside a beat, when something else is already on screen.
+ * `fit` ({ width, min }, fit.mjs): the page shrinks the size until the longest word fits `width`.
  */
-export const Words = (c, { id, text, emphasis, size, font, at, entrance = 'blur', lines = null, fromOpacity = CUT_OPACITY }) => {
+export const Words = (c, { id, text, emphasis, size, font, at, entrance = 'blur', lines = null, fromOpacity = CUT_OPACITY, fit = null }) => {
   if (!ENTRANCES.includes(entrance)) throw new Error(`Unknown entrance "${entrance}" (${ENTRANCES.join(', ')})`)
   const emphasised = new Set((emphasis ?? '').split(/\s+/).map(bare).filter(Boolean))
   const rows = (lines ?? [text]).map((l) => l.split(/\s+/).filter(Boolean))
@@ -36,7 +38,7 @@ export const Words = (c, { id, text, emphasis, size, font, at, entrance = 'blur'
       return r < rows.length - 1 ? `${html}<span style="flex-basis:100%;height:0"></span>` : html
     })
     .join('')
-  const html = `<div id="${id}" style="${style({ fontFamily: font, fontSize: `${size}px`, fontWeight: 700, lineHeight: 1.05, color: c.theme.colors.text, display: 'flex', flexWrap: 'wrap', columnGap: `${Math.round(size * 0.25)}px` })}">${spans}</div>`
+  const html = `<div id="${id}" ${fit ? `${fitAttrs(fit.width, fit.min)} ` : ''}style="${style({ fontFamily: font, fontSize: `${size}px`, fontWeight: 700, lineHeight: 1.05, color: c.theme.colors.text, display: 'flex', flexWrap: 'wrap', columnGap: `${Math.round(size * 0.25)}px` })}">${spans}</div>`
   const word = enterSeconds(c.theme, 'word')
   const sel = (k) => `#${id}-w${k}`
   let tl

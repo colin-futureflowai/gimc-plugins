@@ -1,4 +1,5 @@
 import { clipAttrs, esc, style } from '../html.mjs'
+import { FIT_MIN } from '../fit.mjs'
 import { fontStack, TYPE } from '../theme.mjs'
 import { LowerThird } from './LowerThird.mjs'
 import { SafeArea } from './SafeArea.mjs'
@@ -18,7 +19,7 @@ export const MediaBeat = (c, { src, text, lowerThird, entrance }) => {
     ? `<video id="${c.id}-media" ${clipAttrs(c.start, c.duration, 0)} src="${file}" muted playsinline data-backdrop style="${cover};z-index:0"></video>`
     : ''
   const image = isVideo(src) ? '' : `<img src="${file}" alt="" data-backdrop style="${cover}">`
-  const words = text ? Words(c, { id: `${c.id}-text`, text, size: TYPE.body + 8, font: fontStack(c.theme, 'display'), at: c.start, entrance: entrance ?? 'line' }) : null
+  const words = text ? Words(c, { id: `${c.id}-text`, text, size: TYPE.body + 8, font: fontStack(c.theme, 'display'), at: c.start, entrance: entrance ?? 'line', fit: { width: c.area.width - 2 * 28, min: FIT_MIN.body } }) : null
   const textHtml = words
     ? SafeArea(c, `<div data-backdrop style="${style({ background: c.theme.colors.bg, padding: '24px 28px', alignSelf: 'flex-start' })}">${words.html}</div>`, { justifyContent: 'flex-start', paddingTop: '40px' })
     : ''

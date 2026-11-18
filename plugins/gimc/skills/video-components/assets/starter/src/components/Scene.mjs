@@ -1,5 +1,6 @@
 import { clipAttrs, esc, style } from '../html.mjs'
 import { CUT_OPACITY, EASE, enter } from '../motion.mjs'
+import { FIT_MIN, fitAttrs } from '../fit.mjs'
 import { enterSeconds, fitText, fontStack, SPACE, TYPE } from '../theme.mjs'
 import { SafeArea } from './SafeArea.mjs'
 
@@ -17,7 +18,7 @@ export const Title = (c, text) => {
   if (!text) return { html: `<div data-slot="title" style="height:${TITLE.height - SPACE[3]}px;flex:none"></div>`, tl: [] }
   const fit = fitText(text, { width: c.area.width, maxHeight: TITLE.height - SPACE[3] - SPACE[1], min: TYPE.body, max: TITLE.size, maxLines: 1 })
   return {
-    html: `<div id="${c.id}-title" data-slot="title" style="${style({ height: `${TITLE.height - SPACE[3]}px`, flex: 'none', fontFamily: fontStack(c.theme, 'display'), fontSize: `${fit.size}px`, fontWeight: 700, lineHeight: 1.1, color: c.theme.colors.text, whiteSpace: 'nowrap', paddingTop: `${SPACE[1]}px` })}">${esc(text)}</div>`,
+    html: `<div id="${c.id}-title" data-slot="title" ${fitAttrs(c.area.width, FIT_MIN.small)} style="${style({ height: `${TITLE.height - SPACE[3]}px`, flex: 'none', fontFamily: fontStack(c.theme, 'display'), fontSize: `${fit.size}px`, fontWeight: 700, lineHeight: 1.1, color: c.theme.colors.text, whiteSpace: 'nowrap', paddingTop: `${SPACE[1]}px` })}">${esc(text)}</div>`,
     // The same title as the beat before stays still over the cut: only what changes moves.
     tl: c.prev?.title === text ? [] : [enter(`#${c.id}-title`, c.start, enterSeconds(c.theme, 'small'), { opacity: CUT_OPACITY, filter: 'blur(6px)' }, EASE.arriveSoft)],
   }
