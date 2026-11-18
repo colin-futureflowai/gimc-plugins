@@ -1,14 +1,18 @@
 // Looks at the composition the way a viewer will: seeks index.html with the Hyperframes runtime, checks the layout
 // on many moments and writes stills you can look at. No extra dependencies: it uses the puppeteer-core and the
-// headless Chrome that hyperframes@0.9.61 already brings.
+// headless Chrome that hyperframes@0.9.61 already brings. It works on any Hyperframes composition (HTML with a GSAP
+// timeline in window.__timelines.main), built by build.mjs or written by hand: the beats are the timed children of
+// the composition root (`data-start` + `data-duration`, named by `data-scene` or their id).
 //
 //   node inspect.mjs                     hyperframes check + layout check every 0.25 s and every beat → out/inspect.json,
 //                                        out/contact-sheet.png, out/cut-strip.png, out/phone-sheet.png (--no-check: faster)
 //   node inspect.mjs --at 28.0           one moment → out/still-28.0.png (with boxes), for quick edit loops
 //   node inspect.mjs --video out/reel.mp4  frames of the real render → out/video-contact-sheet.png
 //
-// Options: --props props.json, --platform <name> (default: props.platform), --step 0.25. Exit code 1 when the
-// layout check finds an error. Inspects index.html as it is: run `node build.mjs` first.
+// Options: --dir <composition dir with index.html> (default: this folder), --platform <name> (default:
+// props.platform of this folder, else universal), --fonts "Family A,Family B" (the brand's families: text in another
+// font is an error), --max-seconds 60, --step 0.25. Exit code 1 when the check finds an error; out/inspect.json has
+// every problem with its moment and beat. Inspects index.html as it is: run `node build.mjs` first for props.
 import { spawnSync } from 'node:child_process'
 import { createReadStream, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
@@ -17,17 +21,21 @@ import { dirname, extname, join, normalize, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { HEIGHT, safeArea, WIDTH } from './src/safe-zones.mjs'
 
-const dir = dirname(fileURLToPath(import.meta.url))
+const here = dirname(fileURLToPath(import.meta.url))
 const args = process.argv.slice(2)
 const opt = (name) => {
   const i = args.indexOf(`--${name}`)
   return i >= 0 ? args[i + 1] : undefined
 }
-const propsPath = join(dir, opt('props') ?? 'props.json')
-const props = existsSync(propsPath) ? JSON.parse(readFileSync(propsPath, 'utf8')) : {}
+const dir = resolve(opt('dir') ?? here)
+const entry = 'index.html'
+const propsPath = join(here, opt('props') ?? 'props.json')
+const props = !opt('dir') && existsSync(propsPath) ? JSON.parse(readFileSync(propsPath, 'utf8')) : {}
 const platform = opt('platform') ?? props.platform ?? 'universal'
 const area = safeArea(platform)
 const step = Number(opt('step') ?? 0.25)
+const maxSeconds = Number(opt('max-seconds') ?? 60)
+const brandFonts = (opt('fonts') ?? '').split(',').map((f) => f.trim()).filter(Boolean)
 const outDir = join(dir, 'out')
 mkdirSync(outDir, { recursive: true })
 
@@ -35,21 +43,13 @@ const FPS = 30
 const frame = (t) => Math.round(t * FPS) / FPS
 const clock = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(2).padStart(5, '0')}`
 
-// The beats from props.json (same rounding as build.mjs), for "a still per beat" and the moments around cuts.
+// The beats: the timed children of the composition root, read from the page once it is open (openComposition).
 const beats = []
-{
-  let start = 0
-  for (const [i, b] of (props.beats ?? []).entries()) {
-    const d = frame(Number(b.seconds) || 0)
-    beats.push({ n: i + 1, type: b.type, start, end: frame(start + d) })
-    start = frame(start + d)
-  }
-}
 
 // ---------------------------------------------------------------------------------------------------------------
 // Browser: the Chrome Hyperframes renders with, driven by the puppeteer-core it ships.
 // ---------------------------------------------------------------------------------------------------------------
-const hfDir = join(dir, 'node_modules', 'hyperframes')
+const hfDir = join(here, 'node_modules', 'hyperframes')
 if (!existsSync(hfDir)) throw new Error('node_modules/hyperframes missing: run npm install first.')
 const quiet = { ...process.env, HYPERFRAMES_NO_TELEMETRY: '1', HYPERFRAMES_NO_UPDATE_CHECK: '1', HYPERFRAMES_SKIP_SKILLS: '1' }
 const browserPath = () => {
@@ -64,6 +64,8 @@ const puppeteer = (await import(pathToFileURL(createRequire(join(hfDir, 'package
 // A small static server: index.html gets the Hyperframes runtime injected, exactly like `hyperframes preview`.
 const RUNTIME = join(hfDir, 'dist', 'hyperframe.runtime.iife.js')
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.mp3': 'audio/mpeg', '.m4a': 'audio/mp4', '.wav': 'audio/wav', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf' }
+// Files the composition asked for that are not there (a missing asset renders as nothing, without an error).
+const missing = new Set()
 const serve = () =>
   new Promise((ok) => {
     const server = createServer((req, res) => {
@@ -72,13 +74,14 @@ const serve = () =>
         res.writeHead(200, { 'content-type': 'text/javascript' })
         return createReadStream(RUNTIME).pipe(res)
       }
-      if (path === '/' || path === '/index.html') {
-        const html = readFileSync(join(dir, 'index.html'), 'utf8').replace(/<head[^>]*>/i, (m) => `${m}<script src="/__hyperframes_runtime.js"></script>`)
+      if (path === '/' || path === `/${entry}`) {
+        const html = readFileSync(join(dir, entry), 'utf8').replace(/<head[^>]*>/i, (m) => `${m}<script src="/__hyperframes_runtime.js"></script>`)
         res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
         return res.end(html)
       }
       const file = normalize(join(dir, path))
       if (!file.startsWith(dir + sep) || !existsSync(file) || !statSync(file).isFile()) {
+        if (!/favicon\.ico$/.test(path)) missing.add(path)
         res.writeHead(404)
         return res.end()
       }
@@ -104,18 +107,34 @@ const openComposition = async (browser, port) => {
   await page.setViewport({ width: WIDTH, height: HEIGHT, deviceScaleFactor: 1 })
   const errors = []
   page.on('pageerror', (e) => errors.push(e.message))
-  await page.goto(`http://127.0.0.1:${port}/index.html`, { waitUntil: 'load', timeout: 60000 })
+  await page.goto(`http://127.0.0.1:${port}/${entry}`, { waitUntil: 'load', timeout: 60000 })
   await page.waitForFunction(() => window.__renderReady || typeof window.__hfStartupError === 'string', { timeout: 30000 })
   const startup = await page.evaluate(() => window.__hfStartupError)
   if (typeof startup === 'string') throw new Error(`Composition did not start: ${startup}`)
   if (errors.length) throw new Error(`Script error in index.html: ${errors[0]}`)
   await page.evaluate(() => document.fonts.ready)
-  const duration = await page.evaluate(() => {
+  const info = await page.evaluate(() => {
     const root = document.querySelector('[data-composition-id]')
     const d = Number(root?.getAttribute('data-duration'))
-    return d > 0 ? d : (window.__timelines?.main?.duration() ?? 0)
+    const main = window.__timelines?.main
+    // The beats: timed children of the root (not the audio or video tracks), in time order.
+    const timed = root ? [...root.children].filter((e) => e.hasAttribute('data-start') && e.hasAttribute('data-duration') && !['AUDIO', 'VIDEO'].includes(e.tagName)) : []
+    return {
+      root: !!root,
+      timeline: !!main && typeof main.duration === 'function',
+      duration: d > 0 ? d : (main?.duration?.() ?? 0),
+      beats: timed.map((e) => ({ start: Number(e.getAttribute('data-start')), duration: Number(e.getAttribute('data-duration')), type: e.getAttribute('data-scene') || (e.id ? `#${e.id}` : e.tagName.toLowerCase()) }))
+        .filter((b) => b.duration > 0).sort((a, b) => a.start - b.start),
+    }
   })
-  return { page, duration }
+  // What Hyperframes needs to render at all; without it the render fails or comes out empty.
+  const contract = []
+  if (!info.root) contract.push('no element with data-composition-id (the composition root)')
+  if (!info.timeline) contract.push('no GSAP timeline in window.__timelines.main')
+  if (!(info.duration > 0)) contract.push('no duration (data-duration on the root, or a timeline with a length)')
+  if (info.duration > maxSeconds + 1e-6) contract.push(`the composition lasts ${info.duration.toFixed(2)} s; at most ${maxSeconds} s`)
+  for (const [i, b] of info.beats.entries()) beats.push({ n: i + 1, type: b.type, start: frame(b.start), end: frame(b.start + b.duration) })
+  return { page, duration: info.duration, contract }
 }
 
 // The seek Hyperframes itself uses while rendering (renderSeek, then wait for videos and fonts to settle).
@@ -157,7 +176,7 @@ function analyze(cfg) {
   }
   const hex = (h) => (/^#[0-9a-f]{6}$/i.test(h ?? '') ? { r: parseInt(h.slice(1, 3), 16), g: parseInt(h.slice(3, 5), 16), b: parseInt(h.slice(5, 7), 16), a: 1 } : null)
   const near = (a, b) => a && b && Math.hypot(a.r - b.r, a.g - b.g, a.b - b.b) < 12
-  const accentColor = hex(accent)
+  const accentColor = hex(accent) ?? hex(getComputedStyle(document.documentElement).getPropertyValue('--brand-color-accent').trim())
 
   const opacityCache = new Map()
   const opacity = (el) => {
@@ -430,6 +449,22 @@ function analyze(cfg) {
   // Something to look at besides the captions: text that is visible (also faint, at least 30 % opacity) or a solid
   // element of hero size. Used around every cut (empty-cut).
   const content = texts.some((b) => !b.caption && b.opacity >= 0.3) || [...visuals, ...media].some((v) => solid(v.opacity) && !marked(v.el, 'data-role', 'caption') && fill(v.rect) >= 0.4)
+  // The brand's families (--fonts): visible text in any other font (also a fallback the browser fell back to because
+  // a brand font is missing) is an error. Captions count too; the overlay of this tool does not exist yet here.
+  if (cfg.fonts?.length) {
+    const allowed = new Set(cfg.fonts.map((f) => f.toLowerCase()))
+    const wrong = new Map()
+    for (const b of texts) {
+      if (b.opacity < 0.3) continue
+      for (const o of b.owners) {
+        const family = cs(o).fontFamily.split(',')[0].trim().replace(/^['"]|['"]$/g, '')
+        const loaded = allowed.has(family.toLowerCase()) && document.fonts.check(`${cs(o).fontWeight} 16px "${family}"`)
+        if (!loaded && !wrong.has(family)) wrong.set(family, { b, family, known: allowed.has(family.toLowerCase()) })
+      }
+    }
+    // One problem per family (not per text block), so a whole reel in the wrong font reads as one line.
+    for (const { b, family, known } of wrong.values()) add({ severity: 'error', type: 'font', selector: `font ${family}`, rect: round(b.rect), message: known ? `the brand font ${family} did not load (e.g. '${b.text.slice(0, 30)}')` : `text is set in ${family}, not in a brand font (${cfg.fonts.join(', ')}); e.g. '${b.text.slice(0, 30)}'` })
+  }
   return { issues, texts: texts.length, visuals: visuals.length, heroFill, content }
 }
 
@@ -514,7 +549,7 @@ const beatAt = (t) => beats.find((b) => t >= b.start && t < b.end)
 // keeps free for captions at the bottom of the safe area.
 const runCheck = () => {
   const cli = ['check', '--json', '--safe-zone', 'off']
-  if (props.captions?.length) {
+  if (readFileSync(join(dir, entry), 'utf8').includes('data-role="caption"')) {
     const y1 = (HEIGHT - area.bottom) / HEIGHT
     const y0 = (HEIGHT - area.bottom - 220) / HEIGHT
     cli.push('--caption-zone', `x0=${(area.left / WIDTH).toFixed(3)};y0=${y0.toFixed(3)};x1=${((WIDTH - area.right) / WIDTH).toFixed(3)};y1=${y1.toFixed(3)};severity=error`)
@@ -594,7 +629,7 @@ const motionReview = async (page) => {
 // ---------------------------------------------------------------------------------------------------------------
 // Modes
 // ---------------------------------------------------------------------------------------------------------------
-const cfg = { W: WIDTH, H: HEIGHT, area, accent: props.theme?.colors?.accent, minOpacity: 0.1 }
+const cfg = { W: WIDTH, H: HEIGHT, area, accent: props.theme?.colors?.accent, minOpacity: 0.1, fonts: brandFonts }
 
 const video = opt('video')
 const at = opt('at')
@@ -625,7 +660,7 @@ try {
     await sheet(browser, cards, out, `${video} · ${duration.toFixed(2)} s · ${cards.length} frames · danger zones of ${platform} tinted blue`)
     console.log(`${out}: ${cards.length} frames from the render (beats + every 2 s). Look at it: fonts, timing, what really ended up in the video.`)
   } else {
-    const { page, duration } = await openComposition(browser, port)
+    const { page, duration, contract } = await openComposition(browser, port)
     if (at !== undefined) {
       const t = Math.min(Number(at), Math.max(0, duration - 1 / FPS))
       await seek(page, t)
@@ -686,6 +721,9 @@ try {
         if (empty.length) runs.push({ key: `empty-cut|${b.n}`, first: empty[0], last: empty.at(-1), count: 1, issue: { severity: 'warning', type: 'empty-cut', selector: `cut to beat ${b.n}`, message: `the cut to beat ${b.n} (${b.type}) shows no text or hero at ${empty.map(clock).join(', ')}; start the new beat's entrance visible on the cut frame (CUT_OPACITY) or let the old beat stay until the cut` } })
       }
       for (const m of await motionReview(page)) runs.push({ key: `motion|${m.type}|${m.selector}|${m.t}`, first: m.t, last: m.to, count: 1, issue: m })
+      // The Hyperframes contract (root, timeline, length) and files the composition asked for that are missing.
+      for (const c of contract) runs.push({ key: `contract|${c}`, first: 0, last: 0, count: 1, issue: { severity: 'error', type: 'composition', selector: 'index.html', message: c } })
+      for (const path of missing) runs.push({ key: `missing|${path}`, first: 0, last: 0, count: 1, issue: { severity: 'error', type: 'missing-file', selector: path, message: `${path} is used but not in the composition` } })
       runs.sort((a, b) => a.first - b.first)
       const errorRuns = runs.filter((r) => r.issue.severity === 'error')
       const warnRuns = runs.filter((r) => r.issue.severity === 'warning')
@@ -693,7 +731,7 @@ try {
       const errorMoments = results.filter((r) => r.issues.some((i) => i.severity === 'error')).length
       writeFileSync(
         join(outDir, 'inspect.json'),
-        `${JSON.stringify({ file: 'index.html', platform, safeArea: area, duration, step, checked: moments.length, hyperframesCheck: !args.includes('--no-check'), errors: errorRuns.length, warnings: warnRuns.length, errorMoments, problems: runs.map((r) => ({ from: r.first, to: r.last, ...r.issue })), moments: results.filter((r) => r.issues.length).map((r) => ({ t: r.t, time: clock(r.t), issues: r.issues })) }, null, 2)}\n`,
+        `${JSON.stringify({ file: 'index.html', platform, safeArea: area, duration, step, checked: moments.length, hyperframesCheck: !args.includes('--no-check'), errors: errorRuns.length, warnings: warnRuns.length, errorMoments, problems: runs.map((r) => ({ from: r.first, to: r.last, beat: beatAt(r.first) ? { n: beatAt(r.first).n, type: beatAt(r.first).type } : null, ...r.issue })), moments: results.filter((r) => r.issues.length).map((r) => ({ t: r.t, time: clock(r.t), issues: r.issues })) }, null, 2)}\n`,
       )
 
       // Issues at a moment: our own plus the check findings seen then (with their box when they have one).

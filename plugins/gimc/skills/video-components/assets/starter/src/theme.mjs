@@ -11,6 +11,8 @@ import { esc } from './html.mjs'
  *   fonts: [{ role: 'display'|'body', family, fallback, files: [{ weight, file, style? }] }],
  *   logo?: 'logo.svg'            // in assets/
  *   pace?: 'calm'|'standard'|'snappy'
+ *   css?: 'brand/brand.css'      // a stylesheet linked in <head>: in GIMC the brand layer with the @font-face of the
+ *                                // brand's letters, so fonts can name a family with `files: []`
  * }
  */
 

@@ -26,11 +26,12 @@ platform's safe area, eases and durations per role, and entrances that change fr
 in a slot of its scene type or hangs on a part, so whatever moves the group moves it too.
 You fill in `props.json`; `build.mjs` turns it into `index.html` (the composition) and Hyperframes renders
 that to an mp4. You do not write the components again for every reel. [reel-builder](../reel-builder/SKILL.md)
-decides what the reel says; GIMC renders these props (`gimc.canvas_render_reel`), section 5 locally.
+decides what the reel says; GIMC renders the built `index.html` as a composition (`gimc.canvas_render_reel`).
 
 The project is in [assets/starter/](assets/starter/): `build.mjs` (props → `index.html`), `src/components/`,
 `src/theme.mjs` (grid, tokens, type), `src/storyboard.mjs` (the storyboard check), `src/safe-zones.mjs`,
-`src/motion.mjs`, `inspect.mjs` (section 4), `props.json` (an example with a diagram), `assets/`.
+`src/motion.mjs`, `inspect.mjs` (section 4), `props.json`, `examples/` (every scene type; GIMC's
+rules), `assets/`.
 
 The references are HeyGen's Hyperframes CLI and media skills 0.9.61, adopted (Apache-2.0, see [NOTICE](NOTICE)) and
 changed only where GIMC's setup needs it; the rules of this file win where they differ:

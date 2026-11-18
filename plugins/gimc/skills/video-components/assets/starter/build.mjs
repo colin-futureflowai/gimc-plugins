@@ -31,13 +31,16 @@ const props = JSON.parse(readFileSync(join(dir, propsPath), 'utf8'))
 const external = JSON.stringify(props).match(/(?:https?:)?\/\/[^"\s]+/)
 if (external) throw new Error(`External URL in props (${external[0]}): download the file into assets/ and use its file name.`)
 
-// GSAP from the pinned Hyperframes CLI, as a local file: a CDN fails the render in a VM without network.
+// GSAP from the pinned Hyperframes CLI, as a local file: a CDN fails the render in a VM without network. GIMC puts
+// the same file at vendor/gsap.min.js next to every composition it renders, so without npm install the build goes on
+// (only a local preview or render needs it here).
 const gsap = join(dir, 'vendor', 'gsap.min.js')
 if (!existsSync(gsap)) {
   const bundled = join(dir, 'node_modules', 'hyperframes', 'dist', 'vendor', 'npm', 'gsap@3.15.0', 'dist', 'gsap.min.js')
-  if (!existsSync(bundled)) throw new Error('vendor/gsap.min.js missing: run npm install first (hyperframes@0.9.61 ships GSAP 3.15.0).')
-  mkdirSync(dirname(gsap), { recursive: true })
-  copyFileSync(bundled, gsap)
+  if (existsSync(bundled)) {
+    mkdirSync(dirname(gsap), { recursive: true })
+    copyFileSync(bundled, gsap)
+  } else console.warn('vendor/gsap.min.js missing: run npm install for a local render (hyperframes@0.9.61 ships GSAP 3.15.0); GIMC brings its own.')
 }
 
 // The scene types (motion-design references/storyboard.md). An element that fits none of them is a new scene type
@@ -106,7 +109,7 @@ const html = `<!doctype html>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=${WIDTH}, height=${HEIGHT}" />
     <!-- Built by build.mjs from ${esc(propsPath)}; edit the props, not this file. -->
-    <script src="./vendor/gsap.min.js"></script>
+    <script src="./vendor/gsap.min.js"></script>${theme.css ? `\n    <link rel="stylesheet" href="${esc(theme.css)}" />` : ''}
     <style>
 ${fontFaces(theme, dir)}
       html, body { margin: 0; background: ${theme.colors.bg}; }

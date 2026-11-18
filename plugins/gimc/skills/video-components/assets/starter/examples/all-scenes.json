@@ -1,0 +1,30 @@
+{
+  "platform": "universal",
+  "lang": "en",
+  "theme": {
+    "colors": { "bg": "#111111", "surface": "#1f1f1f", "text": "#ffffff", "muted": "#b3b3b3", "accent": "#ffcc33", "accentText": "#111111" },
+    "fonts": [],
+    "pace": "standard"
+  },
+  "legend": {
+    "target": { "meaning": "the goal of the day", "src": "symbols/target.svg", "size": "icon" },
+    "check": { "meaning": "the way that works", "src": "symbols/check.svg", "size": "sm" },
+    "cross": { "meaning": "the way that fails", "src": "symbols/cross.svg", "size": "sm" }
+  },
+  "diagrams": {
+    "routine": { "kind": "flow", "parts": [{ "id": "light", "label": "Light" }, { "id": "water", "label": "Water" }, { "id": "plan", "label": "Plan" }] }
+  },
+  "beats": [
+    { "type": "hook", "seconds": 2, "message": "Mornings decide your day", "text": "Nobody tells you this about mornings", "emphasis": "mornings" },
+    { "type": "text", "seconds": 2, "message": "Light comes first", "kicker": "Step 1", "text": "Light first", "emphasis": "Light" },
+    { "type": "media", "seconds": 2, "message": "Go outside for light", "src": "example-broll.png", "text": "Ten minutes outside", "lowerThird": { "name": "Test Person", "title": "Morning coach" } },
+    { "type": "diagram", "seconds": 2, "message": "Light, water, then plan", "title": "3-step morning", "diagram": "routine", "show": ["light", "water", "plan"], "attach": [{ "symbol": "target", "to": "plan", "relation": "inside" }] },
+    { "type": "compare", "seconds": 2, "message": "Plan before the phone", "left": { "label": "Phone first", "symbol": "cross" }, "right": { "label": "Plan first", "symbol": "check" }, "winner": "right" },
+    { "type": "actor-object", "seconds": 2, "message": "You set the goal", "actor": { "symbol": "check", "label": "You", "says": "Today!" }, "object": { "symbol": "cross", "label": "Phone" } },
+    { "type": "stack", "seconds": 2, "message": "Three small habits", "title": "The routine", "items": [{ "text": "Light", "symbol": "target" }, { "text": "Water" }, { "text": "One goal" }] },
+    { "type": "presenter", "seconds": 2, "message": "Keep the goal small", "card": { "text": "One goal", "emphasis": "One" }, "presenter": { "image": "example-presenter.png" } },
+    { "type": "end-card", "seconds": 2.5, "message": "Comment ROUTINE for the plan", "label": "Comment", "keyword": "ROUTINE", "promise": "and I'll DM you my 5-minute plan" },
+    { "type": "cta", "seconds": 2.5, "message": "Comment PLAN for the plan", "label": "Comment", "keyword": "PLAN", "promise": "and I'll DM you the plan" }
+  ],
+  "captions": []
+}

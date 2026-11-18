@@ -75,26 +75,36 @@ actually gets watched. Use a **hybrid engine**, matched to the beat:
 
 ### Render in GIMC (the default when GIMC is connected)
 
-When the build table is done, GIMC renders the reel: `gimc.canvas_render_reel` turns the props into an mp4 and a poster in
-a VM and puts them on a **new video card** on the board. Nothing to install, nothing to upload.
+When the build table is done, GIMC renders the reel: `gimc.canvas_render_reel` turns a **composition** into an mp4 and
+a poster in a VM and puts them on a **new video card** on the board. Nothing to install, nothing to upload but media.
 
-1. **Props for GIMC.** The same `props.json` as video-components, in the shape GIMC accepts: `platform`, `lang`,
-   `theme` (`colors` with `bg`, `surface`, `text`, `muted`, `accent`, `accentText`, and `pace`), `beats` and
-   `captions`, at most 60 s. Beat types: `hook`, `text`, `media`, `cta` only, each with its `message` (the
-   Message column, at most 8 words). **No `fonts`**: GIMC takes the letters
-   from the folder's brand (`gimc.canvas_get_brand`); a brand without letters fails the render, so set them first with the
-   `brandbook` skill. **No URLs**: a `media` beat or `voiceover` points at a card on the canvas (`{ item_id }`), so
-   upload footage first as `gimc-canvas` (media) says.
-2. **Scenes GIMC cannot render yet** (`diagram`, `compare`, `actor-object`, `stack`, `presenter`, `end-card`, a
-   `legend`): say so in one sentence and ask whether to rebuild those beats as `hook`/`text`/`media`/`cta` or to
-   render locally. Never switch on your own.
+1. **Make the composition.** A composition is a folder with `index.html`: a Hyperframes composition (a root with
+   `data-composition-id` and `data-duration` ≤ 60 s, a GSAP timeline in `window.__timelines.main`) and its own files.
+   How it looks and moves is yours. The quickest way is the starter of video-components: write `props.json`, run
+   `node build.mjs`, and send `index.html` plus the symbol files it uses. Hand-written HTML works just as well; the
+   starter's components are building blocks, not a must. Details and the exact shape:
+   video-components `assets/starter/examples/README.md`.
+   - **Brand:** link `brand/brand.css` (GIMC writes it next to the composition: the brand's letters as `@font-face`
+     and `--brand-color-*`, `--brand-font-*`). With the starter set `theme.css` to `brand/brand.css` and name the
+     brand fonts with `files: []`. A brand without letters fails the render: set them first with `brandbook`.
+     GSAP is at `vendor/gsap.min.js` (and `gimc/gsap.min.js`); `brand/`, `vendor/` and `gimc/` are GIMC's.
+   - **Media:** images and video are not sent as bytes: upload them as `gimc-canvas` (media) says and list them in
+     `assets` as `{ "path": "assets/clip.mp4", "ref": { "item_id": "<card id>" } }`. **No URLs** anywhere.
+   - **Size:** one `gimc_execute` takes at most 20,000 characters of code, so keep the composition compact (the
+     starter's HTML for 4–5 beats fits; a long reel goes as several shorter reels until GIMC takes bigger ones).
+2. **GIMC checks before it renders.** An external URL, a missing `index.html` or a bad path comes back at once as a
+   refusal with the file and line: nothing is rendered or charged. Then GIMC runs the starter's `inspect.mjs` on the
+   result: text outside the safe area or the frame, text over other elements, a font that is not the brand's, a
+   missing file, no timeline or over 60 s makes the render `failed` with one line per moment ("beat 2 (text)
+   0:02.5: …"). Fix that and render again; the VM time of the check is charged.
 3. **Start the render** (one `gimc_execute`; `source_item_id` = the script or build-table card it comes from, so
    the video gets its line; `idempotency_key` = run id + reel number, so a retry never renders twice):
 
 ```js
 async () => {
   const r = await gimc.canvas_render_reel({ org_id: 'ORG_ID', board_id: 'BOARD_ID', source_item_id: 'SOURCE_CARD_ID',
-    props: PROPS, idempotency_key: 'RUN_ID-reel-1' })
+    composition: { files: [{ path: 'index.html', content: HTML }], assets: ASSETS, platform: 'instagram-reels' },
+    idempotency_key: 'RUN_ID-reel-1' })
   return { render_id: r.render_id, item_id: r.item_id, status: r.status, app_url: r.app_url }
 }
 ```
@@ -102,16 +112,15 @@ async () => {
 4. **Follow it to done.** Check about every 15 s with one `gimc_execute` per check:
    `gimc.canvas_render_status({ org_id: 'ORG_ID', render_id: 'RENDER_ID' })`. A reel of 7–30 s is usually done in
    20–60 s. `done`: the video card has the mp4 and poster; close with its `app_url`. `failed`: give the `error` in
-   plain words and stop. Still not done after 5 minutes: say so with the link; the card shows the state.
+   plain words, fix the composition and render again, or stop. Still not done after 5 minutes: say so with the link.
 5. **Refusals are messages for the user.** "Credits op: …" (402), a limit (429) or "not set up" (503): pass the
    message on word for word and stop. Never fall back to a local render without saying so.
-6. **Changes = a new render.** `gimc.canvas_render_reel({ rerender_of: RENDER_ID })` renders the same props again;
-   with changed props, send the new `props` with `source_item_id` = the previous video card. Both make a new video
-   card with a `remake` line; the old video stays.
+6. **Changes = a new render.** `gimc.canvas_render_reel({ rerender_of: RENDER_ID })` renders the same composition
+   again; with changes, send the new `composition` with `source_item_id` = the previous video card. Both make a new
+   video card with a `remake` line; the old video stays.
 
 **Local render** (video-components §5, then upload as `gimc-canvas` media says) only when the user asks for it,
-when `gimc.canvas_render_reel` is not there, or for scenes GIMC cannot render yet (step 2, after the user chose it). Say
-which route you took.
+or when `gimc.canvas_render_reel` is not there. Say which route you took.
 
 **Non-negotiables (each of these was a real failure once — do not repeat them):**
 1. **The hook needs a gripping VISUAL, not just text.** Open on something that grabs (e.g. a creator

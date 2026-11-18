@@ -48,8 +48,8 @@ steps (3–6 script/hook/caption) are Claude; the execution steps use the underl
   render (Node 22+, ffmpeg, Chrome) is only needed when the user wants it. If one is
   NOT connected, STOP and ASK the user to connect it — never search for or reuse a key.
 - **Step 2** uses **Apify** to actually tear down the model reel.
-- **Step 5** renders the real mp4 **in GIMC**: reel-builder sends the props of
-  [video-components](../video-components/SKILL.md) to `gimc.canvas_render_reel` and follows `gimc.canvas_render_status` to
+- **Step 5** renders the real mp4 **in GIMC**: reel-builder sends a free composition (`index.html` + files, often
+  built with the starter of [video-components](../video-components/SKILL.md)) to `gimc.canvas_render_reel` and follows `gimc.canvas_render_status` to
   done, which puts a new video card on the board (+ **Seedance via Runway** for acting beats), designed by
   [motion-design](../motion-design/SKILL.md) — see [reel-builder](../reel-builder/SKILL.md) ("Render in GIMC").
   A credits or limit message from GIMC goes to the user word for word; a local render only when the user asks for

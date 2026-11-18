@@ -7,7 +7,8 @@ import { Symbol, symbolWidth } from './Symbol.mjs'
 
 /**
  * stack: 2–4 items on one left edge with equal gaps, each an optional legend symbol (`icon` size) and a short line.
- * An item enters when the voice names it (`at`, seconds into the beat; default 6 frames apart).
+ * An item enters when the voice names it (`at`, seconds into the beat; default 6 frames apart), rising into place: a
+ * slide from the left would cross the left edge of the safe area while it moves.
  */
 export const StackBeat = (c, { title, items }) => {
   if (!items?.length || items.length > 4) throw new Error(`${c.id}: a stack has 2–4 items`)
@@ -21,6 +22,6 @@ export const StackBeat = (c, { title, items }) => {
   const t = enterSeconds(c.theme, 'small')
   return {
     html: scene.html,
-    tl: [...scene.tl, ...items.map((it, k) => enter(`#${c.id}-i${k}`, c.start + (it.at ?? k * frames(6)), t, { opacity: (it.at ?? 0) > frames(6) ? 0 : CUT_OPACITY, x: -24 }, EASE.arriveSoft))],
+    tl: [...scene.tl, ...items.map((it, k) => enter(`#${c.id}-i${k}`, c.start + (it.at ?? k * frames(6)), t, { opacity: (it.at ?? 0) > frames(6) ? 0 : CUT_OPACITY, y: 24 }, EASE.arriveSoft))],
   }
 }
