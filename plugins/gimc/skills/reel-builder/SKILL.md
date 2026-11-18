@@ -97,7 +97,11 @@ a poster in a VM and puts them on a **new video card** on the board. Nothing to 
    result: text outside the safe area or the frame, text over other elements, a font that is not the brand's, a
    missing file, no timeline or over 60 s makes the render `failed` with one line per moment ("beat 2 (text)
    0:02.5: …"). Fix that and render again; the VM time of the check is charged.
-3. **Start the render** (one `gimc_execute`; `source_item_id` = the script or build-table card it comes from, so
+3. **Look first, for free (optional):** `gimc.canvas_draft_reel({ org_id, board_id, composition, source_item_id })`
+   puts the composition on a new video card as a concept: it plays as a live preview on the card (play, scrub, safe
+   zones), with no render and no credits. Render it with `gimc.canvas_render_reel({ org_id, board_id, draft_id })`
+   (or the user presses Renderen); the video lands on the same card.
+4. **Start the render** (one `gimc_execute`; `source_item_id` = the script or build-table card it comes from, so
    the video gets its line; `idempotency_key` = run id + reel number, so a retry never renders twice):
 
 ```js
@@ -109,13 +113,13 @@ async () => {
 }
 ```
 
-4. **Follow it to done.** Check about every 15 s with one `gimc_execute` per check:
+5. **Follow it to done.** Check about every 15 s with one `gimc_execute` per check:
    `gimc.canvas_render_status({ org_id: 'ORG_ID', render_id: 'RENDER_ID' })`. A reel of 7–30 s is usually done in
    20–60 s. `done`: the video card has the mp4 and poster; close with its `app_url`. `failed`: give the `error` in
    plain words, fix the composition and render again, or stop. Still not done after 5 minutes: say so with the link.
-5. **Refusals are messages for the user.** "Credits op: …" (402), a limit (429) or "not set up" (503): pass the
+6. **Refusals are messages for the user.** "Credits op: …" (402), a limit (429) or "not set up" (503): pass the
    message on word for word and stop. Never fall back to a local render without saying so.
-6. **Changes = a new render.** `gimc.canvas_render_reel({ rerender_of: RENDER_ID })` renders the same composition
+7. **Changes = a new render.** `gimc.canvas_render_reel({ rerender_of: RENDER_ID })` renders the same composition
    again; with changes, send the new `composition` with `source_item_id` = the previous video card. Both make a new
    video card with a `remake` line; the old video stays.
 
