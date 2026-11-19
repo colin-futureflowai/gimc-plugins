@@ -33,7 +33,7 @@ drives the entire pipeline.
 1. MEMORY      ai-brain ............. recall your voice + past winners (so it sounds like YOU)
 2. FIND+STUDY  Apify ............... tear a proven reel down frame-by-frame + transcript
 3. HOOK        viral-hook-writer .... 10 scroll-stopping hooks for the first 1–3s, ranked
-4. SCRIPT      reel-scripter ........ tight 30–45s ORIGINAL script — your words, the proven structure
+4. SCRIPT      reel-scripter ........ 30–45s ORIGINAL script table (mode A) — your words, the proven structure
 5. BUILD+RENDER reel-builder → gimc.canvas_render_reel (+ Seedance via Runway) . the REAL rendered mp4
 6. CAPTION     caption-and-hashtags . caption + tiered hashtags + a first comment built for saves
 7. SCHEDULE    content-planning ..... puts the reel in the GIMC content calendar; a person approves it
@@ -100,7 +100,8 @@ PIPELINE
 0.5) ai-brain: recall my voice + past winners (if connected).
 1) FIND+STUDY: use Apify to tear down the model URL (or your suggested pick) → hook, beats, pacing, visuals.
 2) viral-hook-writer: 10 hooks, ranked; I'll pick one (or you pick the strongest).
-3) reel-scripter: a 30–45s ORIGINAL script in MY voice on that structure (never a copy).
+3) reel-scripter (mode A): a 30–45s ORIGINAL script table in MY voice on that structure (never a copy),
+   script-check at 0 errors. reel-builder takes its spoken lines unchanged.
 4) reel-builder (+ Seedance via Runway): actually RENDER the reel in GIMC (gimc.canvas_render_reel, follow
    gimc.canvas_render_status to done) → a video card with a real mp4 and the on-screen comment-CTA card.
    Run the look loop of video-components §4 first (inspect to 0 errors, look at the sheets,

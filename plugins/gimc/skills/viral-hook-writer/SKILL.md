@@ -18,7 +18,8 @@ metadata:
 # Viral Hook Writer
 
 Hooks for a reel — the make-or-break first 1-3 seconds. One skill, three modes; pick the mode from what
-the user brings.
+the user brings. Only the opening: the rest of the script, and how the hook opens its question chain, is
+[reel-scripter](../reel-scripter/SKILL.md).
 
 | The user brings | Mode | Result |
 |---|---|---|

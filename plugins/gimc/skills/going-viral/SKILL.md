@@ -79,8 +79,6 @@ Decide the angle and what happens on screen; then let **viral-hook-writer** writ
 - **Real proof only:** real screens, real numbers, real results. A fake number gets caught and kills trust.
 - **Stock footage:** pick the clip where something visibly happens (a person reacting, celebrating, shocked).
   Search for the action or emotion ("woman jumping with joy"), not the noun ("woman").
-- **Re-hook at the dips** (~4s / 9s / 15s) with a micro-loop: "but here's the part nobody tells you…",
-  "and it gets better…", "wait for the last one."
 - **Keep it short + re-watchable.** The reel teases; the caption delivers. A tight loop drives replays,
   and replays drive reach.
 
@@ -90,25 +88,12 @@ The single biggest watch-time lever: **give them a reason to wait — promise th
 withhold it until the end.** This is exactly what made *"I let Claude post for 6 days — Day 6 broke
 everything"* work: the climax is teased in second 0, but you have to watch the whole thing to get it.
 
-**The mechanic — promise → withhold → escalate → pay off:**
-1. **Tease the payoff in the hook, but don't show it.** Name that something big is coming *and where*
-   ("Day 6 broke everything", "the 5th one is the one that 10×'d it", "wait for the last step").
-2. **Make it an escalating series with a visible finish line.** Number or date the beats (Day 1 → Day 6,
-   prompt 1 → 5, step 1 → 4) so they always know how far the payoff is.
-3. **Each beat out-does the last** (or raises the tension). Save the single best moment for the very last beat.
-4. **Pay it off — for real.** The end must deliver the promised thing. **Tease, never lie:** an unpaid loop
-   makes the viewer feel cheated — it kills saves + shares and trains the algorithm that you waste watch-time.
-
-**Curiosity-gap hooks (open the loop the brain *must* close):**
-- "I did [X] for [N] days — [Day N / the last one] broke everything." ← the 6-day pattern
-- "The one [setting / prompt / step] nobody talks about — and it's #[N]."
-- "Watch till the end — the last one is the only one that actually worked."
-- "[N] ways to do [X]. #[N] should be illegal." / "save #[N] for later."
-- **Withhold the mechanism:** show the *result*, make them stay for the *how*.
-
-**The incentive to wait must be EXPLICIT and worth it.** Name a concrete reward for reaching the end —
-the exact result, the secret prompt, the number. Vague "stay tuned" doesn't hold. **Never resolve the loop
-early:** hold the climax for the final beat, then convert immediately.
+Decide here, as strategy: **does this reel withhold its payoff** (the default for value and lead posts),
+**what exactly is the reward** for reaching the end (the result, the prompt, the number — never a vague
+"stay tuned"), and **where it lives** (last beat, or caption + DM). How the script then teases, numbers the
+road, builds and pays off — and re-hooks at the dips — is the anticipation principle of **reel-scripter**
+([storytelling](../reel-scripter/references/storytelling.md), §6); the curiosity-gap hook formulas are in
+**viral-hook-writer** (category 01).
 
 ### Step 4 — Convert (the funnel)
 
@@ -164,8 +149,8 @@ frames alone.
 ## The 5-step checklist
 1. Choose the goal → look up its emotion (Step 1).
 2. Manufacture that emotion with the matching mechanic; obey the hook rule (Step 2).
-3. Open a curiosity gap in the hook — **promise the payoff up front, withhold it to the end** (escalating
-   series w/ a visible finish line → save the best for last → reward the wait). Never resolve it early.
+3. Open a curiosity gap in the hook — **promise the payoff up front, withhold it to the end** (Step 3.5;
+   reel-scripter writes it).
 4. Decide where the payoff lives — in-reel (proof) or withheld to caption + DM (default for value/lead posts).
 5. Convert with one CTA — Save / Share / Follow / Comment-keyword — and close every loop you opened.
 

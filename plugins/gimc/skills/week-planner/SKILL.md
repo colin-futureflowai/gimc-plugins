@@ -36,7 +36,7 @@ lines), never whole lists. Subagents still work one per reel.
 | Trends and sounds | `trend-spotter` |
 | Posting days and times | `best-time-scheduler` (reads GIMC insights) |
 | The week plan (day, theme, hook, format) | `content-calendar` |
-| One reel | `reel-builder`, or `content-factory` steps 3–6 (never its posting steps) |
+| One reel | `reel-scripter` (the script) → `reel-builder`, or `content-factory` steps 3–6 (never its posting steps) |
 | Caption | `caption-and-hashtags` |
 | Music, post settings, scheduling, approval | `content-planning` |
 
@@ -230,7 +230,8 @@ run_id; never a new frame or board, never the folder note, never another frame.
 Draw a derived line from <source card id: the week plan card, or the media card you use> to your result card.
 Input: <the week-plan line: day, time, platform, theme, hook idea, format, tone, CTA keyword, media card ids or
 "faceless", music mood>.
-Reel only: render 9:16 with video-components (Hyperframes), following motion-design (paid services only if the user asked).
+Reel only: write the script with reel-scripter (mode A, script-check at 0 errors), then render 9:16 with
+video-components (Hyperframes), following motion-design (paid services only if the user asked).
 Before you render, run the look loop of video-components §4 (inspect.mjs to 0 errors, look at the three sheets and
 describe each beat, a fresh reviewer when you can start one); never call the reel done on the code alone. Upload to a video card in your frame,
 write the caption (caption-and-hashtags) as data.caption of that card, find music with gimc.social_search_audio

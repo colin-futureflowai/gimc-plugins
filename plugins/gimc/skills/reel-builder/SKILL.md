@@ -1,8 +1,8 @@
 ---
 name: reel-builder
 description: >
-  Builds a finished reel from a teardown or a beat structure: the beat-by-beat script in your voice,
-  on-screen text, the scene and pacing per beat, the caption, and the render (in GIMC with Hyperframes, or Seedance).
+  Builds a finished reel from a reel-scripter script table and the structure to model: on-screen text, the
+  scene and pacing per beat, the caption, and the render (in GIMC with Hyperframes, or Seedance).
   The build step of content-factory. Use when the user hands over a reel-analyzer teardown or a beat
   outline and says "build the reel", "turn this teardown into a reel", "write the full reel" or
   "script and storyboard this". For a whole reel from only a topic, use content-factory.
@@ -18,22 +18,27 @@ metadata:
 # Reel Builder — Claude assembles the whole reel for you
 
 The last step of the factory. Hand Claude a teardown (from [reel-analyzer](../reel-analyzer/SKILL.md))
-or just an idea + the structure to follow, and it **builds the finished reel** — every beat scripted in
-your voice, with the on-screen text and the visual for each beat — so you can shoot/render it as-is.
+or just an idea + the structure to follow, and it **builds the finished reel** — every beat with its spoken line,
+the on-screen text and the visual — so you can shoot/render it as-is.
+
+**The words come from [reel-scripter](../reel-scripter/SKILL.md).** Its script table (spoken line, questions, beat
+job, energy, ~sec) is the input here: take the spoken lines unchanged and build the picture around the story. No
+script table yet? Run reel-scripter first (mode A); a change to the words goes back through reel-scripter too.
 
 ## When to use
 You have the structure you want to model (or a hook + topic) and you want the entire reel assembled, not
 just notes. Run this after the analyzer + hook writer, or standalone with your own outline.
 
 ## What you'll need
-The **teardown or structure** to follow, your **topic/offer**, your **voice**, and the **CTA** (what you
+The **script table** from reel-scripter, the **teardown or structure** to follow, and the **CTA** (what you
 want them to do). Optional: your past winners (via [ai-brain](../ai-brain/SKILL.md)) so it sounds like you.
 
 ## Instructions
 ```
 You are my reel builder. Build a complete, ready-to-make reel.
+SCRIPT: [paste the reel-scripter script table — the spoken lines stay as they are].
 STRUCTURE TO FOLLOW: [paste the reel-analyzer teardown, or describe the beat structure].
-TOPIC: [what it's about] · VOICE: [yours] · GOAL/CTA: [save / follow / comment / DM].
+GOAL/CTA: [save / follow / comment / DM].
 
 Output a beat-by-beat build table (the storyboard) — one row per beat:
 | # | Spoken line (VO, my voice) | Message (≤ 8 words, without sound) | Scene type | Hero | Other elements → relation | Stays from before | On-screen text | ~secs |
@@ -45,13 +50,14 @@ Rules:
 - Scene types: hook, text, media, diagram, compare, actor-object, stack, presenter, end-card. Every other element
   names its relation (inside, on, label-of, aligned-with, next-to, below, replaces) to the hero, a part or a slot;
   an element without one is dropped. One symbol keeps one meaning and one size.
-- Original words on the modeled structure; total length matches the reference (±2s).
+- One build row per script beat; the ~secs follow the script table, total length matches the reference (±2s).
 - End on ONE clear CTA that matches the deliverable.
-Then give me: the final hook (3 options), the full VO script as one paragraph, and a caption + hashtags.
+Then give me a caption + hashtags.
 ```
 
 **Pairs with:** [reel-analyzer](../reel-analyzer/SKILL.md) (what to model) →
-[viral-hook-writer](../viral-hook-writer/SKILL.md) (the opener) → this (the full build) →
+[viral-hook-writer](../viral-hook-writer/SKILL.md) (the opener) → [reel-scripter](../reel-scripter/SKILL.md) (the
+script) → this (the full build) →
 [caption-and-hashtags](../caption-and-hashtags/SKILL.md) (the post).
 
 ## Rendering the reel — the video engine (make it, not just script it)
