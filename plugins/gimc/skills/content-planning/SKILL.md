@@ -156,8 +156,11 @@ something does not fit; `options` replaces the whole object, so send all setting
 - **Collaborators** (`collaborators`, up to 3 usernames, not for Stories): only accounts the user named.
 - Other fields: `contentType` (`reel`, `feed`, `story`, `carousel`; default follows the media), `shareToFeed`,
   `userTags`, `locationId`, `commentsEnabled`, `isAiGenerated`, `isPaidPartnership`, `audioName`, `muteAudio`,
-  `altText`. Facebook: `contentType` (`feed`, `reel`, `story`), `title` (Reel), `firstComment`, `draft`,
-  `geoCountries` (ISO codes, up to 25), `isAiGenerated`, `altText`.
+  `altText`. Facebook: `contentType` (`feed`, `reel`, `story`; a feed post without media is a text post, a link in the
+  caption gets Facebook's preview), `title` (Reel), `firstComment`, `draft` (lands in Facebook's Publishing Tools, not
+  live; the user publishes it there), `geoCountries` (ISO codes, up to 25), `isAiGenerated` (Reel or video Story only),
+  `altText`, `collaborators` (numeric Facebook Page IDs, up to 10, Reel only, not with `draft`; only Pages the user
+  named), `cover` (`{ "kind": "image", "mediaPath": <poster_path> }`, one video only). A Facebook Story has no caption.
 - No settings needed: leave `options` out. Never invent settings the user did not want.
 
 ## 4c. Recommend music (Reels)
